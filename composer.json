@@ -1,0 +1,9 @@
+{
+    "name": "clementdecou/simply-framework",
+    "require": {
+        "symfony/dependency-injection": "^5.1",
+        "symfony/config": "^5.1",
+        "symfony/finder": "^5.1",
+        "symfony/yaml": "^5.1"
+    }
+}
