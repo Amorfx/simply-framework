@@ -5,5 +5,10 @@
         "symfony/config": "^5.1",
         "symfony/finder": "^5.1",
         "symfony/yaml": "^5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "SimplyFramework\\": "src"
+        }
     }
 }

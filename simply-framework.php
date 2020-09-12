@@ -36,5 +36,3 @@ if (!$containerConfigCache->isFresh()) {
 
 require_once $file;
 $container = new CachedContainer();
-
-var_dump($container->getParameter('framework.version')); die;
