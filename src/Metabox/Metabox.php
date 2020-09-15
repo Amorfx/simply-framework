@@ -2,9 +2,6 @@
 
 namespace SimplyFramework\Metabox;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 /**
  * Class Metabox
  * Main Metabox class to render post meta with form builder

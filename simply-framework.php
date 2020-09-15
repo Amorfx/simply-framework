@@ -70,7 +70,8 @@ class Simply {
     }
 }
 
-add_action('plugins_loaded', function() {
+// Use after_setup_theme and not init because the command manager use cli_init to register command
+add_action('after_setup_theme', function() {
     Simply::bootstrap();
 });
 

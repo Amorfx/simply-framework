@@ -29,7 +29,7 @@ class MetaboxManager implements ManagerInterface {
         }
     }
 
-    public function render(array $metaboxArgs, $post) {
+    public function renderMetabox(array $metaboxArgs, $post) {
         if (!array_key_exists('callable', $metaboxArgs)) {
             $metabox = new Metabox(Simply::getContainer(), $post);
             $metabox->render();
@@ -43,7 +43,7 @@ class MetaboxManager implements ManagerInterface {
     public function initMetaboxes() {
         foreach ($this->metaboxes as $id => $args) {
             add_meta_box($id, $args['title'], function($post) use ($id, $args) {
-                $this->render($args, $post);
+                $this->renderMetabox($args, $post);
             }, $args['screen']);
         }
     }
