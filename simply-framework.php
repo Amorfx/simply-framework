@@ -1,6 +1,6 @@
 <?php
 
-use SimplyFramework\Command\ClearCacheCommand;
+use SimplyFramework\Container\Extension\Metabox\MetaboxExtension;
 use SimplyFramework\Container\Extension\PostType\PostTypeExtension;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
@@ -20,7 +20,7 @@ class Simply {
         $file = __DIR__ .'/cache/container.php';
         $containerConfigCache = new ConfigCache($file, WP_DEBUG);
         $configDirectories = apply_filters('simply_config_directories', array(__DIR__ . '/config'));
-        $extensions = apply_filters('simply_container_extensions', array(new PostTypeExtension));
+        $extensions = apply_filters('simply_container_extensions', array(new PostTypeExtension, new MetaboxExtension));
 
         if (!$containerConfigCache->isFresh()) {
             $containerBuilder = new ContainerBuilder();
@@ -63,16 +63,15 @@ class Simply {
         }
         return self::$container;
     }
-}
-add_action('cli_init', function() {
-    new ClearCacheCommand();
-});
 
-add_action('init', function() {
-    $allPostTypesToRegister = Simply::getContainer()->getParameter('post_type');
-    foreach ($allPostTypesToRegister as $key => $args) {
-        register_post_type($key, $args);
+    static function bootstrap() {
+        self::initContainer();
+        self::getContainer()->get('framework.manager')->initialize();
     }
+}
+
+add_action('plugins_loaded', function() {
+    Simply::bootstrap();
 });
 
 add_action('deactivate_plugin', function() {

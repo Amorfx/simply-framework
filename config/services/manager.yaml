@@ -1,0 +1,21 @@
+services:
+  framework.manager:
+    class: SimplyFramework\Manager\FrameworkChainedManager
+    public: true
+    arguments:
+      - !tagged_iterator framework_manager
+
+  framework.manager.metabox:
+    class: SimplyFramework\Manager\MetaboxManager
+    arguments: ['%metaboxes%']
+    tags: ['framework_manager']
+
+  framework.manager.command:
+    class: SimplyFramework\Manager\CommandManager
+    tags: ['framework_manager']
+
+  framework.manager.post_type:
+    class: SimplyFramework\Manager\PostTypeManager
+    arguments: ['%post_type%']
+    tags: ['framework_manager']
+
