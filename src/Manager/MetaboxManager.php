@@ -2,7 +2,9 @@
 
 namespace SimplyFramework\Manager;
 
+use Simply;
 use SimplyFramework\Contract\ManagerInterface;
+use SimplyFramework\Metabox\Metabox;
 
 /**
  * Class MetaboxManager
@@ -27,15 +29,21 @@ class MetaboxManager implements ManagerInterface {
         }
     }
 
-    public function render(string $id) {
-        var_dump($this->get($id));
-        echo $id;
+    public function render(array $metaboxArgs, $post) {
+        if (!array_key_exists('callable', $metaboxArgs)) {
+            $metabox = new Metabox(Simply::getContainer(), $post);
+            $metabox->render();
+        } else {
+            $callable = explode('@', $metaboxArgs['callable']);
+            $metaboxInstance = new $callable[0]();
+            call_user_func(array($metaboxInstance, $callable[1]), $post);
+        }
     }
 
     public function initMetaboxes() {
         foreach ($this->metaboxes as $id => $args) {
-            add_meta_box($id, $args['title'], function() use ($id) {
-                $this->render($id);
+            add_meta_box($id, $args['title'], function($post) use ($id, $args) {
+                $this->render($args, $post);
             }, $args['screen']);
         }
     }
