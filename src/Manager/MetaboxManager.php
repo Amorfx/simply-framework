@@ -23,9 +23,11 @@ class MetaboxManager implements ManagerInterface {
         add_action('add_meta_boxes', [$this, 'initMetaboxes']);
     }
 
-    public function get($id) {
-        if (array_key_exists($id, $this->metaboxes)) {
-            return $this->metaboxes[$id];
+    public function initMetaboxes() {
+        foreach ($this->metaboxes as $id => $args) {
+            add_meta_box($id, $args['title'], function($post) use ($id, $args) {
+                $this->renderMetabox($args, $post);
+            }, $args['screen']);
         }
     }
 
@@ -40,11 +42,9 @@ class MetaboxManager implements ManagerInterface {
         }
     }
 
-    public function initMetaboxes() {
-        foreach ($this->metaboxes as $id => $args) {
-            add_meta_box($id, $args['title'], function($post) use ($id, $args) {
-                $this->renderMetabox($args, $post);
-            }, $args['screen']);
+    public function get($id) {
+        if (array_key_exists($id, $this->metaboxes)) {
+            return $this->metaboxes[$id];
         }
     }
 }

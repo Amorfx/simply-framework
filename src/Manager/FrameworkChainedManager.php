@@ -9,6 +9,7 @@ class FrameworkChainedManager implements ManagerInterface {
      * @var ManagerInterface[]
      */
     private $allManagers;
+    
     public function __construct($allManagers) {
         $this->allManagers = $allManagers;
     }
