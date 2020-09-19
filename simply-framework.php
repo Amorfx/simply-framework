@@ -2,8 +2,11 @@
 
 use SimplyFramework\Container\Extension\Metabox\MetaboxExtension;
 use SimplyFramework\Container\Extension\PostType\PostTypeExtension;
+use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
+use Symfony\Bridge\ProxyManager\LazyProxy\PhpDumper\ProxyDumper;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -24,6 +27,8 @@ class Simply {
 
         if (!$containerConfigCache->isFresh()) {
             $containerBuilder = new ContainerBuilder();
+            $containerBuilder->setProxyInstantiator(new RuntimeInstantiator());
+
             foreach ($extensions as $anExtension) {
                 $containerBuilder->registerExtension($anExtension);
                 $containerBuilder->loadFromExtension($anExtension->getAlias());
@@ -40,10 +45,10 @@ class Simply {
                     }
                 }
             }
-
             $containerBuilder->compile();
 
             $dumper = new PhpDumper($containerBuilder);
+            $dumper->setProxyDumper(new ProxyDumper('_simply_'));
             $containerConfigCache->write(
                 $dumper->dump(['class' => 'CachedContainer']),
                 $containerBuilder->getResources()
@@ -55,7 +60,7 @@ class Simply {
     }
 
     /**
-     * @return \Symfony\Component\DependencyInjection\Container
+     * @return Container
      */
     static function getContainer() {
         if (is_null(self::$container)) {

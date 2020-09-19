@@ -16,6 +16,7 @@ class Configuration implements ConfigurationInterface {
                 ->variableNode('screen')->end()
                 ->variableNode('title')->end()
                 ->variableNode('callable')->end()
+                ->variableNode('fields')->end()
             ->end();
         return $treeBuilder;
     }

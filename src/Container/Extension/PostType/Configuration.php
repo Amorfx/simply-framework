@@ -18,7 +18,7 @@ class Configuration implements ConfigurationInterface {
                 ->variableNode('description')->end()
                 ->booleanNode('public')->defaultFalse()->end()
                 ->variableNode('description')->end()
-                ->booleanNode('hierarchical')->defaultFalse()->end()
+                ->booleanNode('hierarchical')->end()
                 ->booleanNode('exclude_from_search')->end()
                 ->variableNode('publicly_queryable')->end()
                 ->booleanNode('show_ui')->end()
@@ -47,7 +47,7 @@ class Configuration implements ConfigurationInterface {
                     ->end()
                 ->end()
                 ->variableNode('query_var')->end()
-                ->booleanNode('can_export')->defaultTrue()->end()
+                ->booleanNode('can_export')->end()
                 ->booleanNode('delete_with_user')->end()
             ->end();
         return $treeBuilder;

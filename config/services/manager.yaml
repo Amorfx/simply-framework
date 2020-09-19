@@ -7,15 +7,16 @@ services:
 
   framework.manager.metabox:
     class: SimplyFramework\Manager\MetaboxManager
-    arguments: ['%metaboxes%']
+    arguments: ['%metaboxes%', '@framework.form_generator']
     tags: ['framework_manager']
 
   framework.manager.command:
     class: SimplyFramework\Manager\CommandManager
+    arguments:
+      - !tagged_iterator wpcli_command
     tags: ['framework_manager']
 
   framework.manager.post_type:
     class: SimplyFramework\Manager\PostTypeManager
     arguments: ['%post_type%']
     tags: ['framework_manager']
-

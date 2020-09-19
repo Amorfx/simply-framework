@@ -1,0 +1,3 @@
+services:
+  SimplyFramework\Command\ClearCacheCommand:
+    tags: ['wpcli_command']

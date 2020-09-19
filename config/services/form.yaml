@@ -1,0 +1,3 @@
+services:
+  framework.form_generator:
+    class: SimplyFramework\Form\FormGenerator

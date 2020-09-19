@@ -5,8 +5,8 @@ namespace SimplyFramework\Command;
 abstract class AbstractWordPressCommand {
     static $commandName;
     static $requiredArgs = array();
-
-    public function __construct() {
+    
+    public function register() {
         \WP_CLI::add_command($this::$commandName, array($this, '_execute'));
     }
 
