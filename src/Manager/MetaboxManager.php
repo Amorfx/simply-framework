@@ -28,20 +28,30 @@ class MetaboxManager implements ManagerInterface {
     }
 
     public function initialize() {
+        // Use current screen to instanciate metabox
+        add_action('current_screen', [$this, 'createMetaboxInstances']);
+        add_action('add_meta_boxes', [$this, 'addMetaboxes']);
+        add_action('save_post', [$this, 'saveDataMetaboxes'], 10, 2);
+    }
+
+    public function createMetaboxInstances() {
         foreach ($this->metaboxes as $id => $args) {
             if (!array_key_exists('callable', $args)) {
                 $fields = [];
                 if (array_key_exists('fields', $args)) {
                     $fields = $args['fields'];
                 }
-                $this->metaboxInstance[$id] = new Metabox($id, null, $fields, $this->formGenerator);
+
+                $screen = null;
+                if (array_key_exists('screen', $args)) {
+                    $screen = $args['screen'];
+                }
+                $this->metaboxInstance[$id] = new Metabox($id, $screen, null, $fields, $this->formGenerator);
             }
         }
-        add_action('add_meta_boxes', [$this, 'initMetaboxes']);
-        add_action('save_post', [$this, 'saveDataMetabox']);
     }
 
-    public function initMetaboxes() {
+    public function addMetaboxes() {
         foreach ($this->metaboxes as $id => $args) {
             add_meta_box($id, $args['title'], function($post) use ($id, $args) {
                 $this->renderMetabox($id, $args, $post);
@@ -67,9 +77,12 @@ class MetaboxManager implements ManagerInterface {
         }
     }
 
-    public function saveDataMetabox() {
+    public function saveDataMetaboxes($post_id) {
+        $currentScreen = get_current_screen();
         foreach ($this->metaboxInstance as $aMetabox) {
-            $aMetabox->saveFields();
+            if ($aMetabox->supports($currentScreen)) {
+                $aMetabox->saveFields($post_id);
+            }
         }
     }
 }
