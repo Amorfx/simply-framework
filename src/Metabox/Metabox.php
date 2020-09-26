@@ -2,7 +2,7 @@
 
 namespace SimplyFramework\Metabox;
 
-use http\Client\Request;
+use SimplyFramework\Contract\ReferencerTrait;
 use SimplyFramework\Form\FormGenerator;
 use SimplyFramework\Template\TemplateEngine;
 use Symfony\Component\Form\FormInterface;
@@ -16,10 +16,13 @@ use WP_Screen;
  * @package SimplyFramework\Metabox
  */
 class Metabox {
+    use ReferencerTrait;
+
     private $id;
     private $post;
     private $fields;
     private $formGenerator;
+
     /**
      * @var array
      */
@@ -38,6 +41,7 @@ class Metabox {
         $this->id = $id;
         $this->post = $post;
         $this->fields = $fields;
+        $this->initFields();
 
         /**
          * Init compatible page
@@ -55,17 +59,41 @@ class Metabox {
 
         $this->formGenerator = $formGenerator;
         $this->engine = \Simply::getContainer()->get('framework.template_engine');
-        $this->form = $this->formGenerator->createForm($this->fields, $this->id);
+    }
+
+    /**
+     * Set referencer in field
+     */
+    public function initFields() {
+        if (array_key_exists('reference', $this->fields)) {
+            if (!is_array($this->fields['reference'])) {
+                throw new \RuntimeException('The reference parameter should be array type.');
+            }
+            // TODO not put fields references in end of array but in place of reference key ?
+            $fieldsKeyReferences = $this->fields['reference'];
+            unset($this->fields['reference']);
+            foreach ($fieldsKeyReferences as $aField) {
+                $referenceField = $this->getFieldReference($aField);
+                if ($referenceField) {
+                    $this->fields[$aField] = $referenceField;
+                }
+            }
+        }
     }
 
     /**
      * Render the metabox view with a Template engine
      */
     public function render() {
+        $this->form = $this->formGenerator->createForm($this->fields, $this->id);
         // Set Data to form
         $dataForm = [];
         foreach ($this->fields as $fieldKey => $args) {
-            $dataForm[$this->id . '_' . $fieldKey] = get_post_meta($this->post->ID, $fieldKey, true);
+            $keyData = $this->id . '_' . $fieldKey;
+            $dataForm[$keyData] = get_post_meta($this->post->ID, $fieldKey, true);
+            if (empty($dataForm[$keyData])) {
+                unset($dataForm[$keyData]);
+            }
         }
         $this->form->setData($dataForm);
         $this->engine->render('admin/metabox/default.html.twig', [
@@ -97,6 +125,7 @@ class Metabox {
      * @param $post_id
      */
     public function saveFields($post_id) {
+        $this->form = $this->formGenerator->createForm($this->fields, $this->id);
         $dataMetaboxes = $this->form->handleRequest()->getData();
         foreach ($dataMetaboxes as $meta => $value) {
             $metaKey = str_replace($this->id . '_', '', $meta);

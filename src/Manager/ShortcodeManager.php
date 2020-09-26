@@ -12,7 +12,6 @@ class ShortcodeManager implements ManagerInterface {
     private $shortcodes;
 
     public function __construct($shortcodes) {
-
         $this->shortcodes = $shortcodes;
     }
 

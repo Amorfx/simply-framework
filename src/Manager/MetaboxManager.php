@@ -59,6 +59,12 @@ class MetaboxManager implements ManagerInterface {
         }
     }
 
+    /**
+     * Render default view metabox or the callable function
+     * @param string $id
+     * @param array $metaboxArgs
+     * @param $post
+     */
     public function renderMetabox(string $id, array $metaboxArgs, $post) {
         if (array_key_exists($id, $this->metaboxInstance)) {
             $instance=  $this->get($id);

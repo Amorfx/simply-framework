@@ -1,5 +1,6 @@
 <?php
 
+use SimplyFramework\Container\Extension\Field\FieldExtension;
 use SimplyFramework\Container\Extension\Metabox\MetaboxExtension;
 use SimplyFramework\Container\Extension\PostType\PostTypeExtension;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
@@ -23,7 +24,7 @@ class Simply {
         $file = __DIR__ .'/cache/container.php';
         $containerConfigCache = new ConfigCache($file, WP_DEBUG);
         $configDirectories = apply_filters('simply_config_directories', array(__DIR__ . '/config'));
-        $extensions = apply_filters('simply_container_extensions', array(new PostTypeExtension, new MetaboxExtension));
+        $extensions = apply_filters('simply_container_extensions', array(new PostTypeExtension, new MetaboxExtension, new FieldExtension));
 
         if (!$containerConfigCache->isFresh()) {
             $containerBuilder = new ContainerBuilder();
