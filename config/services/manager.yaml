@@ -21,6 +21,11 @@ services:
     arguments: ['%post_type%']
     tags: ['framework_manager']
 
+  framework.manager.taxonomy:
+    class: SimplyFramework\Manager\TaxonomyManager
+    arguments: ['%taxonomy%', '%term_metabox%']
+    tags: ['framework_manager']
+
   framework.manager.shortcode:
     class: SimplyFramework\Manager\ShortcodeManager
     public: true

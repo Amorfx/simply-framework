@@ -3,6 +3,8 @@
 use SimplyFramework\Container\Extension\Field\FieldExtension;
 use SimplyFramework\Container\Extension\Metabox\MetaboxExtension;
 use SimplyFramework\Container\Extension\PostType\PostTypeExtension;
+use SimplyFramework\Container\Extension\Taxonomy\Metabox\TaxonomyMetaboxExtension;
+use SimplyFramework\Container\Extension\Taxonomy\TaxonomyExtension;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Bridge\ProxyManager\LazyProxy\PhpDumper\ProxyDumper;
 use Symfony\Component\Config\ConfigCache;
@@ -24,7 +26,13 @@ class Simply {
         $file = __DIR__ .'/cache/container.php';
         $containerConfigCache = new ConfigCache($file, WP_DEBUG);
         $configDirectories = apply_filters('simply_config_directories', array(__DIR__ . '/config'));
-        $extensions = apply_filters('simply_container_extensions', array(new PostTypeExtension, new MetaboxExtension, new FieldExtension));
+        $extensions = apply_filters('simply_container_extensions', array(
+            new PostTypeExtension,
+            new MetaboxExtension,
+            new FieldExtension,
+            new TaxonomyExtension,
+            new TaxonomyMetaboxExtension
+        ));
 
         if (!$containerConfigCache->isFresh()) {
             $containerBuilder = new ContainerBuilder();

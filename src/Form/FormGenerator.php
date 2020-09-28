@@ -2,6 +2,9 @@
 
 namespace SimplyFramework\Form;
 
+use ReflectionClass;
+use ReflectionException;
+use RuntimeException;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -9,7 +12,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Forms;
-use function TestPlugin\get_choices_type_2;
 
 class FormGenerator {
     private $typeMapping = [
@@ -64,7 +66,7 @@ class FormGenerator {
      * @param $choices
      *
      * @return array|mixed
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     private function configureChoices($choices) {
         if (!is_array($choices)) {
@@ -73,11 +75,11 @@ class FormGenerator {
             } else if (strpos($choices, '@')) {
                 // verify if the callable has type of Class@Action
                 $arrayCallable = explode('@', $choices);
-                $reflectionClass = new \ReflectionClass($arrayCallable[0]);
+                $reflectionClass = new ReflectionClass($arrayCallable[0]);
                 $classInstance = $reflectionClass->newInstance();
                 return $classInstance->{$arrayCallable[1]}();
             } else {
-                throw new \RuntimeException('Choices in choice type field should be callable function or Class@Action string.');
+                throw new RuntimeException('Choices in choice type field should be callable function or Class@Action string.');
             }
         }
         return $choices;
@@ -85,7 +87,7 @@ class FormGenerator {
 
     private function getBuilderTypeByType($type) {
         if (!array_key_exists($type, $this->typeMapping)) {
-            throw new \RuntimeException('The form type ' . $type . ' does not exist. Authorized types are : ' . implode(', ', array_keys($this->typeMapping)));
+            throw new RuntimeException('The form type ' . $type . ' does not exist. Authorized types are : ' . implode(', ', array_keys($this->typeMapping)));
         }
         return $this->typeMapping[$type];
     }
