@@ -2,10 +2,8 @@
 
 namespace SimplyFramework\Metabox;
 
-use SimplyFramework\Contract\ReferencerTrait;
-use SimplyFramework\Contract\RenderedTrait;
+use SimplyFramework\Contract\RenderFormTrait;
 use SimplyFramework\Form\FormGenerator;
-use SimplyFramework\Template\TemplateEngine;
 use Symfony\Component\Form\FormInterface;
 use WP_Post;
 use WP_Screen;
@@ -17,13 +15,10 @@ use WP_Screen;
  * @package SimplyFramework\Metabox
  */
 class Metabox {
-    use ReferencerTrait;
-    use RenderedTrait;
+    use RenderFormTrait;
 
     private $id;
     private $post;
-    private $fields;
-    private $formGenerator;
 
     /**
      * @var array
@@ -39,7 +34,7 @@ class Metabox {
         $this->id = $id;
         $this->post = $post;
         $this->fields = $fields;
-        $this->initFields();
+        $this->initReferenceFields();
 
         /**
          * Init compatible page
@@ -56,26 +51,6 @@ class Metabox {
         }
 
         $this->formGenerator = $formGenerator;
-    }
-
-    /**
-     * Set referencer in field
-     */
-    public function initFields() {
-        if (array_key_exists('reference', $this->fields)) {
-            if (!is_array($this->fields['reference'])) {
-                throw new \RuntimeException('The reference parameter should be array type.');
-            }
-            // TODO not put fields references in end of array but in place of reference key ?
-            $fieldsKeyReferences = $this->fields['reference'];
-            unset($this->fields['reference']);
-            foreach ($fieldsKeyReferences as $aField) {
-                $referenceField = $this->getFieldReference($aField);
-                if ($referenceField) {
-                    $this->fields[$aField] = $referenceField;
-                }
-            }
-        }
     }
 
     /**

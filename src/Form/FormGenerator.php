@@ -6,6 +6,7 @@ use ReflectionClass;
 use ReflectionException;
 use RuntimeException;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -21,6 +22,8 @@ class FormGenerator {
         'integer' => IntegerType::class,
         'number' => NumberType::class,
         'choice' => ChoiceType::class,
+        'hidden' => HiddenType::class,
+        'nonce' => HiddenType::class,
         'submit' => SubmitType::class
     ];
 
@@ -31,6 +34,7 @@ class FormGenerator {
      * @param string $fieldPrefix
      *
      * @return FormInterface
+     * @throws ReflectionException
      */
     public function createForm(array $fields, string $fieldPrefix= '') {
         $formFactory = Forms::createFormFactory();
@@ -54,6 +58,7 @@ class FormGenerator {
      * @param $options
      *
      * @return mixed
+     * @throws ReflectionException
      */
     private function configureOption($options) {
         if (array_key_exists('choices', $options)) {

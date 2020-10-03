@@ -2,24 +2,24 @@
 
 namespace SimplyFramework\Admin\Menu;
 
-use SimplyFramework\Contract\ReferencerTrait;
-use SimplyFramework\Contract\RenderedTrait;
+use SimplyFramework\Contract\RenderFormTrait;
 use SimplyFramework\Form\FormGenerator;
 
 class AdminMenu {
-    use RenderedTrait;
-    use ReferencerTrait;
+    use RenderFormTrait;
 
     private $pageTitle;
     private $pageSlug;
-    private $optionFields;
-    private $formGenerator;
+    private $nonce;
 
     public function __construct($pageTitle, $pageSlug, $optionFields, FormGenerator $formGenerator) {
         $this->pageTitle = $pageTitle;
         $this->pageSlug = $pageSlug;
-        $this->optionFields = $optionFields;
-        $this->optionFields[] = ['type' => 'submit', 'options' => ['label' => __('Save'), 'attr' => ['class' => 'button button-primary']]];
+        $this->fields = $optionFields;
+        $this->nonce = 'adminmenu_page_' . $pageSlug;
+        $this->fields[] = ['type' => 'submit', 'options' => ['label' => __('Save'), 'attr' => ['class' => 'button button-primary']]];
+        $this->fields['admin_menu_nonce'] = ['type' => 'nonce', 'options' => ['data' => wp_create_nonce($this->nonce)]];
+        $this->initReferenceFields();
         $this->formGenerator = $formGenerator;
     }
 
@@ -29,7 +29,7 @@ class AdminMenu {
      */
     public function getOptionsForForm() {
         $data = [];
-        foreach ($this->optionFields as $slug => $dataField) {
+        foreach ($this->fields as $slug => $dataField) {
             if ($dataField['type'] !== 'submit') {
                 $data[$slug] = get_option($slug);
             }
@@ -38,9 +38,9 @@ class AdminMenu {
     }
 
     public function render() {
-        $form = $this->formGenerator->createForm($this->optionFields);
+        $form = $this->formGenerator->createForm($this->fields);
         $form->handleRequest();
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->saveWpOptions($form->getData());
         } else {
             $form->setData($this->getOptionsForForm());
@@ -52,8 +52,14 @@ class AdminMenu {
     }
 
     public function saveWpOptions($data) {
-        foreach ($this->optionFields as $slug => $dataField) {
-            if ($dataField['type'] !== 'submit') {
+        foreach ($this->fields as $slug => $dataField) {
+            if ($slug === 'admin_menu_nonce') {
+                if (!wp_verify_nonce($data[$slug], $this->nonce)) {
+                    wp_die('Tu te crois mâlin ?');
+                }
+            }
+
+            if ($dataField['type'] !== 'submit' && $dataField['type'] !== 'nonce') {
                 if (array_key_exists($slug, $data) && !empty($data[$slug])) {
                     update_option($slug, $data[$slug], false);
                 } else {
