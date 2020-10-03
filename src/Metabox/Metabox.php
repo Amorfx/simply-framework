@@ -3,6 +3,7 @@
 namespace SimplyFramework\Metabox;
 
 use SimplyFramework\Contract\ReferencerTrait;
+use SimplyFramework\Contract\RenderedTrait;
 use SimplyFramework\Form\FormGenerator;
 use SimplyFramework\Template\TemplateEngine;
 use Symfony\Component\Form\FormInterface;
@@ -17,6 +18,7 @@ use WP_Screen;
  */
 class Metabox {
     use ReferencerTrait;
+    use RenderedTrait;
 
     private $id;
     private $post;
@@ -32,10 +34,6 @@ class Metabox {
      * @var FormInterface
      */
     private $form;
-    /**
-     * @var TemplateEngine
-     */
-    private $engine;
 
     public function __construct(string $id, $screen, $post, array $fields, FormGenerator $formGenerator) {
         $this->id = $id;
@@ -58,7 +56,6 @@ class Metabox {
         }
 
         $this->formGenerator = $formGenerator;
-        $this->engine = \Simply::getContainer()->get('framework.template_engine');
     }
 
     /**
@@ -96,7 +93,7 @@ class Metabox {
             }
         }
         $this->form->setData($dataForm);
-        $this->engine->render('admin/metabox/default.html.twig', [
+        $this->getTemplateEngine()->render('admin/metabox/default.html.twig', [
             'title' => 'test title',
             'form' => $this->form->createView()
         ]);

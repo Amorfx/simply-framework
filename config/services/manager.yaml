@@ -10,6 +10,11 @@ services:
     arguments: ['%metaboxes%', '@framework.form_generator']
     tags: ['framework_manager']
 
+  framework.manager.admin_menu:
+    class: SimplyFramework\Manager\AdminMenuManager
+    arguments: [ '%admin_menus%', '@framework.form_generator' ]
+    tags: [ 'framework_manager' ]
+
   framework.manager.command:
     class: SimplyFramework\Manager\CommandManager
     arguments:

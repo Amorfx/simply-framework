@@ -1,5 +1,6 @@
 <?php
 
+use SimplyFramework\Container\Extension\AdminMenu\AdminMenuExtension;
 use SimplyFramework\Container\Extension\Field\FieldExtension;
 use SimplyFramework\Container\Extension\Metabox\MetaboxExtension;
 use SimplyFramework\Container\Extension\PostType\PostTypeExtension;
@@ -31,7 +32,8 @@ class Simply {
             new MetaboxExtension,
             new FieldExtension,
             new TaxonomyExtension,
-            new TaxonomyMetaboxExtension
+            new TaxonomyMetaboxExtension,
+            new AdminMenuExtension
         ));
 
         if (!$containerConfigCache->isFresh()) {

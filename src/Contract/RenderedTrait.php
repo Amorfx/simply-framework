@@ -12,4 +12,6 @@ trait RenderedTrait {
     public function getTemplateEngine() {
         return \Simply::getContainer()->get('framework.template_engine');
     }
+
+    abstract function render();
 }

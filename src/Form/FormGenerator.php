@@ -8,6 +8,7 @@ use RuntimeException;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
@@ -19,11 +20,13 @@ class FormGenerator {
         'textarea' => TextareaType::class,
         'integer' => IntegerType::class,
         'number' => NumberType::class,
-        'choice' => ChoiceType::class
+        'choice' => ChoiceType::class,
+        'submit' => SubmitType::class
     ];
 
     /**
      * Create the form class
+     *
      * @param array $fields
      * @param string $fieldPrefix
      *
@@ -39,7 +42,8 @@ class FormGenerator {
                 $options = $argsField['options'];
             }
             $options = $this->configureOption($options);
-            $form->add($fieldPrefix . '_' . $idField, $builderType, $options);
+            $idFieldWithPrefix = !empty($fieldPrefix) ? $fieldPrefix . '_' . $idField : $idField;
+            $form->add($idFieldWithPrefix, $builderType, $options);
         }
         return $form->getForm();
     }
