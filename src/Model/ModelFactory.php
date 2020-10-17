@@ -7,7 +7,6 @@ use SimplyFramework\Contract\ModelInterface;
 class ModelFactory {
     /**
      * @param $currentObject
-     * TODO finish with WP_Term etc.
      *
      * @return ModelInterface|mixed
      * @throws \Exception
@@ -17,17 +16,20 @@ class ModelFactory {
         switch ($className) {
             case \WP_Post::class:
                 $modelClass = self::getPostModelByType(get_post_type($currentObject));
-                $model = new $modelClass($currentObject);
                 break;
 
             case \WP_Term::class:
+                $modelClass = self::getTermModelByType($currentObject->taxonomy);
+                break;
+
+            case \WP_User::class:
+                $modelClass = UserObject::class;
                 break;
 
             default:
                 throw new \Exception('The class ' . $className . ' is not supported');
         }
-
-        return $model;
+        return new $modelClass($currentObject);
     }
 
     /**
@@ -47,7 +49,15 @@ class ModelFactory {
         }
     }
 
-    private static function getTermModelByType($termName) {
-
+    private static function getTermModelByType($taxonomy) {
+        $mappingModelByTermType = apply_filters('simply_model_term_mapping', [
+            'post_tag' => TermObject::class,
+            'category' => CategoryObject::class
+        ]);
+        if (empty($mappingModelByTermType) || !array_key_exists($taxonomy, $mappingModelByTermType)) {
+            throw new \Exception('The taxonomy ' . $taxonomy . ' is not supported');
+        } else {
+            return $mappingModelByTermType[$taxonomy];
+        }
     }
 }

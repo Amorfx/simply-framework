@@ -30,6 +30,10 @@ abstract class AbstractWordPressCommand {
         \WP_CLI::confirm($question, $assoc_args);
     }
 
+    protected function runCommand($command, $option = array()) {
+        \WP_CLI::runCommand($command, $option);
+    }
+
     /**
      * Verify required args of the command
      * @param $assoc_args

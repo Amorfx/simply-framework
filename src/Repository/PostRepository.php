@@ -18,7 +18,7 @@ class PostRepository extends AbstractRepository {
      */
     public function find($id) {
         $post = get_post($id);
-        return ModelFactory::create($post);
+        return $this->getReturnObject($post);
     }
 
     /**
@@ -33,14 +33,13 @@ class PostRepository extends AbstractRepository {
         $returnModels = [];
         $allPosts = $query->get_posts();
         foreach ($allPosts as $aPost) {
-            $returnModels[] = ModelFactory::create($aPost);
+            $returnModels[] = $this->getReturnObject($aPost);
         }
         wp_reset_postdata();
         return $returnModels;
     }
 
     public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null) {
-        $postType = call_user_func(array($this::getClassName(), 'getType'));
         $queryArgs = array_merge($criteria, [
             'post_type' => $this->getPostType(),
             'orderby' => $orderBy,
@@ -51,7 +50,7 @@ class PostRepository extends AbstractRepository {
         $returnModels = [];
         $allPosts = $query->get_posts();
         foreach ($allPosts as $aPost) {
-            $returnModels[] = ModelFactory::create($aPost);
+            $returnModels[] = $this->getReturnObject($aPost);
         }
         wp_reset_postdata();
         return $returnModels;

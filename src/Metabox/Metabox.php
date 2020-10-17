@@ -69,7 +69,6 @@ class Metabox {
         }
         $this->form->setData($dataForm);
         $this->getTemplateEngine()->render('admin/metabox/default.html.twig', [
-            'title' => 'test title',
             'form' => $this->form->createView()
         ]);
     }

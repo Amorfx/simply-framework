@@ -8,7 +8,10 @@ use RuntimeException;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -18,6 +21,9 @@ use Symfony\Component\Form\Forms;
 class FormGenerator {
     private $typeMapping = [
         'text' => TextType::class,
+        'range' => RangeType::class,
+        'money' => MoneyType::class,
+        'password' => PasswordType::class,
         'textarea' => TextareaType::class,
         'integer' => IntegerType::class,
         'number' => NumberType::class,

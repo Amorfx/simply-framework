@@ -1,3 +1,6 @@
 services:
   SimplyFramework\Command\ClearCacheCommand:
     tags: ['wpcli_command']
+
+  SimplyFramework\Command\CreateDefaultPluginCommand:
+    tags: ['wpcli_command']
