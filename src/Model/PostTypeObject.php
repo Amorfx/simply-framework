@@ -13,9 +13,11 @@ class PostTypeObject implements ModelInterface
      */
     public $post;
 
-    private $postType;
+    public function __construct(WP_Post $post) {
+        $this->post = $post;
+    }
 
-    public function getRepository() {
+    public static function getRepository() {
         return \Simply::getContainer()->get(PostRepository::class);
     }
 
@@ -51,7 +53,7 @@ class PostTypeObject implements ModelInterface
         return get_post_meta($this->post->ID, $key, $single);
     }
 
-    public function supports($type) {
-        return true;
+    public static function getType() {
+        return 'post';
     }
 }

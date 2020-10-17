@@ -6,6 +6,6 @@ interface ModelInterface {
     /**
      * @return RepositoryInterface
      */
-    function getRepository();
-    function supports($type);
+    static function getRepository();
+    static function getType();
 }

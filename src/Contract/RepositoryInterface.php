@@ -28,14 +28,14 @@ interface RepositoryInterface
      * not supported.
      *
      * @param mixed[]       $criteria
-     * @param string[]|null $orderBy
+     * @param string[]|string $orderBy
      * @param int|null      $limit
      * @param int|null      $offset
      *
      * @return object[] The objects.
      *
      */
-    public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null);
+    public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null);
 
     /**
      * Finds a single object by a set of criteria.
