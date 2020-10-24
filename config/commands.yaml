@@ -4,3 +4,6 @@ services:
 
   SimplyFramework\Command\CreateDefaultPluginCommand:
     tags: ['wpcli_command']
+
+  SimplyFramework\Command\CreateDefaultThemeCommand:
+    tags: [ 'wpcli_command' ]

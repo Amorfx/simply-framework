@@ -1,0 +1,6 @@
+services:
+  framework.cache:
+    class: SimplyFramework\Cache\Cache
+    public: true
+    arguments: ['%cache_configurations%']
+    lazy: true
