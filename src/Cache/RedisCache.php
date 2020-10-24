@@ -1,0 +1,38 @@
+<?php
+
+namespace SimplyFramework\Cache;
+
+use SimplyFramework\Contract\CacheInterface;
+
+class RedisCache implements CacheInterface {
+    /**
+     * @var \Redis
+     */
+    private $client;
+
+    public function __construct($host, $port) {
+        $this->client = new \Redis();
+        $this->client->connect($host, $port);
+        $this->client->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
+    }
+
+    /**
+     * @param $key
+     *
+     * @return bool|mixed|string
+     */
+    public function get($key) {
+        return $this->client->get($key);
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     * @param null $expire
+     *
+     * @return mixed|void
+     */
+    public function set($key, $value, $expire = null) {
+        $this->client->set($key, $value, $expire);
+    }
+}
