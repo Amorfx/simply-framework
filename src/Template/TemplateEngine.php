@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormRenderer;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
+use Twig\TwigFunction;
 
 class TemplateEngine {
     private $engine;
@@ -22,11 +23,10 @@ class TemplateEngine {
         $appVariableReflection = new \ReflectionClass('\Symfony\Bridge\Twig\AppVariable');
         $vendorTwigBridgeDirectory = dirname($appVariableReflection->getFileName());
         // the path to your other templates
-        $viewsDirectory = realpath(__DIR__.'/../../views');
+        $viewsDirectory = [realpath(__DIR__.'/../../views')];
+        $viewsDirectory = apply_filters('simply_views_directory', $viewsDirectory);
 
-        $twig = new Environment(new FilesystemLoader([
-            $viewsDirectory
-        ]), [
+        $twig = new Environment(new FilesystemLoader($viewsDirectory), [
             'cache' => SIMPLY_CACHE_DIRECTORY . '/twig'
         ]);
         $formEngine = new TwigRendererEngine([$defaultFormTheme], $twig);
@@ -38,8 +38,24 @@ class TemplateEngine {
 
         // adds the FormExtension to Twig
         $twig->addExtension(new FormExtension());
+        $twig = $this->addTwigFunctions($twig);
 
         $this->engine = $twig;
+    }
+
+    public function addTwigFunctions($twig) {
+        $twig->addFunction(new TwigFunction('function', [$this, 'execFunction']));
+        $twig->addFunction(new TwigFunction('fn', [$this, 'execFunction']));
+        return $twig;
+    }
+
+    public function execFunction($function_name) {
+        $args = func_get_args();
+        array_shift($args);
+        if ( is_string($function_name) ) {
+            $function_name = trim($function_name);
+        }
+        return call_user_func_array($function_name, ($args));
     }
 
     public function render($view, array $context) {
