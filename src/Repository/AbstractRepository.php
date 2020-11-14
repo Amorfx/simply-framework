@@ -12,6 +12,7 @@ abstract class AbstractRepository  implements RepositoryInterface {
      * @param $objectQuery
      *
      * @return mixed|\SimplyFramework\Contract\ModelInterface
+     * @throws \Exception
      */
     protected function getReturnObject($objectQuery) {
         return ModelFactory::create($objectQuery);

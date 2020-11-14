@@ -4,6 +4,7 @@ namespace SimplyFramework\Manager;
 
 use SimplyFramework\Contract\ManagerInterface;
 
+// TODO add manager NavMenu
 class FrameworkChainedManager implements ManagerInterface {
     /**
      * @var ManagerInterface[]

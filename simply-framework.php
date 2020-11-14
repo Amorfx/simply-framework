@@ -85,6 +85,17 @@ class Simply {
         self::initContainer();
         self::getContainer()->get('framework.manager')->initialize();
     }
+
+    /**
+     * Shortcut function for fn get of the container
+     * @param $id
+     *
+     * @return object|Container|null
+     * @throws Exception
+     */
+    static function get($id) {
+        return self::getContainer()->get($id);
+    }
 }
 
 // Use after_setup_theme and not init because the command manager use cli_init to register command

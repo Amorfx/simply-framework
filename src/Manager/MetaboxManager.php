@@ -2,7 +2,6 @@
 
 namespace SimplyFramework\Manager;
 
-use Simply;
 use SimplyFramework\Contract\ManagerInterface;
 use SimplyFramework\Form\FormGenerator;
 use SimplyFramework\Metabox\Metabox;

@@ -39,4 +39,13 @@ class MemcachedCache implements CacheInterface {
 
         $this->client->set($key, $value, $expire);
     }
+
+    /**
+     * @param $key
+     *
+     * @return mixed|void
+     */
+    public function delete($key) {
+        $this->client->delete($key);
+    }
 }

@@ -21,4 +21,12 @@ interface CacheInterface {
      * @return mixed
      */
     public function set($key, $value, $expire = null);
+
+    /**
+     * Delete a key in cache
+     * @param $key
+     *
+     * @return mixed
+     */
+    public function delete($key);
 }

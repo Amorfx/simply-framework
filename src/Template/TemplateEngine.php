@@ -26,9 +26,15 @@ class TemplateEngine {
         $viewsDirectory = [realpath(__DIR__.'/../../views')];
         $viewsDirectory = apply_filters('simply_views_directory', $viewsDirectory);
 
-        $twig = new Environment(new FilesystemLoader($viewsDirectory), [
+        // environnement configuration
+        $envConfig = [
             'cache' => SIMPLY_CACHE_DIRECTORY . '/twig'
-        ]);
+        ];
+        if (WP_DEBUG) {
+            $envConfig['cache'] = false;
+        }
+
+        $twig = new Environment(new FilesystemLoader($viewsDirectory), $envConfig);
         $formEngine = new TwigRendererEngine([$defaultFormTheme], $twig);
         $twig->addRuntimeLoader(new FactoryRuntimeLoader([
             FormRenderer::class => function () use ($formEngine) {
@@ -40,7 +46,7 @@ class TemplateEngine {
         $twig->addExtension(new FormExtension());
         $twig = $this->addTwigFunctions($twig);
 
-        $this->engine = $twig;
+        $this->engine = apply_filters('simply_template_configuration', $twig);;
     }
 
     public function addTwigFunctions($twig) {

@@ -35,4 +35,14 @@ class RedisCache implements CacheInterface {
     public function set($key, $value, $expire = null) {
         $this->client->set($key, $value, $expire);
     }
+
+    /**
+     * @param $key
+     * @param mixed ...$otherKeys
+     *
+     * @return mixed|void
+     */
+    public function delete($key) {
+        $this->client->del($key);
+    }
 }

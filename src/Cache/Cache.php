@@ -36,7 +36,23 @@ class Cache implements CacheInterface {
         return $this->cacheObjectService->get($key);
     }
 
+    /**
+     * @param $key
+     * @param $value
+     * @param null $expire
+     *
+     * @return mixed|void
+     */
     public function set($key, $value, $expire = null) {
         $this->cacheObjectService->set($key, $value, $expire);
+    }
+
+    /**
+     * @param $key
+     *
+     * @return mixed|void
+     */
+    public function delete($key) {
+        $this->cacheObjectService->delete($key);
     }
 }
