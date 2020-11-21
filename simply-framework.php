@@ -14,6 +14,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
@@ -81,7 +82,23 @@ class Simply {
         return self::$container;
     }
 
+    /**
+     * Can use .env file if configured
+     * If configured load env variables
+     * To configured add in wp-config.php constant SIMPLY_USE_DOTENV and SIMPLY_DOTENV_DIRECTORY
+     */
+    private static function initDotEnv() {
+        if (!defined('SIMPLY_DOTENV_DIRECTORY') && defined('ABSPATH')) {
+            define('SIMPLY_DOTENV_DIRECTORY', ABSPATH);
+        }
+        if (defined('SIMPLY_USE_DOTENV') && SIMPLY_USE_DOTENV) {
+            $dotEnv = new Dotenv();
+            $dotEnv->loadEnv(SIMPLY_DOTENV_DIRECTORY . '.env');
+        }
+    }
+
     static function bootstrap() {
+        self::initDotEnv();
         self::initContainer();
         self::getContainer()->get('framework.manager')->initialize();
     }
