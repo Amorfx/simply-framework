@@ -5,16 +5,6 @@ services:
     arguments:
       - !tagged_iterator framework_manager
 
-  framework.manager.metabox:
-    class: SimplyFramework\Manager\MetaboxManager
-    arguments: ['%metaboxes%', '@framework.form_generator']
-    tags: ['framework_manager']
-
-  framework.manager.admin_menu:
-    class: SimplyFramework\Manager\AdminMenuManager
-    arguments: [ '%admin_menus%', '@framework.form_generator' ]
-    tags: [ 'framework_manager' ]
-
   framework.manager.command:
     class: SimplyFramework\Manager\CommandManager
     arguments:
@@ -28,7 +18,7 @@ services:
 
   framework.manager.taxonomy:
     class: SimplyFramework\Manager\TaxonomyManager
-    arguments: ['%taxonomy%', '%term_metabox%']
+    arguments: ['%taxonomy%']
     tags: ['framework_manager']
 
   framework.manager.shortcode:
@@ -36,4 +26,10 @@ services:
     public: true
     arguments:
       - !tagged_iterator wp_shortcode
+    tags: [ 'framework_manager' ]
+
+  framework.manager.hook:
+    class: SimplyFramework\Manager\HookManager
+    arguments:
+      - !tagged_iterator wp.hook
     tags: [ 'framework_manager' ]

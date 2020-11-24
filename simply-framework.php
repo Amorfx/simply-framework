@@ -1,8 +1,6 @@
 <?php
 
-use SimplyFramework\Container\Extension\AdminMenu\AdminMenuExtension;
-use SimplyFramework\Container\Extension\Field\FieldExtension;
-use SimplyFramework\Container\Extension\Metabox\MetaboxExtension;
+use SimplyFramework\Container\Compiler\HookPass;
 use SimplyFramework\Container\Extension\PostType\PostTypeExtension;
 use SimplyFramework\Container\Extension\Taxonomy\Metabox\TaxonomyMetaboxExtension;
 use SimplyFramework\Container\Extension\Taxonomy\TaxonomyExtension;
@@ -31,11 +29,8 @@ class Simply {
         $configDirectories = apply_filters('simply_config_directories', array(__DIR__ . '/config'));
         $extensions = apply_filters('simply_container_extensions', array(
             new PostTypeExtension,
-            new MetaboxExtension,
-            new FieldExtension,
             new TaxonomyExtension,
             new TaxonomyMetaboxExtension,
-            new AdminMenuExtension
         ));
 
         if (!$containerConfigCache->isFresh()) {
@@ -58,6 +53,7 @@ class Simply {
                     }
                 }
             }
+            $containerBuilder->addCompilerPass(new HookPass());
             $containerBuilder->compile();
 
             $dumper = new PhpDumper($containerBuilder);
