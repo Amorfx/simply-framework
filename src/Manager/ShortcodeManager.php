@@ -1,9 +1,9 @@
 <?php
 
-namespace SimplyFramework\Manager;
+namespace Simply\Core\Manager;
 
-use SimplyFramework\Contract\ManagerInterface;
-use SimplyFramework\Shortcode\AbstractShortcode;
+use Simply\Core\Contract\ManagerInterface;
+use Simply\Core\Shortcode\AbstractShortcode;
 
 class ShortcodeManager implements ManagerInterface {
     /**

@@ -1,10 +1,9 @@
 <?php
 
-namespace SimplyFramework\Manager;
+namespace Simply\Core\Manager;
 
-use SimplyFramework\Contract\HookableInterface;
-use SimplyFramework\Contract\ManagerInterface;
-use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use Simply\Core\Contract\HookableInterface;
+use Simply\Core\Contract\ManagerInterface;
 
 class HookManager implements ManagerInterface {
     /**

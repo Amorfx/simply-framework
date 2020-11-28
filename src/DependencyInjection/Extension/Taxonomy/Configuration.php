@@ -1,6 +1,6 @@
 <?php
 
-namespace SimplyFramework\Container\Extension\Taxonomy;
+namespace Simply\Core\DependencyInjection\Extension\Taxonomy;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

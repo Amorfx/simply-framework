@@ -1,8 +1,8 @@
 <?php
 
-namespace SimplyFramework\Model;
+namespace Simply\Core\Model;
 
-use SimplyFramework\Contract\ModelInterface;
+use Simply\Core\Contract\ModelInterface;
 
 class ModelFactory {
     /**

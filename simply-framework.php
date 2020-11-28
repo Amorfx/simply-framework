@@ -1,9 +1,8 @@
 <?php
 
-use SimplyFramework\Container\Compiler\HookPass;
-use SimplyFramework\Container\Extension\PostType\PostTypeExtension;
-use SimplyFramework\Container\Extension\Taxonomy\Metabox\TaxonomyMetaboxExtension;
-use SimplyFramework\Container\Extension\Taxonomy\TaxonomyExtension;
+use Simply\Core\DependencyInjection\Compiler\HookPass;
+use Simply\Core\DependencyInjection\Extension\PostType\PostTypeExtension;
+use Simply\Core\DependencyInjection\Extension\Taxonomy\TaxonomyExtension;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Bridge\ProxyManager\LazyProxy\PhpDumper\ProxyDumper;
 use Symfony\Component\Config\ConfigCache;
@@ -30,7 +29,6 @@ class Simply {
         $extensions = apply_filters('simply_container_extensions', array(
             new PostTypeExtension,
             new TaxonomyExtension,
-            new TaxonomyMetaboxExtension,
         ));
 
         if (!$containerConfigCache->isFresh()) {

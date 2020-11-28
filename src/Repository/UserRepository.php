@@ -1,10 +1,8 @@
 <?php
 
-namespace SimplyFramework\Repository;
+namespace Simply\Core\Repository;
 
-use SimplyFramework\Model\CategoryObject;
-use SimplyFramework\Model\ModelFactory;
-use SimplyFramework\Model\UserObject;
+use Simply\Core\Model\UserObject;
 
 class UserRepository extends AbstractRepository {
     public function find($id) {

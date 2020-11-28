@@ -1,9 +1,9 @@
 <?php
 
-namespace SimplyFramework\Query;
+namespace Simply\Core\Query;
 
-use SimplyFramework\Contract\ModelInterface;
-use SimplyFramework\Model\ModelFactory;
+use Simply\Core\Contract\ModelInterface;
+use Simply\Core\Model\ModelFactory;
 
 class SimplyQuery {
     /**

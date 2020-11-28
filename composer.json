@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-            "SimplyFramework\\": "src"
+            "Simply\\Core\\": "src"
         }
     }
 }

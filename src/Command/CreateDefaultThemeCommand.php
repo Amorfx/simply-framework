@@ -1,6 +1,6 @@
 <?php
 
-namespace SimplyFramework\Command;
+namespace Simply\Core\Command;
 
 use Symfony\Component\Filesystem\Filesystem;
 

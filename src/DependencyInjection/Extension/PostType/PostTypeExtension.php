@@ -1,19 +1,18 @@
 <?php
 
-namespace SimplyFramework\Container\Extension\Taxonomy\Metabox;
+namespace Simply\Core\DependencyInjection\Extension\PostType;
 
 
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
-class TaxonomyMetaboxExtension implements ExtensionInterface {
+class PostTypeExtension implements ExtensionInterface {
     public function load(array $configs, ContainerBuilder $container) {
         $configuration = new Configuration();
         $processor = new Processor();
         $config = $processor->processConfiguration($configuration, $configs);
 
-        // TODO use class to translation
         // replace trans(***) with __()
         foreach ($config as $slug => $args) {
             foreach ($args as $key => $anArg) {
@@ -29,7 +28,7 @@ class TaxonomyMetaboxExtension implements ExtensionInterface {
             }
             $config[$slug] = $args;
         }
-        $container->setParameter('term_metabox', $config);
+        $container->setParameter('post_type', $config);
     }
 
     public function getNamespace() {
@@ -39,6 +38,6 @@ class TaxonomyMetaboxExtension implements ExtensionInterface {
     public function getXsdValidationBasePath() {}
 
     public function getAlias() {
-        return 'term_metabox';
+        return 'post_type';
     }
 }

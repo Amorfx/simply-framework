@@ -1,6 +1,6 @@
 <?php
 
-namespace SimplyFramework\Shortcode;
+namespace Simply\Core\Shortcode;
 
 /**
  * Abstract Class used to add a shortcode

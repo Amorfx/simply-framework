@@ -1,35 +1,35 @@
 services:
   framework.manager:
-    class: SimplyFramework\Manager\FrameworkChainedManager
+    class: Simply\Core\Manager\FrameworkChainedManager
     public: true
     arguments:
       - !tagged_iterator framework_manager
 
   framework.manager.command:
-    class: SimplyFramework\Manager\CommandManager
+    class: Simply\Core\Manager\CommandManager
     arguments:
       - !tagged_iterator wpcli_command
     tags: ['framework_manager']
 
   framework.manager.post_type:
-    class: SimplyFramework\Manager\PostTypeManager
+    class: Simply\Core\Manager\PostTypeManager
     arguments: ['%post_type%']
     tags: ['framework_manager']
 
   framework.manager.taxonomy:
-    class: SimplyFramework\Manager\TaxonomyManager
+    class: Simply\Core\Manager\TaxonomyManager
     arguments: ['%taxonomy%']
     tags: ['framework_manager']
 
   framework.manager.shortcode:
-    class: SimplyFramework\Manager\ShortcodeManager
+    class: Simply\Core\Manager\ShortcodeManager
     public: true
     arguments:
       - !tagged_iterator wp_shortcode
     tags: [ 'framework_manager' ]
 
   framework.manager.hook:
-    class: SimplyFramework\Manager\HookManager
+    class: Simply\Core\Manager\HookManager
     arguments:
       - !tagged_iterator wp.hook
     tags: [ 'framework_manager' ]

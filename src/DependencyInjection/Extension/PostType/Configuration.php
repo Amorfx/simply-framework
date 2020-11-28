@@ -1,6 +1,6 @@
 <?php
 
-namespace SimplyFramework\Container\Extension\PostType;
+namespace Simply\Core\DependencyInjection\Extension\PostType;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

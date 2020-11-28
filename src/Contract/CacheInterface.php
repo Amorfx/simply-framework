@@ -1,6 +1,6 @@
 <?php
 
-namespace SimplyFramework\Contract;
+namespace Simply\Core\Contract;
 
 interface CacheInterface {
     /**

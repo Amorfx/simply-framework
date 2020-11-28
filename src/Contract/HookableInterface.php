@@ -1,6 +1,6 @@
 <?php
 
-namespace SimplyFramework\Contract;
+namespace Simply\Core\Contract;
 
 /**
  * A Hookable is a class that add hooks into wordpress

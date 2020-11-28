@@ -1,8 +1,8 @@
 <?php
 
-namespace SimplyFramework\Manager;
+namespace Simply\Core\Manager;
 
-use SimplyFramework\Contract\ManagerInterface;
+use Simply\Core\Contract\ManagerInterface;
 
 class TaxonomyManager implements ManagerInterface {
     private $taxonomies;

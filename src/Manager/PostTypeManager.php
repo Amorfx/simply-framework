@@ -1,9 +1,8 @@
 <?php
 
-namespace SimplyFramework\Manager;
+namespace Simply\Core\Manager;
 
-use SimplyFramework\Command\ClearCacheCommand;
-use SimplyFramework\Contract\ManagerInterface;
+use Simply\Core\Contract\ManagerInterface;
 
 class PostTypeManager implements ManagerInterface {
     private $postTypes;

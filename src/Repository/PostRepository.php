@@ -1,10 +1,9 @@
 <?php
 
-namespace SimplyFramework\Repository;
+namespace Simply\Core\Repository;
 
-use SimplyFramework\Contract\ModelInterface;
-use SimplyFramework\Model\ModelFactory;
-use SimplyFramework\Model\PostTypeObject;
+use Simply\Core\Contract\ModelInterface;
+use Simply\Core\Model\PostTypeObject;
 
 class PostRepository extends AbstractRepository {
     private function getPostType(){

@@ -1,9 +1,9 @@
 <?php
 
-namespace SimplyFramework\Manager;
+namespace Simply\Core\Manager;
 
-use SimplyFramework\Command\AbstractWordPressCommand;
-use SimplyFramework\Contract\ManagerInterface;
+use Simply\Core\Command\AbstractWordPressCommand;
+use Simply\Core\Contract\ManagerInterface;
 
 class CommandManager implements ManagerInterface {
 

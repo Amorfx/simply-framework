@@ -1,9 +1,9 @@
 <?php
 
-namespace SimplyFramework\Cache;
+namespace Simply\Core\Cache;
 
 use Memcached;
-use SimplyFramework\Contract\CacheInterface;
+use Simply\Core\Contract\CacheInterface;
 
 class MemcachedCache implements CacheInterface {
     /**

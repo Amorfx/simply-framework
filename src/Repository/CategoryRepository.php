@@ -1,8 +1,8 @@
 <?php
 
-namespace SimplyFramework\Repository;
+namespace Simply\Core\Repository;
 
-use SimplyFramework\Model\CategoryObject;
+use Simply\Core\Model\CategoryObject;
 
 class CategoryRepository extends AbstractRepository {
     public function find($id) {

@@ -1,9 +1,9 @@
 <?php
 
-namespace SimplyFramework\Model;
+namespace Simply\Core\Model;
 
-use SimplyFramework\Contract\ModelInterface;
-use SimplyFramework\Repository\UserRepository;
+use Simply\Core\Contract\ModelInterface;
+use Simply\Core\Repository\UserRepository;
 
 class UserObject implements ModelInterface {
     public $user;

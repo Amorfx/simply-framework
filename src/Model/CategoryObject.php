@@ -1,10 +1,9 @@
 <?php
 
-namespace SimplyFramework\Model;
+namespace Simply\Core\Model;
 
-use SimplyFramework\Contract\ModelInterface;
-use SimplyFramework\Repository\CategoryRepository;
-use SimplyFramework\Repository\TagRepository;
+use Simply\Core\Repository\CategoryRepository;
+use Simply\Core\Repository\TagRepository;
 
 class CategoryObject extends TermObject {
 

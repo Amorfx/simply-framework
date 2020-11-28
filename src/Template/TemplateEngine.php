@@ -1,13 +1,10 @@
 <?php
 
-namespace SimplyFramework\Template;
+namespace Simply\Core\Template;
 
 use Symfony\Bridge\Twig\Extension\FormExtension;
-use Symfony\Bridge\Twig\Form\TwigRendererEngine;
-use Symfony\Component\Form\FormRenderer;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
-use Twig\RuntimeLoader\FactoryRuntimeLoader;
 use Twig\TwigFunction;
 
 class TemplateEngine {

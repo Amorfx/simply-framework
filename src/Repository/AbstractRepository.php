@@ -1,9 +1,9 @@
 <?php
 
-namespace SimplyFramework\Repository;
+namespace Simply\Core\Repository;
 
-use SimplyFramework\Contract\RepositoryInterface;
-use SimplyFramework\Model\ModelFactory;
+use Simply\Core\Contract\RepositoryInterface;
+use Simply\Core\Model\ModelFactory;
 
 abstract class AbstractRepository  implements RepositoryInterface {
     /**
@@ -11,7 +11,7 @@ abstract class AbstractRepository  implements RepositoryInterface {
      *
      * @param $objectQuery
      *
-     * @return mixed|\SimplyFramework\Contract\ModelInterface
+     * @return mixed|Simply\Core\Contract\ModelInterface
      * @throws \Exception
      */
     protected function getReturnObject($objectQuery) {

@@ -1,9 +1,9 @@
 <?php
 
-namespace SimplyFramework\Model;
+namespace Simply\Core\Model;
 
-use SimplyFramework\Contract\ModelInterface;
-use SimplyFramework\Repository\PostRepository;
+use Simply\Core\Contract\ModelInterface;
+use Simply\Core\Repository\PostRepository;
 use WP_Post;
 
 class PostTypeObject implements ModelInterface

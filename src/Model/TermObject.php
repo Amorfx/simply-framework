@@ -1,9 +1,9 @@
 <?php
 
-namespace SimplyFramework\Model;
+namespace Simply\Core\Model;
 
-use SimplyFramework\Contract\ModelInterface;
-use SimplyFramework\Repository\TagRepository;
+use Simply\Core\Contract\ModelInterface;
+use Simply\Core\Repository\TagRepository;
 
 class TermObject implements ModelInterface {
     /**

@@ -1,18 +1,19 @@
 <?php
 
-namespace SimplyFramework\Container\Extension\PostType;
+namespace Simply\Core\DependencyInjection\Extension\Taxonomy;
 
 
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
-class PostTypeExtension implements ExtensionInterface {
+class TaxonomyExtension implements ExtensionInterface {
     public function load(array $configs, ContainerBuilder $container) {
         $configuration = new Configuration();
         $processor = new Processor();
         $config = $processor->processConfiguration($configuration, $configs);
 
+        // TODO use class to translation
         // replace trans(***) with __()
         foreach ($config as $slug => $args) {
             foreach ($args as $key => $anArg) {
@@ -28,7 +29,7 @@ class PostTypeExtension implements ExtensionInterface {
             }
             $config[$slug] = $args;
         }
-        $container->setParameter('post_type', $config);
+        $container->setParameter('taxonomy', $config);
     }
 
     public function getNamespace() {
@@ -38,6 +39,6 @@ class PostTypeExtension implements ExtensionInterface {
     public function getXsdValidationBasePath() {}
 
     public function getAlias() {
-        return 'post_type';
+        return 'taxonomy';
     }
 }

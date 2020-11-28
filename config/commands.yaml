@@ -1,9 +1,9 @@
 services:
-  SimplyFramework\Command\ClearCacheCommand:
+  Simply\Core\Command\ClearCacheCommand:
     tags: ['wpcli_command']
 
-  SimplyFramework\Command\CreateDefaultPluginCommand:
+  Simply\Core\Command\CreateDefaultPluginCommand:
     tags: ['wpcli_command']
 
-  SimplyFramework\Command\CreateDefaultThemeCommand:
+  Simply\Core\Command\CreateDefaultThemeCommand:
     tags: [ 'wpcli_command' ]

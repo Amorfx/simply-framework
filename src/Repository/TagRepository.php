@@ -1,9 +1,8 @@
 <?php
 
-namespace SimplyFramework\Repository;
+namespace Simply\Core\Repository;
 
-use SimplyFramework\Model\ModelFactory;
-use SimplyFramework\Model\TermObject;
+use Simply\Core\Model\TermObject;
 
 class TagRepository extends AbstractRepository {
     public function find($id) {

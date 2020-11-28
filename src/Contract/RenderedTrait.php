@@ -1,8 +1,8 @@
 <?php
 
-namespace SimplyFramework\Contract;
+namespace Simply\Core\Contract;
 
-use SimplyFramework\Template\TemplateEngine;
+use Simply\Core\Template\TemplateEngine;
 
 trait RenderedTrait {
     /**

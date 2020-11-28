@@ -1,8 +1,8 @@
 <?php
 
-namespace SimplyFramework\Cache;
+namespace Simply\Core\Cache;
 
-use SimplyFramework\Contract\CacheInterface;
+use Simply\Core\Contract\CacheInterface;
 
 class RedisCache implements CacheInterface {
     /**

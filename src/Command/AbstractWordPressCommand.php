@@ -1,6 +1,6 @@
 <?php
 
-namespace SimplyFramework\Command;
+namespace Simply\Core\Command;
 
 abstract class AbstractWordPressCommand {
     static $commandName;
