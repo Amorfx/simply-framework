@@ -92,7 +92,6 @@ class Simply {
     }
 
     static function bootstrap() {
-        self::initDotEnv();
         self::initContainer();
         self::getContainer()->get('framework.manager')->initialize();
     }

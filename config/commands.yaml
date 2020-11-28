@@ -1,9 +1,5 @@
 services:
-  Simply\Core\Command\ClearCacheCommand:
-    tags: ['wpcli_command']
-
-  Simply\Core\Command\CreateDefaultPluginCommand:
-    tags: ['wpcli_command']
-
-  Simply\Core\Command\CreateDefaultThemeCommand:
-    tags: [ 'wpcli_command' ]
+    Simply\Core\Command\:
+      resource: '../src/Command/*'
+      exclude: '../../src/Repository/AbstractWordPressCommand.php'
+      tags: [ 'wp.command' ]
