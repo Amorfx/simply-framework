@@ -5,3 +5,7 @@ services:
   Simply\Core\Contract\CacheInterface:
     factory: ['@Simply\Core\Cache\CacheFactory', 'createCacheObject']
     lazy: true
+
+  framework.cache:
+    alias: Simply\Core\Contract\CacheInterface
+    public: true
