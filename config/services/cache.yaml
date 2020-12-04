@@ -1,6 +1,7 @@
 services:
-  framework.cache:
-    class: Simply\Core\Cache\Cache
-    public: true
-    arguments: ['%cache_configurations%']
+  Simply\Core\Cache\CacheFactory:
+    arguments: [ '%cache_configurations%' ]
+
+  Simply\Core\Contract\CacheInterface:
+    factory: ['@Simply\Core\Cache\CacheFactory', 'createCacheObject']
     lazy: true

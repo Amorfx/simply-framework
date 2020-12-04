@@ -2,18 +2,19 @@
 
 namespace Simply\Core\Cache;
 
+use Redis;
 use Simply\Core\Contract\CacheInterface;
 
 class RedisCache implements CacheInterface {
     /**
-     * @var \Redis
+     * @var Redis
      */
     private $client;
 
     public function __construct($host, $port) {
-        $this->client = new \Redis();
+        $this->client = new Redis();
         $this->client->connect($host, $port);
-        $this->client->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
+        $this->client->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
     }
 
     /**
@@ -44,5 +45,10 @@ class RedisCache implements CacheInterface {
      */
     public function delete($key) {
         $this->client->del($key);
+    }
+
+    public function geoAdd($key, $longitude, $latitude, $member) {
+        $this->client->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_NONE);
+        return $this->client->geoadd($key, $longitude, $latitude, $member);
     }
 }

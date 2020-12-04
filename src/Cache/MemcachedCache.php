@@ -48,4 +48,8 @@ class MemcachedCache implements CacheInterface {
     public function delete($key) {
         $this->client->delete($key);
     }
+
+    public function getClient() {
+        return $this->client;
+    }
 }
