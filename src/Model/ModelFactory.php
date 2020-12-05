@@ -51,7 +51,7 @@ class ModelFactory {
 
     private static function getTermModelByType($taxonomy) {
         $mappingModelByTermType = apply_filters('simply_model_term_mapping', [
-            'post_tag' => TermObject::class,
+            'post_tag' => TagObject::class,
             'category' => CategoryObject::class
         ]);
         if (empty($mappingModelByTermType) || !array_key_exists($taxonomy, $mappingModelByTermType)) {

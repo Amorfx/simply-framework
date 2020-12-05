@@ -2,6 +2,8 @@
 
 namespace Simply\Core\Repository;
 
+use Exception;
+use Simply\Core\Contract\ModelInterface;
 use Simply\Core\Contract\RepositoryInterface;
 use Simply\Core\Model\ModelFactory;
 
@@ -11,8 +13,8 @@ abstract class AbstractRepository  implements RepositoryInterface {
      *
      * @param $objectQuery
      *
-     * @return mixed|Simply\Core\Contract\ModelInterface
-     * @throws \Exception
+     * @return mixed|ModelInterface
+     * @throws Exception
      */
     protected function getReturnObject($objectQuery) {
         return ModelFactory::create($objectQuery);

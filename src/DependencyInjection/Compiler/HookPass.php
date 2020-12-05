@@ -19,6 +19,7 @@ class HookPass implements CompilerPassInterface {
                 $definition = $container->findDefinition($id);
                 if (!$definition->hasTag('container.service_subscriber') && in_array(ServiceSubscriberTrait::class, class_uses($definition->getClass()))) {
                     $definition->addTag('container.service_subscriber');
+                    $definition->setAutowired(true);
                 }
             }
         }
