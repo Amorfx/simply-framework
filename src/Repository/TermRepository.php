@@ -24,12 +24,20 @@ abstract class TermRepository extends AbstractRepository {
     }
 
     public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null) {
-        $args = array_merge($criteria, [
-            'orderby' => $orderBy,
-            'number' => $limit,
-            'offset' => $offset,
-            'taxonomy' => $this->getTaxonomy()
-        ]);
+        $mergeCriteria = ['taxonomy' => $this->getTaxonomy()];
+        if (!is_null($orderBy)) {
+            $mergeCriteria['orderBy'] = $orderBy;
+        }
+
+        if (!is_null($limit)) {
+            $mergeCriteria['number'] = $limit;
+        }
+
+        if (!is_null($offset)) {
+            $mergeCriteria['offset'] = $offset;
+        }
+
+        $args = array_merge($criteria, $mergeCriteria);
         $terms = get_terms($args);
         $returnModels = [];
         foreach ($terms as $aTerm) {

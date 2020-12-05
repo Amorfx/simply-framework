@@ -18,7 +18,8 @@ class TemplateEngine {
         $envConfig = [
             'cache' => SIMPLY_CACHE_DIRECTORY . '/twig'
         ];
-        if (WP_DEBUG) {
+
+        if (WP_DEBUG === true) {
             $envConfig['cache'] = false;
         }
 
