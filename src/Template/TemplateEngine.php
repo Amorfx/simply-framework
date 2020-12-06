@@ -4,6 +4,7 @@ namespace Simply\Core\Template;
 
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Twig\Environment;
+use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFunction;
 
@@ -21,9 +22,14 @@ class TemplateEngine {
 
         if (WP_DEBUG === true) {
             $envConfig['cache'] = false;
+            $envConfig['debug'] = true;
         }
 
         $twig = new Environment(new FilesystemLoader($viewsDirectory), $envConfig);
+
+        if (WP_DEBUG === true) {
+            $twig->addExtension(new DebugExtension());
+        }
 
         // adds the FormExtension to Twig
         $twig->addExtension(new FormExtension());

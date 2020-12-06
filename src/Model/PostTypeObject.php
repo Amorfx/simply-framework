@@ -24,11 +24,11 @@ class PostTypeObject implements ModelInterface
     /**
      * @return string
      */
-    public function getPostTitle() {
+    public function getTitle() {
         return get_the_title($this->post);
     }
 
-    public function getPostContent($more_link_text = null, $strip_teaser = false) {
+    public function getContent($more_link_text = null, $strip_teaser = false) {
         return get_the_content($more_link_text, $strip_teaser, $this->getID());
     }
 
