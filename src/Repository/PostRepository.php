@@ -30,7 +30,7 @@ class PostRepository extends AbstractRepository {
             'posts_per_page' => -1,
         ]);
         $returnModels = [];
-        $allPosts = $query->get_posts();
+        $allPosts = $query->posts;
         foreach ($allPosts as $aPost) {
             $returnModels[] = $this->getReturnObject($aPost);
         }
@@ -65,7 +65,7 @@ class PostRepository extends AbstractRepository {
         $queryArgs = array_merge($criteria, $arrayMergeCriterias);
         $query = new \WP_Query($queryArgs);
         $returnModels = [];
-        $allPosts = $query->get_posts();
+        $allPosts = $query->posts;
         foreach ($allPosts as $aPost) {
             $returnModels[] = $this->getReturnObject($aPost);
         }
