@@ -18,7 +18,7 @@ class CategoryObject extends TermObject {
     }
 
     static function getRepository() {
-        return \Simply::getContainer()->get(CategoryRepository::class);
+        return \Simply::get(CategoryRepository::class);
     }
 
     static function getType() {

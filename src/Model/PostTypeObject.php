@@ -18,7 +18,7 @@ class PostTypeObject implements ModelInterface
     }
 
     public static function getRepository() {
-        return \Simply::getContainer()->get(PostRepository::class);
+        return \Simply::get(PostRepository::class);
     }
 
     /**

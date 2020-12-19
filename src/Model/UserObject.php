@@ -13,7 +13,7 @@ class UserObject implements ModelInterface {
     }
 
     static function getRepository() {
-        return \Simply::getContainer()->get(UserRepository::class);
+        return \Simply::get(UserRepository::class);
     }
 
     static function getType() {

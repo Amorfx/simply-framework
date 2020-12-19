@@ -31,4 +31,12 @@ class SimplyQuery {
         self::$currentObject = $model;
         return $model;
     }
+
+    /**
+     * @return \WP_Query
+     */
+    public static function getCurrentQuery() {
+        global $wp_query;
+        return $wp_query;
+    }
 }

@@ -19,14 +19,12 @@ class TagObject implements ModelInterface {
         return $this->term->name;
     }
 
-    // TODO another get function
-
     public function getMeta($meta, $single) {
         return get_term_meta($this->term->term_id, $meta, $single);
     }
 
     static function getRepository() {
-        return \Simply::getContainer()->get(TagRepository::class);
+        return \Simply::get(TagRepository::class);
     }
 
     static function getType() {

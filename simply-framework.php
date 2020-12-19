@@ -1,6 +1,7 @@
 <?php
 
 use Simply\Core\DependencyInjection\Compiler\HookPass;
+use Simply\Core\DependencyInjection\Extension\NavMenu\NavMenuExtension;
 use Simply\Core\DependencyInjection\Extension\PostType\PostTypeExtension;
 use Simply\Core\DependencyInjection\Extension\Taxonomy\TaxonomyExtension;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
@@ -22,6 +23,7 @@ define('SIMPLY_RESOURCES_DIRECTORY', __DIR__ . '/resources');
 
 class Simply {
     private static $container;
+
     private static function initContainer() {
         $file = __DIR__ .'/cache/container.php';
         $containerConfigCache = new ConfigCache($file, WP_DEBUG);
@@ -29,6 +31,7 @@ class Simply {
         $extensions = apply_filters('simply_container_extensions', array(
             new PostTypeExtension,
             new TaxonomyExtension,
+            new NavMenuExtension
         ));
 
         if (!$containerConfigCache->isFresh()) {
@@ -39,7 +42,6 @@ class Simply {
                 $containerBuilder->registerExtension($anExtension);
                 $containerBuilder->loadFromExtension($anExtension->getAlias());
             }
-
 
             foreach ($configDirectories as $aConfigDirectory) {
                 $finder = new Finder();
@@ -69,31 +71,16 @@ class Simply {
     /**
      * @return Container
      */
-    static function getContainer() {
+    private static function getContainer() {
         if (is_null(self::$container)) {
             self::initContainer();
         }
         return self::$container;
     }
 
-    /**
-     * Can use .env file if configured
-     * If configured load env variables
-     * To configured add in wp-config.php constant SIMPLY_USE_DOTENV and SIMPLY_DOTENV_DIRECTORY
-     */
-    private static function initDotEnv() {
-        if (!defined('SIMPLY_DOTENV_DIRECTORY') && defined('ABSPATH')) {
-            define('SIMPLY_DOTENV_DIRECTORY', ABSPATH);
-        }
-        if (defined('SIMPLY_USE_DOTENV') && SIMPLY_USE_DOTENV) {
-            $dotEnv = new Dotenv();
-            $dotEnv->loadEnv(SIMPLY_DOTENV_DIRECTORY . '.env');
-        }
-    }
-
     static function bootstrap() {
         self::initContainer();
-        self::getContainer()->get('framework.manager')->initialize();
+        self::get('framework.manager')->initialize();
     }
 
     /**

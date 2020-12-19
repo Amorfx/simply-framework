@@ -33,3 +33,8 @@ services:
     arguments:
       - !tagged_iterator wp.hook
     tags: [ 'framework.manager' ]
+
+  framework.manager.navmenu:
+    class: Simply\Core\Manager\NavMenuManager
+    arguments: ['%nav_menu%']
+    tags: [ 'framework.manager' ]
