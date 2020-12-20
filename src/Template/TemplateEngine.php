@@ -31,8 +31,6 @@ class TemplateEngine {
             $twig->addExtension(new DebugExtension());
         }
 
-        // adds the FormExtension to Twig
-        $twig->addExtension(new FormExtension());
         $twig = $this->addTwigFunctions($twig);
 
         $this->engine = apply_filters('simply_template_configuration', $twig);;

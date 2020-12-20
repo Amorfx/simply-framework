@@ -5,9 +5,6 @@
         "symfony/config": "^5.1",
         "symfony/finder": "^5.1",
         "symfony/yaml": "^5.1",
-        "symfony/form": "^5.1",
-        "symfony/validator": "^5.1",
-        "symfony/twig-bridge": "^5.1",
         "symfony/proxy-manager-bridge": "^5.1",
         "twig/twig": "^3.1"
     },
