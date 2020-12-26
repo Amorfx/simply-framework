@@ -1,5 +1,6 @@
 {
     "name": "clementdecou/simply-framework",
+    "type": "wordpress-muplugin",
     "license": "MIT",
     "require": {
         "symfony/dependency-injection": "^5.1",
