@@ -1,0 +1,4 @@
+services:
+  Simply\Core\Model\:
+    resource: '../../src/Model/*'
+    tags: ['framework.model']

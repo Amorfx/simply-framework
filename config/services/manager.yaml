@@ -1,0 +1,40 @@
+services:
+  framework.manager:
+    class: Simply\Core\Manager\FrameworkChainedManager
+    public: true
+    arguments:
+      - !tagged_iterator framework.manager
+
+  framework.manager.command:
+    class: Simply\Core\Manager\CommandManager
+    arguments:
+      - !tagged_iterator wp.command
+    tags: ['framework.manager']
+
+  framework.manager.post_type:
+    class: Simply\Core\Manager\PostTypeManager
+    arguments: ['%post_type%']
+    tags: ['framework.manager']
+
+  framework.manager.taxonomy:
+    class: Simply\Core\Manager\TaxonomyManager
+    arguments: ['%taxonomy%']
+    tags: ['framework.manager']
+
+  framework.manager.shortcode:
+    class: Simply\Core\Manager\ShortcodeManager
+    public: true
+    arguments:
+      - !tagged_iterator wp_shortcode
+    tags: [ 'framework.manager' ]
+
+  framework.manager.hook:
+    class: Simply\Core\Manager\HookManager
+    arguments:
+      - !tagged_iterator wp.hook
+    tags: [ 'framework.manager' ]
+
+  framework.manager.navmenu:
+    class: Simply\Core\Manager\NavMenuManager
+    arguments: ['%nav_menu%']
+    tags: [ 'framework.manager' ]

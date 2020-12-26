@@ -4,6 +4,13 @@
         "symfony/dependency-injection": "^5.1",
         "symfony/config": "^5.1",
         "symfony/finder": "^5.1",
-        "symfony/yaml": "^5.1"
+        "symfony/yaml": "^5.1",
+        "symfony/proxy-manager-bridge": "^5.1",
+        "twig/twig": "^3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Simply\\Core\\": "src"
+        }
     }
 }

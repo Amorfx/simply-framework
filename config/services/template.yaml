@@ -1,0 +1,5 @@
+services:
+  framework.template_engine:
+    class: Simply\Core\Template\TemplateEngine
+    public: true
+    lazy: true

@@ -1,0 +1,5 @@
+services:
+    Simply\Core\Command\:
+      resource: '../src/Command/*'
+      exclude: '../../src/Repository/AbstractWordPressCommand.php'
+      tags: [ 'wp.command' ]

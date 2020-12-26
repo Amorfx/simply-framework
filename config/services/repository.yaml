@@ -1,0 +1,7 @@
+services:
+  Simply\Core\Repository\:
+    resource: '../../src/Repository/*'
+    exclude: '../../src/Repository/AbstractRepository.php'
+    public: true
+    tags: ['framework.repository']
+
