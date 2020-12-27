@@ -16,7 +16,12 @@ use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
-require_once __DIR__ . '/vendor/autoload.php';
+// if vendor exist the user use the plugin not with the boilerplate or install manually
+$vendorPath = __DIR__ . '/vendor/autoload.php';
+if (file_exists($vendorPath)) {
+    require_once __DIR__ . '/vendor/autoload.php';
+}
+
 
 define('SIMPLY_CACHE_DIRECTORY', __DIR__ . '/cache');
 define('SIMPLY_RESOURCES_DIRECTORY', __DIR__ . '/resources');
