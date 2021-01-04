@@ -10,6 +10,11 @@ class SimplyQuery {
      * @var ModelInterface
      */
     private static $currentObject = null;
+    public $query;
+
+    public function __construct(\WP_Query $query) {
+        $this->query = $query;
+    }
 
     /**
      * Get the model associated with the WordPress queried object
@@ -33,10 +38,26 @@ class SimplyQuery {
     }
 
     /**
-     * @return \WP_Query
+     * @return SimplyQuery
      */
     public static function getCurrentQuery() {
         global $wp_query;
-        return $wp_query;
+        return new self($wp_query);
+    }
+
+    /**
+     * @return array|false
+     * @throws \Exception
+     */
+    public function getQueriedPosts() {
+        $allPosts = $this->query->posts;
+        if (sizeof($allPosts) > 0) {
+            $returnPosts = [];
+            foreach ($allPosts as $aPost) {
+                $returnPosts[] = ModelFactory::create($aPost);
+            }
+            return $returnPosts;
+        }
+        return false;
     }
 }

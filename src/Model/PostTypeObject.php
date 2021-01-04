@@ -36,6 +36,20 @@ class PostTypeObject implements ModelInterface
         return get_permalink($this->getID());
     }
 
+    public function getThumbnailUrl($size = 'post-thumbnail') {
+        return get_the_post_thumbnail_url($this->getID(), $size);
+    }
+
+    public function getCategories(): array {
+        $allCategories = get_the_category($this->getID());
+        if (sizeof($allCategories) > 0) {
+            foreach ($allCategories as $k => $c) {
+                $allCategories[$k] = ModelFactory::create($c);
+            }
+        }
+        return $allCategories;
+    }
+
     /**
      * @return int
      */

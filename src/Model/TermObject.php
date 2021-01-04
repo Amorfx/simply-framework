@@ -23,6 +23,10 @@ abstract class TermObject implements ModelInterface {
         return $this->term->slug;
     }
 
+    public function getLink() {
+        return get_term_link($this->term);
+    }
+
     // TODO another get function
 
     public function getMeta($meta, $single) {
