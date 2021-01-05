@@ -32,6 +32,10 @@ class PostTypeObject implements ModelInterface
         return get_the_content($more_link_text, $strip_teaser, $this->getID());
     }
 
+    public function getExcerpt() {
+        return get_the_excerpt($this->post);
+    }
+
     public function getPermalink() {
         return get_permalink($this->getID());
     }
