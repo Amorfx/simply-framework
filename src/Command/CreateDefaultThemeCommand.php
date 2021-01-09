@@ -12,7 +12,7 @@ use Symfony\Component\Filesystem\Filesystem;
 class CreateDefaultThemeCommand extends AbstractWordPressCommand {
     static $commandName = 'simply:create:theme';
     static $requiredArgs = ['theme-slug'];
-    function execute($args, $assoc_args) {
+    public function execute($args, $assoc_args) {
         $themeSlug = $assoc_args['theme-slug'];
         $this->showColorMessage("Start creating new WordPress theme called " . $themeSlug, '%g');
         // Create the directory plugin and copy the resources and change value

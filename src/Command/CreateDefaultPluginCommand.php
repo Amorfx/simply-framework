@@ -12,7 +12,8 @@ use Symfony\Component\Filesystem\Filesystem;
 class CreateDefaultPluginCommand extends AbstractWordPressCommand {
     static $commandName = 'simply:create:plugin';
     static $requiredArgs = ['plugin-slug'];
-    function execute($args, $assoc_args) {
+
+    public function execute($args, $assoc_args) {
         $pluginSlug = $assoc_args['plugin-slug'];
         $this->showColorMessage("Start creating new WordPress plugin called " . $pluginSlug, '%g');
         // Create the directory plugin and copy the resources and change value
