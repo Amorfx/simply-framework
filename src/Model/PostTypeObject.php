@@ -40,6 +40,10 @@ class PostTypeObject implements ModelInterface
         return get_permalink($this->getID());
     }
 
+    public function getDate($format = '') {
+        return get_the_date($format, $this->post);
+    }
+
     public function getThumbnailUrl($size = 'post-thumbnail') {
         return get_the_post_thumbnail_url($this->getID(), $size);
     }
