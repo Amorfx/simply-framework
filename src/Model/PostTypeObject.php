@@ -50,12 +50,26 @@ class PostTypeObject implements ModelInterface
 
     public function getCategories(): array {
         $allCategories = get_the_category($this->getID());
-        if (sizeof($allCategories) > 0) {
+        if (sizeof($allCategories) > 0 && (!$allCategories instanceof \WP_Error) && $allCategories !== false) {
             foreach ($allCategories as $k => $c) {
                 $allCategories[$k] = ModelFactory::create($c);
             }
+        } else {
+            $allCategories = [];
         }
         return $allCategories;
+    }
+
+    public function getTags(): array {
+        $allTags = get_the_tags($this->getID());
+        if (sizeof($allTags) > 0 && (!$allTags instanceof \WP_Error) && $allTags !== false) {
+            foreach ($allTags as $k => $t) {
+                $allTags[$k] = ModelFactory::create($t);
+            }
+        } else {
+            $allTags = [];
+        }
+        return $allTags;
     }
 
     /**
