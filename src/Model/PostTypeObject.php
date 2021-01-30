@@ -62,7 +62,7 @@ class PostTypeObject implements ModelInterface
 
     public function getTags(): array {
         $allTags = get_the_tags($this->getID());
-        if (sizeof($allTags) > 0 && (!$allTags instanceof \WP_Error) && $allTags !== false) {
+        if (is_array($allTags) && sizeof($allTags) > 0) {
             foreach ($allTags as $k => $t) {
                 $allTags[$k] = ModelFactory::create($t);
             }
