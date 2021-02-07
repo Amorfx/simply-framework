@@ -1,5 +1,6 @@
 <?php
 
+use Simply\Core\Cache\CacheDirectoryManager;
 use Simply\Core\DependencyInjection\Compiler\HookPass;
 use Simply\Core\DependencyInjection\Extension\NavMenu\NavMenuExtension;
 use Simply\Core\DependencyInjection\Extension\PostType\PostTypeExtension;
@@ -30,7 +31,7 @@ class Simply {
     private static $container;
 
     private static function initContainer() {
-        $file = __DIR__ .'/cache/container.php';
+        $file = CacheDirectoryManager::getCachePath('container.php');
         $containerConfigCache = new ConfigCache($file, WP_DEBUG);
         $configDirectories = apply_filters('simply_config_directories', array(__DIR__ . '/config'));
         $extensions = apply_filters('simply_container_extensions', array(
@@ -106,12 +107,10 @@ add_action('after_setup_theme', function() {
 });
 
 add_action('deactivate_plugin', function() {
-    $fs = new Filesystem();
-    $fs->remove(SIMPLY_CACHE_DIRECTORY);
+    CacheDirectoryManager::deleteCache();
 });
 
 add_action('activate_plugin', function() {
-    $fs = new Filesystem();
-    $fs->remove(SIMPLY_CACHE_DIRECTORY);
+    CacheDirectoryManager::deleteCache();
 });
 
