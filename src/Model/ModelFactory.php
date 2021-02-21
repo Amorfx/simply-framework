@@ -12,6 +12,10 @@ class ModelFactory {
      * @throws \Exception
      */
     public static function create($currentObject) {
+        if (is_null($currentObject)) {
+            return false;
+        }
+
         $className = get_class($currentObject);
         switch ($className) {
             case \WP_Post::class:
