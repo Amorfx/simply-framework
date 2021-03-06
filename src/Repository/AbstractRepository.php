@@ -17,6 +17,7 @@ abstract class AbstractRepository  implements RepositoryInterface {
      * @throws Exception
      */
     protected function getReturnObject($objectQuery) {
-        return ModelFactory::create($objectQuery);
+        $class = $this->getClassName();
+        return new $class($objectQuery);
     }
 }

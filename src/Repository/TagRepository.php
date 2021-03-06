@@ -2,7 +2,7 @@
 
 namespace Simply\Core\Repository;
 
-use Simply\Core\Model\TermObject;
+use Simply\Core\Model\TagObject;
 
 class TagRepository extends AbstractRepository {
     public function find($id) {
@@ -42,6 +42,6 @@ class TagRepository extends AbstractRepository {
     }
 
     public function getClassName() {
-        return TermObject::class;
+        return TagObject::class;
     }
 }

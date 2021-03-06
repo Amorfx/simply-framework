@@ -5,6 +5,9 @@ namespace Simply\Core\Model;
 use Simply\Core\Contract\ModelInterface;
 
 class ModelFactory {
+    private static $postTypeMapping = null;
+    private static $taxTypeMapping = null;
+
     /**
      * @param $currentObject
      *
@@ -37,6 +40,21 @@ class ModelFactory {
     }
 
     /**
+     * Set key to have a clean mapping
+     *
+     * @param string[] $models
+     *
+     * @return array
+     */
+    private static function setMappingArray(array $models): array {
+        foreach ($models as $key => $model) {
+            $models[call_user_func([$model, 'getType'])] = $model;
+            unset($models[$key]);
+        }
+        return $models;
+    }
+
+    /**
      * Get Model register by post type
      * A developer can map post type with a specific Model created by him
      *
@@ -45,23 +63,29 @@ class ModelFactory {
      * @return mixed|string
      */
     private static function getPostModelByType($postType) {
-        $mappingModelByPostType = apply_filters('simply_model_post_type_mapping', []);
-        if (empty($mappingModelByPostType) || !array_key_exists($postType, $mappingModelByPostType)) {
+        if (is_null(self::$postTypeMapping)) {
+            self::$postTypeMapping = self::setMappingArray(apply_filters('simply_model_post_type_mapping', [PostTypeObject::class]));
+        }
+
+        if (empty(self::$postTypeMapping) || !array_key_exists($postType, self::$postTypeMapping)) {
             return PostTypeObject::class;
         } else {
-            return $mappingModelByPostType[$postType];
+            return self::$postTypeMapping[$postType];
         }
     }
 
     private static function getTermModelByType($taxonomy) {
-        $mappingModelByTermType = apply_filters('simply_model_term_mapping', [
-            'post_tag' => TagObject::class,
-            'category' => CategoryObject::class
-        ]);
-        if (empty($mappingModelByTermType) || !array_key_exists($taxonomy, $mappingModelByTermType)) {
+        if (is_null(self::$taxTypeMapping)) {
+            self::$taxTypeMapping = self::setMappingArray(apply_filters('simply_model_term_mapping', [
+                TagObject::class,
+                CategoryObject::class,
+            ]));
+        }
+
+        if (empty(self::$taxTypeMapping) || !array_key_exists($taxonomy, self::$taxTypeMapping)) {
             throw new \Exception('The taxonomy ' . $taxonomy . ' is not supported');
         } else {
-            return $mappingModelByTermType[$taxonomy];
+            return self::$taxTypeMapping[$taxonomy];
         }
     }
 }
