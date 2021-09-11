@@ -53,7 +53,9 @@ class HookManager implements ManagerInterface {
                         $arrayHook['priority'],
                         $arrayHook['numberArguments']);
                     $attributeHook->setCallable(array($aHook, $arrayHook['fn']));
-                    $attributeHook->register();
+                    if (is_callable(array($aHook, $arrayHook['fn']))) {
+                        $attributeHook->register();
+                    }
                 }
             }
         }
