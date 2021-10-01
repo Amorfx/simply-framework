@@ -2,21 +2,25 @@
 
 namespace Simply\Core\Manager;
 
-use ClementCore\Hook\Excerpt;
-use Simply\Core\Attributes\Action;
-use Simply\Core\Attributes\Filter;
-use Simply\Core\Compiler\HookCompiler;
 use Simply\Core\Contract\HookableInterface;
 use Simply\Core\Contract\ManagerInterface;
 
 class HookManager implements ManagerInterface {
     /**
-     * @var HookableInterface[]
+     * @var array<HookableInterface>
      */
     private $hooks;
 
-    public function __construct($hooks) {
+    private array $compileHooks;
+    /**
+     * @var array<object>
+     */
+    private $attributeHooksService;
+
+    public function __construct($hooks, array $compileHooks, $attributeHooksService) {
         $this->hooks = $hooks;
+        $this->compileHooks = $compileHooks;
+        $this->attributeHooksService = $attributeHooksService;
     }
 
     public function initialize() {
@@ -24,40 +28,40 @@ class HookManager implements ManagerInterface {
             $aHook->register();
         }
 
-        if ($aHook instanceof Excerpt) {
-            $hookCompiler = new HookCompiler();
-            $compiledHooks = $hookCompiler->getFromCache();
-            if ($compiledHooks === false) {
-                $ref = new \ReflectionClass($aHook);
-                foreach ($ref->getMethods() as $method) {
-                    $actionsAttribute = $method->getAttributes(Action::class);
-                    $filtersAttribute = $method->getAttributes(Filter::class);
-                    $attributes = array_merge($actionsAttribute, $filtersAttribute);
-                    if (empty($attributes)) {
-                        continue;
-                    }
-                    foreach ($attributes as $attr) {
-                        /** @var Action|Filter $hooks */
-                        $hooks = $attr->newInstance();
-                        $hooks->setCallable(array($aHook, $method->getName()));
-                        $hooks->register();
-                        $hookCompiler->add(get_class($aHook), get_class($hooks), $hooks->getHook(), $method->getName());
-                    }
-                }
-                $hookCompiler->compile();
-            } else {
-                $hooks = $hookCompiler->getFromClass(get_class($aHook));
+        if (!empty($this->compileHooks)) {
+            foreach ($this->compileHooks as $class => $hooks) {
                 foreach ($hooks as $arrayHook) {
                     $attributeHook = new $arrayHook['type'](
                         $arrayHook['hook'],
                         $arrayHook['priority'],
                         $arrayHook['numberArguments']);
-                    $attributeHook->setCallable(array($aHook, $arrayHook['fn']));
-                    if (is_callable(array($aHook, $arrayHook['fn']))) {
+
+                    $service = $this->getServiceFromClass($class);
+                    if (false === $service) {
+                        throw new \Exception('The service ' . $class . ' is not register in container.');
+                    }
+                    $attributeHook->setCallable(array($service, $arrayHook['fn']));
+                    if (is_callable(array($service, $arrayHook['fn']))) {
                         $attributeHook->register();
                     }
                 }
             }
         }
+    }
+
+    /**
+     * In compile hook we have the classname not the service
+     * so we have to search the service instance with the classname
+     * @param string $class
+     *
+     * @return false|object
+     */
+    private function getServiceFromClass(string $class) {
+        foreach ($this->attributeHooksService as $service) {
+            if ($service instanceof $class) {
+                return $service;
+            }
+        }
+        return false;
     }
 }

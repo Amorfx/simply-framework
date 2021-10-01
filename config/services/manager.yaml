@@ -32,6 +32,8 @@ services:
     class: Simply\Core\Manager\HookManager
     arguments:
       - !tagged_iterator wp.hook
+      - '%simply.compile_hooks%'
+      - !tagged_iterator simply.attribute_hooks
     tags: [ 'framework.manager' ]
 
   framework.manager.navmenu:

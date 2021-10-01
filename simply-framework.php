@@ -94,7 +94,7 @@ class Simply {
             }
             $containerBuilder->addCompilerPass(new HookPass());
             // force autoconfigure true
-            foreach ($containerBuilder->getDefinitions() as $d) {
+            foreach ($containerBuilder->getDefinitions() as $id => $d) {
                 $d->setAutoconfigured(true);
             }
             $containerBuilder->compile();
