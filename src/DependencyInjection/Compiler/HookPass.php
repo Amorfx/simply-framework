@@ -32,7 +32,7 @@ class HookPass implements CompilerPassInterface {
         // A class without HookableInterface can add action and filters with this attributes
         if (version_compare(phpversion(), '8.0.0', '>=')) {
             $classesToParse = array();
-            foreach ($container->getDefinitions() as $id => $d) {
+            foreach ($container->getDefinitions() as $d) {
                 if (!empty($d->getClass()) && class_exists($d->getClass())) {
                     $classesToParse[] = $d->getClass();
                 }

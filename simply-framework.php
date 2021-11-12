@@ -118,7 +118,7 @@ class Simply {
     /**
      * @return Container
      */
-    private static function getContainer() {
+    public static function getContainer(): Container {
         if (is_null(self::$container)) {
             self::initContainer();
         }
@@ -145,6 +145,7 @@ class Simply {
 // Use after_setup_theme and not init because the command manager use cli_init to register command
 add_action('after_setup_theme', function() {
     Simply::bootstrap();
+    do_action('simply/core/after_bootstrap');
 });
 
 add_action('deactivate_plugin', function() {
