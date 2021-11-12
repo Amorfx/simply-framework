@@ -12,10 +12,6 @@ class UserObject implements ModelInterface {
         $this->user = $user;
     }
 
-    static function getRepository() {
-        return \Simply::get(UserRepository::class);
-    }
-
     static function getType() {
         return 'user';
     }

@@ -31,6 +31,5 @@ abstract class TermObject implements ModelInterface {
         return get_term_meta($this->term->term_id, $meta, $single);
     }
 
-    abstract static function getRepository();
     abstract static function getType();
 }

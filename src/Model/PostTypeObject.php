@@ -17,10 +17,6 @@ class PostTypeObject implements ModelInterface
         $this->post = $post;
     }
 
-    public static function getRepository() {
-        return \Simply::get(PostRepository::class);
-    }
-
     /**
      * @return string
      */
