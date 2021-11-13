@@ -14,10 +14,13 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpKernel\DependencyInjection\ControllerArgumentValueResolverPass;
+use Symfony\Component\HttpKernel\DependencyInjection\RegisterControllerArgumentLocatorsPass;
 
 // if vendor exist the user use the plugin not with the boilerplate or install manually
 $vendorPath = __DIR__ . '/vendor/autoload.php';
@@ -62,6 +65,9 @@ class Simply {
         if (!$containerConfigCache->isFresh()) {
             $containerBuilder = new ContainerBuilder();
             $containerBuilder->setProxyInstantiator(new RuntimeInstantiator());
+            // In symfony component kernel.debug parameter must be added
+            $containerBuilder->setParameter('kernel.debug', WP_DEBUG);
+            do_action('simply/core/build', $containerBuilder);
 
             // Add auto tags
             $containerBuilder->registerForAutoconfiguration(HookableInterface::class)
@@ -74,10 +80,20 @@ class Simply {
 
             foreach ($configDirectories as $aConfigDirectory) {
                 $finder = new Finder();
-                $finder->files()->in($aConfigDirectory);
-                $loader = new YamlFileLoader($containerBuilder, new FileLocator($aConfigDirectory));
-                if ($finder->hasResults()) {
-                    foreach ($finder as $aFile) {
+                $fileLocator = new FileLocator($aConfigDirectory);
+                // Load configurations file yaml or php
+                $yamlFiles = iterator_to_array($finder->files()->in($aConfigDirectory)->name(array('*.yaml', '*.yml')), false);
+                if (!empty($yamlFiles)) {
+                    $loader = new YamlFileLoader($containerBuilder, $fileLocator);
+                    foreach ($yamlFiles as $aFile) {
+                        $loader->load($aFile->getRelativePathname());
+                    }
+                }
+
+                $phpFiles = iterator_to_array($finder::create()->files()->in($aConfigDirectory)->name('*.php'), false);
+                if (!empty($phpFiles)) {
+                    $loader = new PhpFileLoader($containerBuilder, $fileLocator);
+                    foreach ($phpFiles as $aFile) {
                         $loader->load($aFile->getRelativePathname());
                     }
                 }
@@ -93,6 +109,7 @@ class Simply {
                 }
             }
             $containerBuilder->addCompilerPass(new HookPass());
+
             // force autoconfigure true
             foreach ($containerBuilder->getDefinitions() as $id => $d) {
                 $d->setAutoconfigured(true);

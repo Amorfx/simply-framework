@@ -2,14 +2,13 @@
 
 namespace Simply\Core\Template;
 
-use Symfony\Bridge\Twig\Extension\FormExtension;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFunction;
 
 class TemplateEngine {
-    private $engine;
+    private Environment $engine;
 
     public function __construct() {
         // the path to your other templates
@@ -51,7 +50,10 @@ class TemplateEngine {
         return call_user_func_array($function_name, ($args));
     }
 
-    public function render($view, array $context) {
-        $this->engine->display($view, $context);
+    public function render($view, array $context, bool $display = true) {
+        if ($display) {
+            return $this->engine->display($view, $context);
+        }
+        return $this->engine->render($view, $context);
     }
 }

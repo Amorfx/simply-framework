@@ -5,9 +5,9 @@ namespace Simply\Core\DependencyInjection\Compiler;
 use Simply\Core\Attributes\Action;
 use Simply\Core\Attributes\Filter;
 use Simply\Core\Compiler\HookCompiler;
+use Simply\Mvc\BasicController;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Contracts\Service\ServiceSubscriberTrait;
 
 /**
  * Add container.service_subscriber tag if class use ServiceSubscriberTrait

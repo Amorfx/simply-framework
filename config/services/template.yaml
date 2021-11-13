@@ -3,3 +3,7 @@ services:
     class: Simply\Core\Template\TemplateEngine
     public: true
     lazy: true
+  Simply\Core\Template\TemplateEngine:
+    public: true
+    autowire: true
+    lazy: true
