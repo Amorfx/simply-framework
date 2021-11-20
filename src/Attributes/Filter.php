@@ -5,7 +5,7 @@ namespace Simply\Core\Attributes;
 use Attribute;
 use Simply\Core\Contract\HookableInterface;
 
-#[Attribute]
+#[Attribute(Attribute::IS_REPEATABLE | Attribute::TARGET_METHOD)]
 class Filter implements HookableInterface {
     private string $filter;
     private int $priority;
