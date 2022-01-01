@@ -11,9 +11,17 @@
         "symfony/proxy-manager-bridge": "^6.0",
         "twig/twig": "^3.3"
     },
+    "require-dev": {
+        "brain/monkey": "~2.0.0",
+        "phpunit/phpunit": "~9.5"
+    },
     "autoload": {
         "psr-4": {
-            "Simply\\Core\\": "src"
+            "Simply\\Core\\": "src",
+            "Simply\\Tests\\": "tests"
         }
-    }
+    },
+    "exclude-from-classmap": [
+        "/Tests/"
+    ]
 }
