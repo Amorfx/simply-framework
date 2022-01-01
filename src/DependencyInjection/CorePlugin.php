@@ -61,7 +61,7 @@ class CorePlugin implements PluginInterface {
             foreach ($this->wpPluginPaths as $pluginInfo) {
                 $srcDir = $pluginInfo['path'] . '/src';
                 if (file_exists($srcDir) && !empty($pluginInfo['namespace'])) {
-                    $loader->registerClasses(new Definition(), $pluginInfo['namespace'] . '\\', $srcDir);
+                    // $loader->registerClasses(new Definition(), $pluginInfo['namespace'] . '\\', $srcDir);
                 }
             }
         }

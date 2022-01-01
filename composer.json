@@ -12,16 +12,27 @@
         "twig/twig": "^3.3"
     },
     "require-dev": {
-        "brain/monkey": "~2.0.0",
+        "brain/monkey": "~2.6",
         "phpunit/phpunit": "~9.5"
     },
     "autoload": {
         "psr-4": {
-            "Simply\\Core\\": "src",
+            "Simply\\Core\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Simply\\Tests\\": "tests"
         }
     },
-    "exclude-from-classmap": [
-        "/Tests/"
-    ]
+    "scripts": {
+        "test": [
+            "Composer\\Config::disableProcessTimeout",
+            "phpunit"
+        ],
+        "coverage": [
+            "Composer\\Config::disableProcessTimeout",
+            "phpunit --coverage-text"
+        ]
+    }
 }

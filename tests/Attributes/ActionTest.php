@@ -5,6 +5,7 @@ namespace Simply\Tests\Attributes;
 use Simply\Core\Attributes\Action;
 use Simply\Tests\Fixtures\ExampleClass;
 use Simply\Tests\SimplyTestCase;
+use Brain\Monkey;
 
 class ActionTest extends SimplyTestCase {
     private Action $attribute;
@@ -21,7 +22,7 @@ class ActionTest extends SimplyTestCase {
     public function testRegister() {
         $exampleClass = new ExampleClass();
         $this->attribute->setCallable(array($exampleClass, 'myFunction'));
+        Monkey\Actions\expectAdded('my_action')->once()->with(array($exampleClass, 'myFunction'), 10, 1);
         $this->attribute->register();
-        $this->assertTrue(has_action('my_action', array($exampleClass, 'myFunction')));
     }
 }
