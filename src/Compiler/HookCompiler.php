@@ -8,7 +8,7 @@ class HookCompiler {
     private array $hooksMapping = array();
     private const FILE_NAME = 'hooks.php';
 
-    private function getFilePath() {
+    protected function getFilePath() {
         return CacheDirectoryManager::getCachePath(self::FILE_NAME);
     }
 
@@ -21,7 +21,7 @@ class HookCompiler {
     }
 
     public function add(string $className, string $hookClass, string $hook, string $function, int $priority = 10, int $numberArguments = 1) {
-        if (!is_array($this->hooksMapping[$className])) {
+        if (!isset($this->hooksMapping[$className]) || !is_array($this->hooksMapping[$className])) {
             $this->hooksMapping[$className] = array();
         }
         $this->hooksMapping[$className][] = array(
