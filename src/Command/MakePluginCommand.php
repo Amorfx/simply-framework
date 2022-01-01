@@ -9,8 +9,8 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @package SimplyFramework\Command
  */
-class CreateDefaultPluginCommand extends AbstractWordPressCommand {
-    static $commandName = 'simply:create:plugin';
+class MakePluginCommand extends AbstractWordPressCommand {
+    static $commandName = 'simply:make:plugin';
     static $requiredArgs = ['plugin-slug'];
 
     public function execute($args, $assoc_args) {

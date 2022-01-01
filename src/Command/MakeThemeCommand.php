@@ -9,8 +9,8 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @package SimplyFramework\Command
  */
-class CreateDefaultThemeCommand extends AbstractWordPressCommand {
-    static $commandName = 'simply:create:theme';
+class MakeThemeCommand extends AbstractWordPressCommand {
+    static $commandName = 'simply:make:theme';
     static $requiredArgs = ['theme-slug'];
     public function execute($args, $assoc_args) {
         $themeSlug = $assoc_args['theme-slug'];

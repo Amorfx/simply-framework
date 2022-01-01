@@ -3,12 +3,13 @@
     "type": "wordpress-muplugin",
     "license": "MIT",
     "require": {
-        "symfony/dependency-injection": "^5.1",
-        "symfony/config": "^5.1",
-        "symfony/finder": "^5.1",
-        "symfony/yaml": "^5.1",
-        "symfony/proxy-manager-bridge": "^5.1",
-        "twig/twig": "^3.1"
+        "php": ">= 8.0",
+        "symfony/dependency-injection": "^6.0",
+        "symfony/config": "^6.0",
+        "symfony/finder": "^6.0",
+        "symfony/yaml": "^6.0",
+        "symfony/proxy-manager-bridge": "^6.0",
+        "twig/twig": "^3.3"
     },
     "autoload": {
         "psr-4": {

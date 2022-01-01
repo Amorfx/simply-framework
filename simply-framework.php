@@ -1,21 +1,17 @@
 <?php
 
 use Simply\Core\Cache\CacheDirectoryManager;
-use Simply\Core\DependencyInjection\Compiler\HookPass;
+use Simply\Core\Contract\PluginInterface;
+use Simply\Core\DependencyInjection\CorePlugin;
 use Simply\Core\DependencyInjection\Extension\NavMenu\NavMenuExtension;
 use Simply\Core\DependencyInjection\Extension\PostType\PostTypeExtension;
 use Simply\Core\DependencyInjection\Extension\Taxonomy\TaxonomyExtension;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Bridge\ProxyManager\LazyProxy\PhpDumper\ProxyDumper;
 use Symfony\Component\Config\ConfigCache;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\Dotenv\Dotenv;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
 
 // if vendor exist the user use the plugin not with the boilerplate or install manually
 $vendorPath = __DIR__ . '/vendor/autoload.php';
@@ -29,37 +25,57 @@ define('SIMPLY_RESOURCES_DIRECTORY', __DIR__ . '/resources');
 
 class Simply {
     private static $container;
+    /**
+     * @var PluginInterface[]
+     */
+    private static $simplyPlugins = array();
+    private static array $wpPluginsPath = array();
 
     private static function initContainer() {
         $file = CacheDirectoryManager::getCachePath('container.php');
         $containerConfigCache = new ConfigCache($file, WP_DEBUG);
+
+        // register configuration directories
+        // Default path of framework
         $configDirectories = apply_filters('simply_config_directories', array(__DIR__ . '/config'));
-        $extensions = apply_filters('simply_container_extensions', array(
-            new PostTypeExtension,
-            new TaxonomyExtension,
-            new NavMenuExtension
-        ));
 
-        if (!$containerConfigCache->isFresh()) {
-            $containerBuilder = new ContainerBuilder();
-            $containerBuilder->setProxyInstantiator(new RuntimeInstantiator());
-
-            foreach ($extensions as $anExtension) {
-                $containerBuilder->registerExtension($anExtension);
-                $containerBuilder->loadFromExtension($anExtension->getAlias());
-            }
-
-            foreach ($configDirectories as $aConfigDirectory) {
-                $finder = new Finder();
-                $finder->files()->in($aConfigDirectory);
-                $loader = new YamlFileLoader($containerBuilder, new FileLocator($aConfigDirectory));
-                if ($finder->hasResults()) {
-                    foreach ($finder as $aFile) {
-                        $loader->load($aFile->getRelativePathname());
-                    }
+        // Register path of plugins and theme
+        if (!empty(self::$wpPluginsPath)) {
+            /** @var array{path: string, namespace: string} $pluginInfo */
+            foreach (self::$wpPluginsPath as $pluginInfo) {
+                $pluginConfig = $pluginInfo['path'] . '/config';
+                if (file_exists($pluginConfig)) {
+                    $configDirectories[] = $pluginConfig;
                 }
             }
-            $containerBuilder->addCompilerPass(new HookPass());
+        }
+
+        if (!$containerConfigCache->isFresh()) {
+            $extensions = apply_filters('simply_container_extensions', array(
+                new PostTypeExtension,
+                new TaxonomyExtension,
+                new NavMenuExtension,
+            ));
+
+            self::registerSimplyPlugin(new CorePlugin($extensions, $configDirectories, self::$wpPluginsPath));
+
+            $containerBuilder = new ContainerBuilder();
+            $containerBuilder->setProxyInstantiator(new RuntimeInstantiator());
+            // In symfony component kernel.debug parameter must be added
+            $containerBuilder->setParameter('kernel.debug', WP_DEBUG);
+
+            // TODO deprecated after beta ? Use Class implement PluginInterface ?
+            do_action('simply/core/build', $containerBuilder);
+
+            // Build plugins
+            foreach (self::$simplyPlugins as $plugin) {
+                $plugin->build($containerBuilder);
+            }
+
+            // force autoconfigure true
+            foreach ($containerBuilder->getDefinitions() as $id => $d) {
+                $d->setAutoconfigured(true);
+            }
             $containerBuilder->compile();
 
             $dumper = new PhpDumper($containerBuilder);
@@ -74,10 +90,18 @@ class Simply {
         self::$container = new CachedContainer();
     }
 
+    public static function registerPlugin(string $path, string $namespace = ''): void {
+        self::$wpPluginsPath[] = array('path' => $path, 'namespace' => $namespace);
+    }
+
+    public static function registerSimplyPlugin(PluginInterface $plugin): void {
+        self::$simplyPlugins[] = $plugin;
+    }
+
     /**
      * @return Container
      */
-    private static function getContainer() {
+    public static function getContainer(): Container {
         if (is_null(self::$container)) {
             self::initContainer();
         }
@@ -87,6 +111,7 @@ class Simply {
     static function bootstrap() {
         self::initContainer();
         self::get('framework.manager')->initialize();
+        do_action('simply/core/after_bootstrap');
     }
 
     /**
