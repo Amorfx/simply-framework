@@ -17,10 +17,12 @@ class CommandManager implements ManagerInterface {
     }
 
     public function initialize() {
-        add_action('cli_init', function() {
-            foreach ($this->commands as $aCommand) {
-                $aCommand->register();
-            }
-        });
+        add_action('cli_init', array($this, 'registerCommands'));
+    }
+
+    public function registerCommands() {
+        foreach ($this->commands as $aCommand) {
+            $aCommand->register();
+        }
     }
 }
