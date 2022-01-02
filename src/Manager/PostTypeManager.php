@@ -12,10 +12,12 @@ class PostTypeManager implements ManagerInterface {
     }
 
     public function initialize() {
-        add_action('init', function() {
-            foreach ($this->postTypes as $key => $args) {
-                register_post_type($key, $args);
-            }
-        });
+        add_action('init', array($this, 'registerPostTypes'));
+    }
+
+    public function registerPostTypes() {
+        foreach ($this->postTypes as $key => $args) {
+            register_post_type($key, $args);
+        }
     }
 }

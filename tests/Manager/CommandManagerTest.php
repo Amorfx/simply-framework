@@ -5,7 +5,6 @@ namespace Simply\Tests\Manager;
 use Simply\Core\Command\AbstractWordPressCommand;
 use Simply\Core\Manager\CommandManager;
 use Simply\Tests\SimplyTestCase;
-use Brain\Monkey;
 
 class CommandManagerTest extends SimplyTestCase {
     public function testInitialize() {
