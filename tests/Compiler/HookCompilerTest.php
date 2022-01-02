@@ -43,5 +43,9 @@ class HookCompilerTest extends SimplyTestCase {
             ->once()
             ->with('/tmp/hooks.php', '<?php return ' . var_export($map, true) . ';');
         $hookCompiler->compile();
+
+        // Test get from cache
+        Monkey\Functions\when('file_exists')->justReturn(false);
+        $this->assertFalse($hookCompiler->getFromCache());
     }
 }

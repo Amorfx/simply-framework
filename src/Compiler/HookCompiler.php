@@ -17,7 +17,9 @@ class HookCompiler {
         if (!file_exists($fp)) {
             return false;
         }
+        // @codeCoverageIgnoreStart
         return require $fp;
+        // @codeCoverageIgnoreEnd
     }
 
     public function add(string $className, string $hookClass, string $hook, string $function, int $priority = 10, int $numberArguments = 1) {
