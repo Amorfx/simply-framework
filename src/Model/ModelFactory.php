@@ -22,7 +22,7 @@ class ModelFactory {
         $className = get_class($currentObject);
         switch ($className) {
             case \WP_Post::class:
-                $modelClass = self::getPostModelByType(get_post_type($currentObject));
+                $modelClass = self::getPostModelByType($currentObject->post_type);
                 break;
 
             case \WP_Term::class:

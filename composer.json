@@ -33,6 +33,10 @@
         "coverage": [
             "Composer\\Config::disableProcessTimeout",
             "phpunit --coverage-text"
+        ],
+        "coverage-html": [
+            "Composer\\Config::disableProcessTimeout",
+            "phpunit --coverage-html /var/www/wordpress/build/coverage"
         ]
     }
 }
