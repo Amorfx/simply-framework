@@ -21,7 +21,6 @@ if (file_exists($vendorPath)) {
 
 
 define('SIMPLY_CACHE_DIRECTORY', __DIR__ . '/cache');
-define('SIMPLY_RESOURCES_DIRECTORY', __DIR__ . '/resources');
 
 class Simply {
     private static $container;
