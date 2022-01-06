@@ -30,15 +30,14 @@ class TemplateEngine {
             $twig->addExtension(new DebugExtension());
         }
 
-        $twig = $this->addTwigFunctions($twig);
+        $twig->addFunction(new TwigFunction('function', [$this, 'execFunction']));
+        $twig->addFunction(new TwigFunction('fn', [$this, 'execFunction']));
 
         $this->engine = apply_filters('simply_template_configuration', $twig);;
     }
 
-    public function addTwigFunctions($twig) {
-        $twig->addFunction(new TwigFunction('function', [$this, 'execFunction']));
-        $twig->addFunction(new TwigFunction('fn', [$this, 'execFunction']));
-        return $twig;
+    public function getEngine() {
+        return $this->engine;
     }
 
     public function execFunction($function_name) {
