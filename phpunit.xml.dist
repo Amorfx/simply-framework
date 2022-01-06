@@ -7,15 +7,22 @@
             <directory>./src</directory>
         </include>
         <exclude>
-            <directory>./Contract</directory>
+            <directory>src/Contract</directory>
+            <directory>src/Query</directory>
+            <directory>src/Repository</directory>
+            <directory>src/Model</directory>
+            <file>src/Command/AbstractWordPressCommand.php</file>
+            <file>src/DependencyInjection/Extension/NavMenu/Configuration.php</file>
+            <file>src/DependencyInjection/Extension/PostType/Configuration.php</file>
+            <file>src/DependencyInjection/Extension/Taxonomy/Configuration.php</file>
         </exclude>
     </coverage>
     <php>
         <ini name="error_reporting" value="-1"/>
     </php>
     <testsuites>
-        <testsuite name="Simply framework test suite">
-            <directory>./tests/</directory>
+        <testsuite name="unit">
+            <directory>./tests/unit</directory>
         </testsuite>
     </testsuites>
 </phpunit>

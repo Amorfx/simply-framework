@@ -11,6 +11,7 @@ class NavMenuExtension implements ExtensionInterface {
     public function load(array $configs, ContainerBuilder $container) {
         $configuration = new Configuration();
         $processor = new Processor();
+
         $config = $processor->processConfiguration($configuration, $configs);
 
         // replace trans(***) with __()

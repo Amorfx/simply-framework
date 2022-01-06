@@ -9,8 +9,4 @@ class CacheDirectoryManagerTest extends SimplyTestCase {
     public function testGetCachePath() {
         $this->assertEquals('/tmp/myfile.php', CacheDirectoryManager::getCachePath('myfile.php'));
     }
-
-    public function deleteCache() {
-
-    }
 }
