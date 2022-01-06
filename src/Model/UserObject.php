@@ -12,7 +12,7 @@ class UserObject implements ModelInterface {
         $this->user = $user;
     }
 
-    static function getType() {
+    public static function getType() {
         return 'user';
     }
 }

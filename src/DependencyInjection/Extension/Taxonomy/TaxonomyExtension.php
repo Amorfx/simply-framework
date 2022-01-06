@@ -16,13 +16,15 @@ class TaxonomyExtension implements ExtensionInterface {
         // TODO use class to translation
         // replace trans(***) with __()
         foreach ($config as $slug => $args) {
-            foreach ($args as $key => $anArg) {
-                if (!is_array($anArg)) {
-                    if (strpos($anArg, 'trans(') !== -1) {
-                        $anArg = str_replace(' ', '', $anArg);
-                        preg_match('/trans\((.*),(.*)\)/', $anArg, $matches);
-                        if (!empty($matches)) {
-                            $args[$key] = __($matches[1], $matches[2]);
+            if (!empty($args['args'])) {
+                foreach ($args['args'] as $key => $anArg) {
+                    if (!is_array($anArg)) {
+                        if (strpos($anArg, 'trans(') !== -1) {
+                            $anArg = str_replace(' ', '', $anArg);
+                            preg_match('/trans\((.*),(.*)\)/', $anArg, $matches);
+                            if (!empty($matches)) {
+                                $args['args'][$key] = __($matches[1], $matches[2]);
+                            }
                         }
                     }
                 }

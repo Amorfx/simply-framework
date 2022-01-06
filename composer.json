@@ -11,9 +11,41 @@
         "symfony/proxy-manager-bridge": "^6.0",
         "twig/twig": "^3.3"
     },
+    "require-dev": {
+        "brain/monkey": "~2.6",
+        "phpunit/phpunit": "~9.5",
+        "yoast/phpunit-polyfills": "^1.0"
+    },
     "autoload": {
         "psr-4": {
             "Simply\\Core\\": "src"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Simply\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": [
+            "Composer\\Config::disableProcessTimeout",
+            "phpunit"
+        ],
+        "test-unit": [
+            "Composer\\Config::disableProcessTimeout",
+            "phpunit --testsuite=unit"
+        ],
+        "test-integration": [
+            "Composer\\Config::disableProcessTimeout",
+            "phpunit --configuration=phpunit-integration.xml.dist --testsuite=integration"
+        ],
+        "coverage": [
+            "Composer\\Config::disableProcessTimeout",
+            "phpunit --coverage-text"
+        ],
+        "coverage-html": [
+            "Composer\\Config::disableProcessTimeout",
+            "phpunit --coverage-html /var/www/wordpress/build/coverage"
+        ]
     }
 }

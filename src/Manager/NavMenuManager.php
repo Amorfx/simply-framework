@@ -12,8 +12,10 @@ class NavMenuManager implements ManagerInterface {
     }
 
     public function initialize() {
-        add_action('init', function() {
-            register_nav_menus($this->navMenus);
-        });
+        add_action('init', array($this, 'registerMenus'));
+    }
+
+    public function registerMenus() {
+        register_nav_menus($this->navMenus);
     }
 }

@@ -5,6 +5,9 @@ namespace Simply\Core\Cache;
 use Symfony\Component\Filesystem\Filesystem;
 
 class CacheDirectoryManager {
+    /**
+     * @codeCoverageIgnore
+     */
     public static function deleteCache(): void {
         $fs = new Filesystem();
         $fs->remove(SIMPLY_CACHE_DIRECTORY);
