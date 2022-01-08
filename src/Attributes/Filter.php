@@ -26,6 +26,20 @@ class Filter implements HookableInterface {
         $this->callable = $callable;
     }
 
+    /**
+     * @return int
+     */
+    public function getPriority(): int {
+        return $this->priority;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumberArguments(): int {
+        return $this->numberArguments;
+    }
+
     public function register() {
         add_filter($this->filter, $this->callable, $this->priority, $this->numberArguments);
     }

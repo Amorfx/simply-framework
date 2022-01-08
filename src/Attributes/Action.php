@@ -5,7 +5,7 @@ namespace Simply\Core\Attributes;
 use Attribute;
 use Simply\Core\Contract\HookableInterface;
 
-#[Attribute]
+#[Attribute(Attribute::IS_REPEATABLE | Attribute::TARGET_METHOD)]
 class Action implements HookableInterface {
     private string $action;
     private int $priority;
@@ -24,6 +24,20 @@ class Action implements HookableInterface {
 
     public function setCallable(array $callable) {
         $this->callable = $callable;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPriority(): int {
+        return $this->priority;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumberArguments(): int {
+        return $this->numberArguments;
     }
 
     public function register() {

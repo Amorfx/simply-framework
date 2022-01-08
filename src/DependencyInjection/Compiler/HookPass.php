@@ -55,7 +55,7 @@ class HookPass implements CompilerPassInterface {
                         /** @var Action|Filter $hooks */
                         $hooks = $attr->newInstance();
                         $hooks->setCallable(array($c, $method->getName()));
-                        $hookCompiler->add($c, get_class($hooks), $hooks->getHook(), $method->getName());
+                        $hookCompiler->add($c, get_class($hooks), $hooks->getHook(), $method->getName(), $hooks->getPriority(), $hooks->getNumberArguments());
                     }
                 }
                 $hookCompiler->compile();
