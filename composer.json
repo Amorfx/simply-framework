@@ -1,6 +1,8 @@
 {
     "name": "clementdecou/simply-framework",
     "type": "wordpress-muplugin",
+    "description": "The WordPress Simply Framework",
+    "homepage": "https://amorfx.github.io/simply-documentation/",
     "license": "MIT",
     "require": {
         "php": ">= 8.0",
