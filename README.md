@@ -6,7 +6,7 @@ Simply is not a framework that will lose you if you have been developing for som
 It will allow you to save development time by offering you dependency injection as well as the automation of recurring tasks on WordPress.
 
 ## Installation
-All installation and documentation is [available here](https://amorfx.github.io/simply-documentation/docs/getting-started/installation). Read it carefully.
+All installation and documentation is [available here](https://amorfx.github.io/simply-documentation/getting-started/installation). Read it carefully.
 
 ## Philosophy
 
