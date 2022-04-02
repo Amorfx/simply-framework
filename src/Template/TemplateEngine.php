@@ -10,7 +10,7 @@ use Twig\TwigFunction;
 class TemplateEngine {
     private Environment $engine;
 
-    public function __construct(array $defaultViewsTheme) {
+    public function __construct(array $defaultViewsTheme = []) {
         // the path to your other templates
         $viewsDirectory = apply_filters('simply/config/view_directories', $defaultViewsTheme);
 
