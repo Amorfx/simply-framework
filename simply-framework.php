@@ -2,10 +2,12 @@
 
 use Simply\Core\Cache\CacheDirectoryManager;
 use Simply\Core\Contract\PluginInterface;
+use Simply\Core\Contract\RegisterModelInterface;
 use Simply\Core\DependencyInjection\CorePlugin;
 use Simply\Core\DependencyInjection\Extension\NavMenu\NavMenuExtension;
 use Simply\Core\DependencyInjection\Extension\PostType\PostTypeExtension;
 use Simply\Core\DependencyInjection\Extension\Taxonomy\TaxonomyExtension;
+use Simply\Core\Model\ModelFactory;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Bridge\ProxyManager\LazyProxy\PhpDumper\ProxyDumper;
 use Symfony\Component\Config\ConfigCache;
@@ -25,10 +27,11 @@ define('SIMPLY_CACHE_DIRECTORY', __DIR__ . '/cache');
 class Simply {
     private static $container;
     /**
-     * @var PluginInterface[]
+     * @var PluginInterface[]|RegisterModelInterface[]
      */
-    private static $simplyPlugins = array();
-    private static array $wpPluginsPath = array();
+    private static $simplyPlugins = [];
+    private static array $wpPluginsPath = [];
+    private static array $wpThemePath = [];
 
     private static function initContainer() {
         $file = CacheDirectoryManager::getCachePath('container.php');
@@ -36,7 +39,7 @@ class Simply {
 
         // register configuration directories
         // Default path of framework
-        $configDirectories = apply_filters('simply_config_directories', array(__DIR__ . '/config'));
+        $configDirectories = apply_filters('simply/config/directories', [__DIR__ . '/config']);
 
         // Register path of plugins and theme
         if (!empty(self::$wpPluginsPath)) {
@@ -48,15 +51,22 @@ class Simply {
                 }
             }
         }
+        // For theme, we have only one theme register not many
+        if (!empty(self::$wpThemePath)) {
+            $themeConfig = self::$wpThemePath['path'] . '/config';
+            if (file_exists($themeConfig)) {
+                $configDirectories[] = $themeConfig;
+            }
+        }
 
         if (!$containerConfigCache->isFresh()) {
-            $extensions = apply_filters('simply_container_extensions', array(
+            $extensions = apply_filters('simply/config/container_extensions', [
                 new PostTypeExtension,
                 new TaxonomyExtension,
                 new NavMenuExtension,
-            ));
+            ]);
 
-            self::registerSimplyPlugin(new CorePlugin($extensions, $configDirectories, self::$wpPluginsPath));
+            self::registerSimplyPlugin(new CorePlugin($extensions, $configDirectories, self::$wpPluginsPath, self::$wpThemePath));
 
             $containerBuilder = new ContainerBuilder();
             $containerBuilder->setProxyInstantiator(new RuntimeInstantiator());
@@ -67,8 +77,13 @@ class Simply {
             do_action('simply/core/build', $containerBuilder);
 
             // Build plugins
+            $modelFactory = new ModelFactory();
             foreach (self::$simplyPlugins as $plugin) {
                 $plugin->build($containerBuilder);
+                $interfaces = class_implements($plugin);
+                if (is_array($interfaces) && in_array(RegisterModelInterface::class, $interfaces)) {
+                    $plugin->registerModel($modelFactory);
+                }
             }
 
             // force autoconfigure true
@@ -90,11 +105,15 @@ class Simply {
     }
 
     public static function registerPlugin(string $path, string $namespace = ''): void {
-        self::$wpPluginsPath[] = array('path' => $path, 'namespace' => $namespace);
+        self::$wpPluginsPath[] = ['path' => $path, 'namespace' => $namespace];
     }
 
     public static function registerSimplyPlugin(PluginInterface $plugin): void {
         self::$simplyPlugins[] = $plugin;
+    }
+
+    public static function registerTheme(string $path, string $namespace = ''): void {
+        self::$wpThemePath = ['path' => $path, 'namespace' => $namespace];
     }
 
     /**

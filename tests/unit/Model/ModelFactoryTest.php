@@ -66,4 +66,16 @@ class ModelFactoryTest extends SimplyTestCase {
     public function testNotCreateModel() {
         $this->assertFalse(ModelFactory::create(null));
     }
+
+    public function testRegisterModels() {
+        $factory = new ModelFactory();
+        $class = new \stdClass();
+        $class->a = 'ok';
+        $expected = array($class);
+        $factory->registerPostModel(array($class));
+        $factory->registerTermModel(array($class));
+        $factoryReflection = new \ReflectionClass($factory);
+        $this->assertSame($expected, $factoryReflection->getStaticPropertyValue('postTypeModelClasses'));
+        $this->assertSame($expected, $factoryReflection->getStaticPropertyValue('termTypeModelClasses'));
+    }
 }

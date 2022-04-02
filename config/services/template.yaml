@@ -2,8 +2,9 @@ services:
   framework.template_engine:
     class: Simply\Core\Template\TemplateEngine
     public: true
+    arguments: [ '%default_views_directories%' ]
     lazy: true
   Simply\Core\Template\TemplateEngine:
     public: true
-    autowire: true
+    arguments: [ '%default_views_directories%' ]
     lazy: true
