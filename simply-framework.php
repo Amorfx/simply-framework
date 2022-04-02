@@ -41,6 +41,7 @@ class Simply {
         // Default path of framework
         $configDirectories = apply_filters('simply/config/directories', [__DIR__ . '/config']);
 
+
         // Register path of plugins and theme
         if (!empty(self::$wpPluginsPath)) {
             /** @var array{path: string, namespace: string} $pluginInfo */
