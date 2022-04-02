@@ -5,6 +5,9 @@ namespace Simply\Core\Model;
 use Simply\Core\Contract\ModelInterface;
 
 class ModelFactory {
+    private static $postTypeModelClasses = [PostTypeObject::class];
+    private static $termTypeModelClasses = [TagObject::class, CategoryObject::class];
+
     private static $postTypeMapping = null;
     private static $taxTypeMapping = null;
 
@@ -40,6 +43,24 @@ class ModelFactory {
     }
 
     /**
+     * Use in Simply Plugin to register your post type models
+     *
+     * @param array $postModels
+     */
+    public function registerPostModel(array $postModels): void {
+        self::$postTypeModelClasses = $postModels;
+    }
+
+    /**
+     * Use in Simply Plugin to register your term type models
+     *
+     * @param array $termModels
+     */
+    public function registerTermModel(array $termModels): void {
+        self::$termTypeModelClasses = $termModels;
+    }
+
+    /**
      * Set key to have a clean mapping
      *
      * @param string[] $models
@@ -64,7 +85,7 @@ class ModelFactory {
      */
     private static function getPostModelByType($postType) {
         if (is_null(self::$postTypeMapping)) {
-            self::$postTypeMapping = self::setMappingArray(apply_filters('simply/model/post_type_mapping', [PostTypeObject::class]));
+            self::$postTypeMapping = self::setMappingArray(apply_filters('simply/model/post_type_mapping', self::$postTypeModelClasses));
         }
 
         if (empty(self::$postTypeMapping) || !array_key_exists($postType, self::$postTypeMapping)) {
@@ -76,10 +97,7 @@ class ModelFactory {
 
     private static function getTermModelByType($taxonomy) {
         if (is_null(self::$taxTypeMapping)) {
-            self::$taxTypeMapping = self::setMappingArray(apply_filters('simply/model/term_mapping', [
-                TagObject::class,
-                CategoryObject::class,
-            ]));
+            self::$taxTypeMapping = self::setMappingArray(apply_filters('simply/model/term_mapping', self::$termTypeModelClasses));
         }
 
         if (empty(self::$taxTypeMapping) || !array_key_exists($taxonomy, self::$taxTypeMapping)) {
