@@ -12,7 +12,7 @@ class TemplateEngine {
 
     public function __construct() {
         // the path to your other templates
-        $viewsDirectory = apply_filters('simply_views_directory', []);
+        $viewsDirectory = apply_filters('simply/config/view_directories', []);
 
         // environnement configuration
         $envConfig = [
@@ -33,7 +33,7 @@ class TemplateEngine {
         $twig->addFunction(new TwigFunction('function', [$this, 'execFunction']));
         $twig->addFunction(new TwigFunction('fn', [$this, 'execFunction']));
 
-        $this->engine = apply_filters('simply_template_configuration', $twig);;
+        $this->engine = apply_filters('simply/config/template', $twig);;
     }
 
     public function getEngine() {

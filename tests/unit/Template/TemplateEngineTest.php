@@ -13,8 +13,8 @@ class TemplateEngineTest extends SimplyTestCase {
      */
     public function testConstructClassDebugFalse() {
         define('WP_DEBUG', false);
-        Monkey\Filters\expectApplied('simply_views_directory')->with(array());
-        Monkey\Filters\expectApplied('simply_template_configuration');
+        Monkey\Filters\expectApplied('simply/config/view_directories')->with(array());
+        Monkey\Filters\expectApplied('simply/config/template');
         $engine = new TemplateEngine();
         $this->assertFalse($engine->getEngine()->isDebug());
     }

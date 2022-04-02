@@ -64,7 +64,7 @@ class ModelFactory {
      */
     private static function getPostModelByType($postType) {
         if (is_null(self::$postTypeMapping)) {
-            self::$postTypeMapping = self::setMappingArray(apply_filters('simply_model_post_type_mapping', [PostTypeObject::class]));
+            self::$postTypeMapping = self::setMappingArray(apply_filters('simply/model/post_type_mapping', [PostTypeObject::class]));
         }
 
         if (empty(self::$postTypeMapping) || !array_key_exists($postType, self::$postTypeMapping)) {
@@ -76,7 +76,7 @@ class ModelFactory {
 
     private static function getTermModelByType($taxonomy) {
         if (is_null(self::$taxTypeMapping)) {
-            self::$taxTypeMapping = self::setMappingArray(apply_filters('simply_model_term_mapping', [
+            self::$taxTypeMapping = self::setMappingArray(apply_filters('simply/model/term_mapping', [
                 TagObject::class,
                 CategoryObject::class,
             ]));

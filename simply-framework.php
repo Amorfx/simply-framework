@@ -36,7 +36,7 @@ class Simply {
 
         // register configuration directories
         // Default path of framework
-        $configDirectories = apply_filters('simply_config_directories', array(__DIR__ . '/config'));
+        $configDirectories = apply_filters('simply/config/directories', array(__DIR__ . '/config'));
 
         // Register path of plugins and theme
         if (!empty(self::$wpPluginsPath)) {
@@ -50,7 +50,7 @@ class Simply {
         }
 
         if (!$containerConfigCache->isFresh()) {
-            $extensions = apply_filters('simply_container_extensions', array(
+            $extensions = apply_filters('simply/config/container_extensions', array(
                 new PostTypeExtension,
                 new TaxonomyExtension,
                 new NavMenuExtension,
