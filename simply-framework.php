@@ -2,10 +2,12 @@
 
 use Simply\Core\Cache\CacheDirectoryManager;
 use Simply\Core\Contract\PluginInterface;
+use Simply\Core\Contract\RegisterModelInterface;
 use Simply\Core\DependencyInjection\CorePlugin;
 use Simply\Core\DependencyInjection\Extension\NavMenu\NavMenuExtension;
 use Simply\Core\DependencyInjection\Extension\PostType\PostTypeExtension;
 use Simply\Core\DependencyInjection\Extension\Taxonomy\TaxonomyExtension;
+use Simply\Core\Model\ModelFactory;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Bridge\ProxyManager\LazyProxy\PhpDumper\ProxyDumper;
 use Symfony\Component\Config\ConfigCache;
@@ -25,7 +27,7 @@ define('SIMPLY_CACHE_DIRECTORY', __DIR__ . '/cache');
 class Simply {
     private static $container;
     /**
-     * @var PluginInterface[]
+     * @var PluginInterface[]|RegisterModelInterface[]
      */
     private static $simplyPlugins = array();
     private static array $wpPluginsPath = array();
@@ -67,8 +69,13 @@ class Simply {
             do_action('simply/core/build', $containerBuilder);
 
             // Build plugins
+            $modelFactory = new ModelFactory();
             foreach (self::$simplyPlugins as $plugin) {
                 $plugin->build($containerBuilder);
+                $interfaces = class_implements($plugin);
+                if (is_array($interfaces) && in_array(RegisterModelInterface::class, $interfaces)) {
+                    $plugin->registerModel($modelFactory);
+                }
             }
 
             // force autoconfigure true
