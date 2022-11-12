@@ -89,6 +89,16 @@ class CorePlugin implements PluginInterface {
         $container->registerForAutoconfiguration(HookableInterface::class)
             ->addTag('wp.hook');
         $container->addCompilerPass(new HookPass());
+        $container->setParameter('container.behavior_describing_tags', [
+            'annotations.cached_reader',
+            'container.do_not_inline',
+            'container.service_locator',
+            'container.service_subscriber',
+            'kernel.event_subscriber',
+            'kernel.event_listener',
+            'kernel.locale_aware',
+            'kernel.reset',
+        ]);
     }
 
     private function registerClasses(FileLoader $loader, $namespace, $srcDir) {
