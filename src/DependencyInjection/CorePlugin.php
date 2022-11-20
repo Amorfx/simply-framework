@@ -36,12 +36,31 @@ class CorePlugin implements PluginInterface {
             $container->loadFromExtension($anExtension->getAlias());
         }
 
+        $hasThemePath = !empty($this->wpThemePath);
+
+        // Auto configure all file to service
+        // TODO use the loader linked to the directory of the plugin
+        if (!empty($this->wpPluginPaths)) {
+            foreach ($this->wpPluginPaths as $pluginInfo) {
+                $srcDir = $pluginInfo['path'] . '/src';
+                $this->registerClasses($container, $pluginInfo['namespace'], $srcDir);
+            }
+            // Same for files in Theme
+            if ($hasThemePath) {
+                $srcDir = $this->wpThemePath['path'] . '/src';
+                $this->registerClasses($container, $this->wpThemePath['namespace'], $srcDir);
+            }
+        }
+
         // Load all configurations
         foreach ($this->configDirectories as $aConfigDirectory) {
             $finder = new Finder();
             $fileLocator = new FileLocator($aConfigDirectory);
             // Load configurations file yaml or php
-            $yamlFiles = iterator_to_array($finder->files()->in($aConfigDirectory)->name(array('*.yaml', '*.yml')), false);
+            $yamlFiles = iterator_to_array($finder->files()->in($aConfigDirectory)->name(array(
+                '*.yaml',
+                '*.yml',
+            )), false);
             if (!empty($yamlFiles)) {
                 $loader = new YamlFileLoader($container, $fileLocator);
                 foreach ($yamlFiles as $aFile) {
@@ -59,7 +78,6 @@ class CorePlugin implements PluginInterface {
         }
 
         // Put the views path if exist of theme into defaultViewsDirectory for TemplateEngine Class
-        $hasThemePath = !empty($this->wpThemePath);
         if ($hasThemePath) {
             $viewsDirectory = $this->wpThemePath['path'] . '/views';
             if (file_exists($viewsDirectory)) {
@@ -71,23 +89,8 @@ class CorePlugin implements PluginInterface {
             $container->setParameter('default_views_directories', array());
         }
 
-        // Auto configure all file to service
-        // TODO use the loader linked to the directory of the plugin
-        if (!empty($this->wpPluginPaths)) {
-            foreach ($this->wpPluginPaths as $pluginInfo) {
-                $srcDir = $pluginInfo['path'] . '/src';
-                $this->registerClasses($loader, $pluginInfo['namespace'], $srcDir);
-            }
-            // Same for files in Theme
-            if ($hasThemePath) {
-                $srcDir = $this->wpThemePath['path'] . '/src';
-                $this->registerClasses($loader, $this->wpThemePath['namespace'], $srcDir);
-            }
-        }
-
         // Add auto tags
-        $container->registerForAutoconfiguration(HookableInterface::class)
-            ->addTag('wp.hook');
+        $container->registerForAutoconfiguration(HookableInterface::class)->addTag('wp.hook');
         $container->addCompilerPass(new HookPass());
         $container->setParameter('container.behavior_describing_tags', [
             'annotations.cached_reader',
@@ -101,8 +104,9 @@ class CorePlugin implements PluginInterface {
         ]);
     }
 
-    private function registerClasses(FileLoader $loader, $namespace, $srcDir) {
+    private function registerClasses(ContainerBuilder $container, $namespace, $srcDir) {
         if (file_exists($srcDir) && !empty($namespace)) {
+            $loader = new PhpFileLoader($container, new FileLocator($srcDir));
             $loader->registerClasses(new Definition(), $namespace . '\\', $srcDir);
         }
     }
