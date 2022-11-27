@@ -39,17 +39,17 @@ class CorePlugin implements PluginInterface {
         $hasThemePath = !empty($this->wpThemePath);
 
         // Auto configure all file to service
-        // TODO use the loader linked to the directory of the plugin
         if (!empty($this->wpPluginPaths)) {
             foreach ($this->wpPluginPaths as $pluginInfo) {
                 $srcDir = $pluginInfo['path'] . '/src';
                 $this->registerClasses($container, $pluginInfo['namespace'], $srcDir);
             }
-            // Same for files in Theme
-            if ($hasThemePath) {
-                $srcDir = $this->wpThemePath['path'] . '/src';
-                $this->registerClasses($container, $this->wpThemePath['namespace'], $srcDir);
-            }
+        }
+
+        // Same for files in Theme
+        if ($hasThemePath) {
+            $srcDir = $this->wpThemePath['path'] . '/src';
+            $this->registerClasses($container, $this->wpThemePath['namespace'], $srcDir);
         }
 
         // Load all configurations
