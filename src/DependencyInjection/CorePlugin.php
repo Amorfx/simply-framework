@@ -8,10 +8,10 @@ use Simply\Core\DependencyInjection\Compiler\HookPass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Loader\FileLoader;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Finder\Finder;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 /**
  * Main Simply plugin to build container with automatic extensions, config directories (load configuration...) provided by Simply class
@@ -90,6 +90,8 @@ class CorePlugin implements PluginInterface {
         }
 
         // Add auto tags
+        $container->registerForAutoconfiguration(ServiceSubscriberInterface::class)
+            ->addTag('container.service_subscriber');
         $container->registerForAutoconfiguration(HookableInterface::class)->addTag('wp.hook');
         $container->addCompilerPass(new HookPass());
         $container->setParameter('container.behavior_describing_tags', [
@@ -107,7 +109,10 @@ class CorePlugin implements PluginInterface {
     private function registerClasses(ContainerBuilder $container, $namespace, $srcDir) {
         if (file_exists($srcDir) && !empty($namespace)) {
             $loader = new PhpFileLoader($container, new FileLocator($srcDir));
-            $loader->registerClasses(new Definition(), $namespace . '\\', $srcDir);
+            $def = new Definition();
+            $def->setAutoconfigured(true)
+                ->setAutowired(true);
+            $loader->registerClasses($def, $namespace . '\\', $srcDir);
         }
     }
 }
