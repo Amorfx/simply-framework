@@ -78,4 +78,18 @@ class ModelFactoryTest extends SimplyTestCase {
         $this->assertSame($expected, $factoryReflection->getStaticPropertyValue('postTypeModelClasses'));
         $this->assertSame($expected, $factoryReflection->getStaticPropertyValue('termTypeModelClasses'));
     }
+    
+    public function testRegisterMultipleModelsWithMultipleCall() {
+        $factory = new ModelFactory();
+        $classA = 'ClassA';
+        $classB = 'ClassB';
+        $expected = array($classA, $classB);
+        $factory->registerPostModel(array($classA));
+        $factory->registerTermModel(array($classA));
+        $factory->addPostModel(array($classB));
+        $factory->addTermModel(array($classB));
+        $factoryReflection = new \ReflectionClass($factory);
+        $this->assertSame($expected, $factoryReflection->getStaticPropertyValue('postTypeModelClasses'));
+        $this->assertSame($expected, $factoryReflection->getStaticPropertyValue('termTypeModelClasses'));
+    }
 }
