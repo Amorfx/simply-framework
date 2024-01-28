@@ -2,6 +2,9 @@
 
 namespace Simply\Core\Command;
 
+use ReflectionFunction;
+use ReflectionMethod;
+use Simply\Core\Dto\Debug\HookDebug;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -31,24 +34,50 @@ final class DebugHookCommand extends Command
             }
             $hook_names = array_keys($hooks);
             sort($hook_names);
-            foreach ($hooks as $hookData) {
-                // get source file name of the callback
-                $callback = $hookData->callbacks[10];
-                $callback = array_shift($callback);
-                $callback = $callback['function'];
-                $reflector = new \ReflectionMethod($callback[0], $callback[1]);
-                $hookData->source = $reflector->getFileName();
-                $output->writeln($callback[0]::class);
-                $output->writeln($callback[1]);
-                $output->writeln($hookData->source);
-//                $reflector = new \ReflectionFunction($callback);
-//                $hookData->source = $reflector->getFileName();
-                dd($hookData->source);
+            /** @var HookDebug[] $hookDebug */
+            $hookDebug = [];
+            foreach ($hooks as $name => $hookData) {
+                if (empty($hookData->callbacks)) {
+                    continue;
+                }
+
+                foreach ($hookData->callbacks as $priority => $callbacks) {
+                    foreach ($callbacks as $dataCallback) {
+                        $source = '';
+                        $functionName = '';
+                        $sourceLine = 0;
+                        if (is_array($dataCallback['function'])) {
+                            $reflector = new ReflectionMethod($dataCallback['function'][0], $dataCallback['function'][1]);
+                            $source = $reflector->getFileName();
+                            $functionName = $dataCallback['function'][1];
+                            $sourceLine = $reflector->getStartLine();
+                        } elseif (is_string($dataCallback['function'])) {
+                            $reflector = new ReflectionFunction($dataCallback['function']);
+                            $source = $reflector->getFileName();
+                            $functionName = $dataCallback['function'];
+                            $sourceLine = $reflector->getStartLine();
+                        }
+                        $hookDebug[] = new HookDebug(
+                            $name,
+                            $source,
+                            $sourceLine,
+                            $functionName,
+                            $priority,
+                        );
+                    }
+                }
             }
             $table = new Table($output);
             $table->setStyle('box');
-            $table->setHeaders(['Hook Name']);
-            $table->setRows($hook_names);
+            $table->setHeaders(['Hook Name', 'Priority', 'method/function name', 'Source']);
+            foreach ($hookDebug as $hook) {
+                $table->addRow([
+                    $hook->name,
+                    $hook->priority,
+                    $hook->functionName,
+                    "<href=file://$hook->source>$hook->source line $hook->sourceLine</>",
+                ]);
+            }
             $table->render();
 
             return Command::SUCCESS;
