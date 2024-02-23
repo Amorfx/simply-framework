@@ -4,7 +4,9 @@ namespace Simply\Core\Command;
 
 use ReflectionFunction;
 use ReflectionMethod;
-use Simply\Core\Dto\Debug\HookDebug;
+use Simply\Core\Debug\FilterParams;
+use Simply\Core\Debug\HookDebug;
+use Simply\Core\Debug\SearchEngine;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,7 +22,9 @@ final class DebugHookCommand extends Command
     protected function configure()
     {
         $this->setDescription('List all hooks registered in the application.');
-        $this->addOption('filter', 'f', InputOption::VALUE_OPTIONAL, 'Filter the hooks by name.');
+        $this->addOption('hook_name', null, InputOption::VALUE_OPTIONAL, 'Filter the hooks by name.');
+        $this->addOption('directory', null, InputOption::VALUE_OPTIONAL, 'Filter the hooks by directory path.');
+        $this->addOption('function_name', null, InputOption::VALUE_OPTIONAL, 'Filter the hooks by function name.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -30,7 +34,12 @@ final class DebugHookCommand extends Command
 
         $this->loadAllWordpressFiles();
 
-        $filter = $input->getOption('filter');
+        $filter = new FilterParams(
+            hookName: $input->getOption('hook_name'),
+            directory: $input->getOption('directory'),
+            functionName: $input->getOption('function_name')
+        );
+
         $hooks = $this->getAllHooksRegistered($filter);
         $hook_names = array_keys($hooks);
         sort($hook_names);
@@ -53,19 +62,20 @@ final class DebugHookCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function getAllHooksRegistered(?string $filter = null): array
+    private function getAllHooksRegistered(FilterParams $filter): array
     {
         global $wp_filter;
-        if (array_key_exists($filter, $wp_filter)) {
-            return [$filter => $wp_filter[$filter]];
+        $searchEngine = new SearchEngine($wp_filter, $filter);
+        if (array_key_exists($filter->hookName, $wp_filter)) {
+            return [$filter->hookName => $wp_filter[$filter->hookName]];
         }
 
-        if ($filter) {
-            $this->output->writeln("<error>Hook $filter not found.</error>");
+        if ($filter->hookName) {
+            $this->output->writeln("<error>Hook $filter->hookName not found.</error>");
             return [];
         }
 
-        return $wp_filter;
+        return $searchEngine->search();
     }
 
     private function constructHookDebugData(array $hooks): array
@@ -109,7 +119,6 @@ final class DebugHookCommand extends Command
 
     private function loadAllWordpressFiles(): void
     {
-        // Display all hooks => load admin files too
         require_once ABSPATH . 'wp-admin/includes/admin.php';
         require_once ABSPATH . 'wp-admin/includes/ajax-actions.php';
         require_once ABSPATH . 'wp-admin/includes/dashboard.php';

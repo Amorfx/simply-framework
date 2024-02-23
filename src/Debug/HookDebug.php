@@ -1,6 +1,6 @@
 <?php
 
-namespace Simply\Core\Dto\Debug;
+namespace Simply\Core\Debug;
 
 final class HookDebug
 {
