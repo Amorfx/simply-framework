@@ -39,6 +39,10 @@ class SearchEngineTest extends \WP_UnitTestCase {
         self::assertCount(1, $hooks);
         self::assertArrayHasKey('my_hook', $hooks);
         self::assertCount(1, $hooks['my_hook']->callbacks);
+
+        $searchEngine = new SearchEngine($GLOBALS['wp_filter'], new FilterParams(functionName: 'notExist'));
+        $hooks = $searchEngine->search();
+        self::assertCount(0, $hooks);
     }
 
     private function loadAllWordpressFiles(): void
