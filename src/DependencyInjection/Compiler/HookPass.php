@@ -15,8 +15,10 @@ use Symfony\Contracts\Service\ServiceSubscriberTrait;
  *
  * @package SimplyFramework\Container\Compiler
  */
-class HookPass implements CompilerPassInterface {
-    public function process(ContainerBuilder $container) {
+class HookPass implements CompilerPassInterface
+{
+    public function process(ContainerBuilder $container)
+    {
         $allHookServices = $container->findTaggedServiceIds('wp.hook');
         if (!empty($allHookServices)) {
             foreach ($allHookServices as $id => $tags) {
@@ -64,7 +66,8 @@ class HookPass implements CompilerPassInterface {
         }
     }
 
-    protected function getHookCompiler() {
+    protected function getHookCompiler()
+    {
         return new HookCompiler();
     }
 }

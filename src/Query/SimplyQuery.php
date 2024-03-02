@@ -5,14 +5,16 @@ namespace Simply\Core\Query;
 use Simply\Core\Contract\ModelInterface;
 use Simply\Core\Model\ModelFactory;
 
-class SimplyQuery {
+class SimplyQuery
+{
     /**
      * @var ModelInterface
      */
     private static $currentObject = null;
     public $query;
 
-    public function __construct(\WP_Query $query) {
+    public function __construct(\WP_Query $query)
+    {
         $this->query = $query;
     }
 
@@ -21,7 +23,8 @@ class SimplyQuery {
      * @return ModelInterface|false
      * @throws \Exception
      */
-    public static function getCurrentObject() {
+    public static function getCurrentObject()
+    {
         if (!is_null(self::$currentObject)) {
             return self::$currentObject;
         }
@@ -40,7 +43,8 @@ class SimplyQuery {
     /**
      * @return SimplyQuery
      */
-    public static function getCurrentQuery() {
+    public static function getCurrentQuery()
+    {
         global $wp_query;
         return new self($wp_query);
     }
@@ -49,7 +53,8 @@ class SimplyQuery {
      * @return array|false
      * @throws \Exception
      */
-    public function getQueriedPosts() {
+    public function getQueriedPosts()
+    {
         $allPosts = $this->query->posts;
         if (sizeof($allPosts) > 0) {
             $returnPosts = [];

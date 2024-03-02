@@ -8,6 +8,6 @@ final class FilterParams
         public readonly ?string $hookName = null,
         public readonly ?string $directory = null,
         public readonly ?string $functionName = null
-    )
-    {}
+    ) {
+    }
 }

@@ -15,8 +15,8 @@ final class SearchEngine
      */
     public function __construct(
         private readonly array $hooks,
-        private readonly FilterParams $filters)
-    {
+        private readonly FilterParams $filters
+    ) {
     }
 
     /**

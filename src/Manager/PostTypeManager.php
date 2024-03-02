@@ -4,18 +4,22 @@ namespace Simply\Core\Manager;
 
 use Simply\Core\Contract\ManagerInterface;
 
-class PostTypeManager implements ManagerInterface {
+class PostTypeManager implements ManagerInterface
+{
     private $postTypes;
 
-    public function __construct(array $postTypes) {
+    public function __construct(array $postTypes)
+    {
         $this->postTypes = $postTypes;
     }
 
-    public function initialize() {
+    public function initialize()
+    {
         add_action('init', array($this, 'registerPostTypes'));
     }
 
-    public function registerPostTypes() {
+    public function registerPostTypes()
+    {
         foreach ($this->postTypes as $key => $args) {
             register_post_type($key, $args);
         }

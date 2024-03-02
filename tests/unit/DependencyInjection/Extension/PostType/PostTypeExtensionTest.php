@@ -7,8 +7,10 @@ use Simply\Tests\SimplyTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Brain\Monkey;
 
-class PostTypeExtensionTest extends SimplyTestCase {
-    public function testAddNavMenuParam() {
+class PostTypeExtensionTest extends SimplyTestCase
+{
+    public function testAddNavMenuParam()
+    {
         $container = new ContainerBuilder();
         $extension = new PostTypeExtension();
         $configs = array(
@@ -22,18 +24,21 @@ class PostTypeExtensionTest extends SimplyTestCase {
         $this->assertSame(array('my_cpt' => array('public' => true, 'labels' => 'translated')), $container->getParameter('post_type'));
     }
 
-    public function testGetAlias() {
+    public function testGetAlias()
+    {
         $extension = new PostTypeExtension();
         $this->assertEquals('post_type', $extension->getAlias());
     }
 
-    public function testGetNamespace() {
+    public function testGetNamespace()
+    {
         $extension = new PostTypeExtension();
         $this->assertFalse($extension->getNamespace());
     }
 
-    public function testGetXsdValidationBasePath() {
+    public function testGetXsdValidationBasePath()
+    {
         $extension = new PostTypeExtension();
-        $this->assertNull( $extension->getXsdValidationBasePath());
+        $this->assertNull($extension->getXsdValidationBasePath());
     }
 }

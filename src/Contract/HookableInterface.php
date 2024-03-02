@@ -10,7 +10,8 @@ namespace Simply\Core\Contract;
  *
  * @package SimplyFramework\Contract
  */
-interface HookableInterface {
+interface HookableInterface
+{
     /**
      * Register all hooks for the class
      * @return mixed

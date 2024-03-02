@@ -2,13 +2,14 @@
 
 namespace Simply\Core\DependencyInjection\Extension\PostType;
 
-
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
-class PostTypeExtension implements ExtensionInterface {
-    public function load(array $configs, ContainerBuilder $container) {
+class PostTypeExtension implements ExtensionInterface
+{
+    public function load(array $configs, ContainerBuilder $container)
+    {
         $configuration = new Configuration();
         $processor = new Processor();
         $config = $processor->processConfiguration($configuration, $configs);
@@ -31,13 +32,17 @@ class PostTypeExtension implements ExtensionInterface {
         $container->setParameter('post_type', $config);
     }
 
-    public function getNamespace() {
+    public function getNamespace()
+    {
         return false;
     }
 
-    public function getXsdValidationBasePath() {}
+    public function getXsdValidationBasePath()
+    {
+    }
 
-    public function getAlias() {
+    public function getAlias()
+    {
         return 'post_type';
     }
 }

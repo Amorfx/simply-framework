@@ -2,11 +2,13 @@
 
 namespace Simply\Core\Command;
 
-abstract class AbstractWordPressCommand {
-    static $commandName;
-    static $requiredArgs = array();
-    
-    public function register() {
+abstract class AbstractWordPressCommand
+{
+    public static $commandName;
+    public static $requiredArgs = array();
+
+    public function register()
+    {
         \WP_CLI::add_command($this::$commandName, array($this, '_execute'));
     }
 
@@ -17,7 +19,8 @@ abstract class AbstractWordPressCommand {
      * @param $message
      * @param string $color
      */
-    protected function showColorMessage($message, $color = '%n') {
+    protected function showColorMessage($message, $color = '%n')
+    {
         \WP_CLI::log(\WP_CLI::colorize($color.$message));
     }
 
@@ -26,11 +29,13 @@ abstract class AbstractWordPressCommand {
      * @param $question
      * @param array $assoc_args
      */
-    protected function confirm($question, $assoc_args = array()) {
+    protected function confirm($question, $assoc_args = array())
+    {
         \WP_CLI::confirm($question, $assoc_args);
     }
 
-    protected function runCommand($command, $option = array()) {
+    protected function runCommand($command, $option = array())
+    {
         \WP_CLI::runCommand($command, $option);
     }
 
@@ -38,7 +43,8 @@ abstract class AbstractWordPressCommand {
      * Verify required args of the command
      * @param $assoc_args
      */
-    protected function verifyRequiredArgs($assoc_args) {
+    protected function verifyRequiredArgs($assoc_args)
+    {
         $missedArgs = array();
         if (is_array($this::$requiredArgs) && ! empty($this::$requiredArgs)) {
             foreach ($this::$requiredArgs as $anArg) {
@@ -58,7 +64,8 @@ abstract class AbstractWordPressCommand {
      * @param $args
      * @param $assoc_args
      */
-    public function _execute($args, $assoc_args) {
+    public function _execute($args, $assoc_args)
+    {
         // Exit if not have required args
         $this->verifyRequiredArgs($assoc_args);
 
@@ -66,5 +73,5 @@ abstract class AbstractWordPressCommand {
         $this->execute($args, $assoc_args);
     }
 
-    abstract function execute($args, $assoc_args);
+    abstract public function execute($args, $assoc_args);
 }

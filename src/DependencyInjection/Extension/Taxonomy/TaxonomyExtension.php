@@ -2,13 +2,14 @@
 
 namespace Simply\Core\DependencyInjection\Extension\Taxonomy;
 
-
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
-class TaxonomyExtension implements ExtensionInterface {
-    public function load(array $configs, ContainerBuilder $container) {
+class TaxonomyExtension implements ExtensionInterface
+{
+    public function load(array $configs, ContainerBuilder $container)
+    {
         $configuration = new Configuration();
         $processor = new Processor();
         $config = $processor->processConfiguration($configuration, $configs);
@@ -34,13 +35,17 @@ class TaxonomyExtension implements ExtensionInterface {
         $container->setParameter('taxonomy', $config);
     }
 
-    public function getNamespace() {
+    public function getNamespace()
+    {
         return false;
     }
 
-    public function getXsdValidationBasePath() {}
+    public function getXsdValidationBasePath()
+    {
+    }
 
-    public function getAlias() {
+    public function getAlias()
+    {
         return 'taxonomy';
     }
 }

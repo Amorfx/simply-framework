@@ -7,8 +7,10 @@ use Simply\Tests\SimplyTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Brain\Monkey;
 
-class NavMenuExtensionTest extends SimplyTestCase {
-    public function testAddNavMenuParam() {
+class NavMenuExtensionTest extends SimplyTestCase
+{
+    public function testAddNavMenuParam()
+    {
         $container = new ContainerBuilder();
         $extension = new NavMenuExtension();
         $configs = array(
@@ -19,18 +21,21 @@ class NavMenuExtensionTest extends SimplyTestCase {
         $this->assertSame(array('my_menu' => 'translated'), $container->getParameter('nav_menu'));
     }
 
-    public function testGetAlias() {
+    public function testGetAlias()
+    {
         $extension = new NavMenuExtension();
         $this->assertEquals('nav_menu', $extension->getAlias());
     }
 
-    public function testGetNamespace() {
+    public function testGetNamespace()
+    {
         $extension = new NavMenuExtension();
         $this->assertFalse($extension->getNamespace());
     }
 
-    public function testGetXsdValidationBasePath() {
+    public function testGetXsdValidationBasePath()
+    {
         $extension = new NavMenuExtension();
-        $this->assertNull( $extension->getXsdValidationBasePath());
+        $this->assertNull($extension->getXsdValidationBasePath());
     }
 }

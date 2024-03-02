@@ -4,7 +4,8 @@ namespace Simply\Core\Model;
 
 use Simply\Core\Contract\ModelInterface;
 
-class ModelFactory {
+class ModelFactory
+{
     private static $postTypeModelClasses = [PostTypeObject::class];
     private static $termTypeModelClasses = [TagObject::class, CategoryObject::class];
 
@@ -17,7 +18,8 @@ class ModelFactory {
      * @return ModelInterface|mixed
      * @throws \Exception
      */
-    public static function create($currentObject) {
+    public static function create($currentObject)
+    {
         if (is_null($currentObject)) {
             return false;
         }
@@ -47,11 +49,13 @@ class ModelFactory {
      *
      * @param array $postModels
      */
-    public function registerPostModel(array $postModels): void {
+    public function registerPostModel(array $postModels): void
+    {
         self::$postTypeModelClasses = $postModels;
     }
 
-    public function addPostModel(array $postModels): void {
+    public function addPostModel(array $postModels): void
+    {
         self::$postTypeModelClasses = array_merge(self::$postTypeModelClasses, $postModels);
     }
 
@@ -60,11 +64,13 @@ class ModelFactory {
      *
      * @param array $termModels
      */
-    public function registerTermModel(array $termModels): void {
+    public function registerTermModel(array $termModels): void
+    {
         self::$termTypeModelClasses = $termModels;
     }
 
-    public function addTermModel(array $termModels): void {
+    public function addTermModel(array $termModels): void
+    {
         self::$termTypeModelClasses = array_merge(self::$termTypeModelClasses, $termModels);
     }
 
@@ -75,7 +81,8 @@ class ModelFactory {
      *
      * @return array
      */
-    private static function setMappingArray(array $models): array {
+    private static function setMappingArray(array $models): array
+    {
         foreach ($models as $key => $model) {
             $models[call_user_func([$model, 'getType'])] = $model;
             unset($models[$key]);
@@ -91,7 +98,8 @@ class ModelFactory {
      *
      * @return mixed|string
      */
-    private static function getPostModelByType($postType) {
+    private static function getPostModelByType($postType)
+    {
         if (is_null(self::$postTypeMapping)) {
             self::$postTypeMapping = self::setMappingArray(apply_filters('simply/model/post_type_mapping', self::$postTypeModelClasses));
         }
@@ -103,7 +111,8 @@ class ModelFactory {
         }
     }
 
-    private static function getTermModelByType($taxonomy) {
+    private static function getTermModelByType($taxonomy)
+    {
         if (is_null(self::$taxTypeMapping)) {
             self::$taxTypeMapping = self::setMappingArray(apply_filters('simply/model/term_mapping', self::$termTypeModelClasses));
         }

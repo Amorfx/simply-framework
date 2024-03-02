@@ -65,9 +65,9 @@ abstract class AbstractShortcode
      * Return array of default params
      * @return array
      */
-    public abstract function getDefaultParams();
+    abstract public function getDefaultParams();
 
-    protected abstract function render($atts, $content);
+    abstract protected function render($atts, $content);
 
     /**
      * Generate the shortcode string

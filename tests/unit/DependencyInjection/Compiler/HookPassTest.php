@@ -9,8 +9,10 @@ use Simply\Tests\Fixtures\ExampleServiceSubscriberClass;
 use Simply\Tests\SimplyTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class HookPassTest extends SimplyTestCase {
-    public function testAddContainerServiceSubscriberTagAndAutowired() {
+class HookPassTest extends SimplyTestCase
+{
+    public function testAddContainerServiceSubscriberTagAndAutowired()
+    {
         $container = new ContainerBuilder();
         $definition = $container->register('example', ExampleServiceSubscriberClass::class);
         $definition->addTag('wp.hook');
@@ -22,7 +24,8 @@ class HookPassTest extends SimplyTestCase {
         $this->assertTrue($definition->isAutowired());
     }
 
-    public function testAddHooksAndCompile() {
+    public function testAddHooksAndCompile()
+    {
         $container = new ContainerBuilder();
         $definition = $container->register(ExampleServiceHookAttribute::class, ExampleServiceHookAttribute::class);
 

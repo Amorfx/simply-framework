@@ -5,8 +5,10 @@ namespace Simply\Core\Repository;
 use Simply\Core\Contract\ModelInterface;
 use Simply\Core\Model\PostTypeObject;
 
-class PostRepository extends AbstractRepository {
-    private function getPostType(){
+class PostRepository extends AbstractRepository
+{
+    private function getPostType()
+    {
         return call_user_func(array($this::getClassName(), 'getType'));
     }
     /**
@@ -15,7 +17,8 @@ class PostRepository extends AbstractRepository {
      * @return mixed|ModelInterface|null
      * @throws \Exception
      */
-    public function find($id) {
+    public function find($id)
+    {
         $post = get_post($id);
         return $this->getReturnObject($post);
     }
@@ -24,7 +27,8 @@ class PostRepository extends AbstractRepository {
      * @return ModelInterface[]
      * @throws \Exception
      */
-    public function findAll() {
+    public function findAll()
+    {
         $query = new \WP_Query([
             'post_type' => $this->getPostType(),
             'posts_per_page' => -1,
@@ -38,7 +42,8 @@ class PostRepository extends AbstractRepository {
         return $returnModels;
     }
 
-    public function findBy(array $criteria, $orderBy = null, $limit = null, $offset  = null) {
+    public function findBy(array $criteria, $orderBy = null, $limit = null, $offset  = null)
+    {
         $arrayMergeCriterias = ['post_type' => $this->getPostType()];
 
         // orderby example :
@@ -73,7 +78,8 @@ class PostRepository extends AbstractRepository {
         return $returnModels;
     }
 
-    public function findOneBy(array $criteria) {
+    public function findOneBy(array $criteria)
+    {
         $models = $this->findBy($criteria, null, 1);
         if (count($models) > 0) {
             return $models[0];
@@ -81,7 +87,8 @@ class PostRepository extends AbstractRepository {
         return false;
     }
 
-    public function getClassName() {
+    public function getClassName()
+    {
         return PostTypeObject::class;
     }
 }

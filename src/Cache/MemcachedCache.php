@@ -5,13 +5,15 @@ namespace Simply\Core\Cache;
 use Memcached;
 use Simply\Core\Contract\CacheInterface;
 
-class MemcachedCache implements CacheInterface {
+class MemcachedCache implements CacheInterface
+{
     /**
      * @var Memcached
      */
     private $client;
 
-    public function __construct($host, $port = 11211) {
+    public function __construct($host, $port = 11211)
+    {
         $this->client = new Memcached();
         $this->client->addServer($host, $port);
     }
@@ -21,7 +23,8 @@ class MemcachedCache implements CacheInterface {
      *
      * @return mixed
      */
-    public function get($key) {
+    public function get($key)
+    {
         return $this->client->get($key);
     }
 
@@ -32,7 +35,8 @@ class MemcachedCache implements CacheInterface {
      *
      * @return mixed|void
      */
-    public function set($key, $value, $expire = null) {
+    public function set($key, $value, $expire = null)
+    {
         if (is_null($expire)) {
             $expire = 0;
         }
@@ -45,11 +49,13 @@ class MemcachedCache implements CacheInterface {
      *
      * @return mixed|void
      */
-    public function delete($key) {
+    public function delete($key)
+    {
         $this->client->delete($key);
     }
 
-    public function getClient() {
+    public function getClient()
+    {
         return $this->client;
     }
 }

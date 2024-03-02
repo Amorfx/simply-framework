@@ -5,14 +5,17 @@ namespace Simply\Core\Model;
 use Simply\Core\Contract\ModelInterface;
 use Simply\Core\Repository\UserRepository;
 
-class UserObject implements ModelInterface {
+class UserObject implements ModelInterface
+{
     public $user;
 
-    public function __construct($user) {
+    public function __construct($user)
+    {
         $this->user = $user;
     }
 
-    public static function getType() {
+    public static function getType()
+    {
         return 'user';
     }
 }

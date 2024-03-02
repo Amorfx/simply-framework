@@ -2,7 +2,8 @@
 
 namespace Simply\Core\Contract;
 
-interface CacheInterface {
+interface CacheInterface
+{
     /**
      * Get cache value from key
      * @param $key

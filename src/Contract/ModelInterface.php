@@ -2,6 +2,7 @@
 
 namespace Simply\Core\Contract;
 
-interface ModelInterface {
-    static function getType();
+interface ModelInterface
+{
+    public static function getType();
 }

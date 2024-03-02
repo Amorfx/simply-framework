@@ -6,8 +6,10 @@ use Simply\Core\Manager\PostTypeManager;
 use Simply\Tests\SimplyTestCase;
 use Brain\Monkey;
 
-class PostTypeManagerTest extends SimplyTestCase {
-    public function testInitialize() {
+class PostTypeManagerTest extends SimplyTestCase
+{
+    public function testInitialize()
+    {
         $manager = new PostTypeManager(array('post_type' => array('ok')));
         $manager->initialize();
         // Expect added cli init

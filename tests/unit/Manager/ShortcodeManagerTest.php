@@ -8,20 +8,24 @@ use Simply\Tests\Fixtures\ExampleClass;
 use Simply\Tests\Fixtures\ExampleShortcodeClass;
 use Simply\Tests\SimplyTestCase;
 
-class ShortcodeManagerTest extends SimplyTestCase {
-    public function testInitializeAddAction() {
+class ShortcodeManagerTest extends SimplyTestCase
+{
+    public function testInitializeAddAction()
+    {
         $manager = new ShortcodeManager(array());
         $manager->initialize();
         $this->assertSame(10, has_action('init', ShortcodeManager::class . '->registerShortcodes()'));
     }
 
-    public function testRegisterWithException() {
+    public function testRegisterWithException()
+    {
         $manager = new ShortcodeManager(array(new ExampleClass()));
         $this->expectException(\RuntimeException::class);
         $manager->registerShortcodes();
     }
 
-    public function testRegisterOk() {
+    public function testRegisterOk()
+    {
         $shortcode = $this->getMockBuilder(AbstractShortcode::class)
             ->onlyMethods(array('register'))
             ->getMockForAbstractClass();
@@ -30,7 +34,8 @@ class ShortcodeManagerTest extends SimplyTestCase {
         $manager->registerShortcodes();
     }
 
-    public function testGetShortcode() {
+    public function testGetShortcode()
+    {
         $manager = new ShortcodeManager(array(new ExampleShortcodeClass()));
         $this->assertFalse($manager->getShortcode('a'));
 

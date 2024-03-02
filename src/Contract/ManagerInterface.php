@@ -2,6 +2,7 @@
 
 namespace Simply\Core\Contract;
 
-interface ManagerInterface {
+interface ManagerInterface
+{
     public function initialize();
 }

@@ -5,7 +5,8 @@ namespace Simply\Core\Manager;
 use Simply\Core\Contract\HookableInterface;
 use Simply\Core\Contract\ManagerInterface;
 
-class HookManager implements ManagerInterface {
+class HookManager implements ManagerInterface
+{
     /**
      * @var array<HookableInterface>
      */
@@ -17,13 +18,15 @@ class HookManager implements ManagerInterface {
      */
     private $attributeHooksService;
 
-    public function __construct($hooks, array $compileHooks, $attributeHooksService) {
+    public function __construct($hooks, array $compileHooks, $attributeHooksService)
+    {
         $this->hooks = $hooks;
         $this->compileHooks = $compileHooks;
         $this->attributeHooksService = $attributeHooksService;
     }
 
-    public function initialize() {
+    public function initialize()
+    {
         foreach ($this->hooks as $aHook) {
             $aHook->register();
         }
@@ -34,7 +37,8 @@ class HookManager implements ManagerInterface {
                     $attributeHook = new $arrayHook['type'](
                         $arrayHook['hook'],
                         $arrayHook['priority'],
-                        $arrayHook['numberArguments']);
+                        $arrayHook['numberArguments']
+                    );
 
                     $service = $this->getServiceFromClass($class);
                     if (false === $service) {
@@ -56,7 +60,8 @@ class HookManager implements ManagerInterface {
      *
      * @return false|object
      */
-    private function getServiceFromClass(string $class) {
+    private function getServiceFromClass(string $class)
+    {
         foreach ($this->attributeHooksService as $service) {
             if ($service instanceof $class) {
                 return $service;

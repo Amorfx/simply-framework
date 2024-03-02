@@ -2,8 +2,10 @@
 
 namespace Simply\Tests\Fixtures;
 
-class ExampleClass {
-    public function myFunction ($title) {
+class ExampleClass
+{
+    public function myFunction($title)
+    {
         return $title;
     }
 }

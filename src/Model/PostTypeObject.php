@@ -13,38 +13,46 @@ class PostTypeObject implements ModelInterface
      */
     public $post;
 
-    public function __construct(WP_Post $post) {
+    public function __construct(WP_Post $post)
+    {
         $this->post = $post;
     }
 
     /**
      * @return string
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return get_the_title($this->post);
     }
 
-    public function getContent($more_link_text = null, $strip_teaser = false) {
+    public function getContent($more_link_text = null, $strip_teaser = false)
+    {
         return get_the_content($more_link_text, $strip_teaser, $this->getID());
     }
 
-    public function getExcerpt() {
+    public function getExcerpt()
+    {
         return get_the_excerpt($this->post);
     }
 
-    public function getPermalink() {
+    public function getPermalink()
+    {
         return get_permalink($this->getID());
     }
 
-    public function getDate($format = '') {
+    public function getDate($format = '')
+    {
         return get_the_date($format, $this->post);
     }
 
-    public function getThumbnailUrl($size = 'post-thumbnail') {
+    public function getThumbnailUrl($size = 'post-thumbnail')
+    {
         return get_the_post_thumbnail_url($this->getID(), $size);
     }
 
-    public function getCategories(): array {
+    public function getCategories(): array
+    {
         $allCategories = get_the_category($this->getID());
         if (sizeof($allCategories) > 0 && (!$allCategories instanceof \WP_Error) && $allCategories !== false) {
             foreach ($allCategories as $k => $c) {
@@ -56,7 +64,8 @@ class PostTypeObject implements ModelInterface
         return $allCategories;
     }
 
-    public function getTags(): array {
+    public function getTags(): array
+    {
         $allTags = get_the_tags($this->getID());
         if (is_array($allTags) && sizeof($allTags) > 0) {
             foreach ($allTags as $k => $t) {
@@ -71,7 +80,8 @@ class PostTypeObject implements ModelInterface
     /**
      * @return int
      */
-    public function getID() {
+    public function getID()
+    {
         return $this->post->ID;
     }
 
@@ -81,11 +91,13 @@ class PostTypeObject implements ModelInterface
      *
      * @return mixed
      */
-    public function getMeta($key, $single = false) {
+    public function getMeta($key, $single = false)
+    {
         return get_post_meta($this->post->ID, $key, $single);
     }
 
-    public static function getType() {
+    public static function getType()
+    {
         return 'post';
     }
 }

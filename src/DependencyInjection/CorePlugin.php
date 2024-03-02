@@ -16,20 +16,23 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 /**
  * Main Simply plugin to build container with automatic extensions, config directories (load configuration...) provided by Simply class
  */
-class CorePlugin implements PluginInterface {
+class CorePlugin implements PluginInterface
+{
     private array $extensions;
     private array $configDirectories;
     private array $wpPluginPaths;
     private array $wpThemePath;
 
-    public function __construct(array $extensions, array $configDirectories, array $wpPluginPaths, array $wpThemePath) {
+    public function __construct(array $extensions, array $configDirectories, array $wpPluginPaths, array $wpThemePath)
+    {
         $this->extensions = $extensions;
         $this->configDirectories = $configDirectories;
         $this->wpPluginPaths = $wpPluginPaths;
         $this->wpThemePath = $wpThemePath;
     }
 
-    public function build(ContainerBuilder $container): void {
+    public function build(ContainerBuilder $container): void
+    {
         // Load extensions provider by Simply Class
         foreach ($this->extensions as $anExtension) {
             $container->registerExtension($anExtension);
@@ -106,7 +109,8 @@ class CorePlugin implements PluginInterface {
         ]);
     }
 
-    private function registerClasses(ContainerBuilder $container, $namespace, $srcDir) {
+    private function registerClasses(ContainerBuilder $container, $namespace, $srcDir)
+    {
         if (file_exists($srcDir) && !empty($namespace)) {
             $loader = new PhpFileLoader($container, new FileLocator($srcDir));
             $def = new Definition();

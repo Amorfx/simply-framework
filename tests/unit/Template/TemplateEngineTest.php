@@ -7,11 +7,13 @@ use Simply\Tests\SimplyTestCase;
 use Brain\Monkey;
 use Twig\Environment;
 
-class TemplateEngineTest extends SimplyTestCase {
+class TemplateEngineTest extends SimplyTestCase
+{
     /**
      * @runInSeparateProcess
      */
-    public function testConstructClassDebugFalse() {
+    public function testConstructClassDebugFalse()
+    {
         define('WP_DEBUG', false);
         Monkey\Filters\expectApplied('simply/config/view_directories')->with(array());
         Monkey\Filters\expectApplied('simply/config/template');
@@ -22,7 +24,8 @@ class TemplateEngineTest extends SimplyTestCase {
     /**
      * @runInSeparateProcess
      */
-    public function testConstructClassDebugTrue() {
+    public function testConstructClassDebugTrue()
+    {
         define('WP_DEBUG', true);
         $engine = new TemplateEngine();
         $this->assertTrue($engine->getEngine()->isDebug());
@@ -31,7 +34,8 @@ class TemplateEngineTest extends SimplyTestCase {
     /**
      * @runInSeparateProcess
      */
-    public function testExecFunction() {
+    public function testExecFunction()
+    {
         define('WP_DEBUG', false);
         $engine = new TemplateEngine();
         Monkey\Functions\when('is_single')->justReturn(true);
@@ -41,7 +45,8 @@ class TemplateEngineTest extends SimplyTestCase {
     /**
      * @runInSeparateProcess
      */
-    public function testRenderDisplay() {
+    public function testRenderDisplay()
+    {
         define('WP_DEBUG', false);
         $engine = new TemplateEngine();
         $twig = $this->getMockBuilder(Environment::class)
@@ -59,7 +64,8 @@ class TemplateEngineTest extends SimplyTestCase {
     /**
      * @runInSeparateProcess
      */
-    public function testRender() {
+    public function testRender()
+    {
         define('WP_DEBUG', false);
         $engine = new TemplateEngine();
         $twig = $this->getMockBuilder(Environment::class)

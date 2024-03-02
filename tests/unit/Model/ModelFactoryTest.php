@@ -12,8 +12,10 @@ use Simply\Tests\Fixtures\Model\ExampleTermModel;
 use Simply\Tests\SimplyTestCase;
 use Brain\Monkey;
 
-class ModelFactoryTest extends SimplyTestCase {
-    public function testCreatePostTypeModel() {
+class ModelFactoryTest extends SimplyTestCase
+{
+    public function testCreatePostTypeModel()
+    {
         $mapping = array(ExamplePostModel::class, PostTypeObject::class);
 
         $postMock = \Mockery::mock(\WP_Post::class);
@@ -24,7 +26,8 @@ class ModelFactoryTest extends SimplyTestCase {
         $this->assertInstanceOf(ExamplePostModel::class, ModelFactory::create($postMock));
     }
 
-    public function testCreatePostTypeModelNotFoundDefault() {
+    public function testCreatePostTypeModelNotFoundDefault()
+    {
         $mapping = array(ExamplePostModel::class, PostTypeObject::class);
         $postMock = \Mockery::mock(\WP_Post::class);
         $postMock->post_type = 'does_not_exist';
@@ -34,12 +37,14 @@ class ModelFactoryTest extends SimplyTestCase {
         $this->assertInstanceOf(PostTypeObject::class, ModelFactory::create($postMock));
     }
 
-    public function testClassNotSupported() {
+    public function testClassNotSupported()
+    {
         $this->expectException(\Exception::class);
         ModelFactory::create(new \stdClass());
     }
 
-    public function testCreateTermModel() {
+    public function testCreateTermModel()
+    {
         $mapping = [ExampleTermModel::class, TagObject::class, CategoryObject::class];
         Monkey\Functions\when('get_class')->justReturn(\WP_Term::class);
         Monkey\Functions\when('apply_filters')->justReturn($mapping);
@@ -49,7 +54,8 @@ class ModelFactoryTest extends SimplyTestCase {
         $this->assertInstanceOf(ExampleTermModel::class, ModelFactory::create($termMock));
     }
 
-    public function testTaxonomyNotSupported() {
+    public function testTaxonomyNotSupported()
+    {
         Monkey\Functions\when('get_class')->justReturn(\WP_Term::class);
         $termMock = \Mockery::mock(\WP_Term::class);
         $termMock->taxonomy = 'does_not_exist';
@@ -57,17 +63,20 @@ class ModelFactoryTest extends SimplyTestCase {
         ModelFactory::create($termMock);
     }
 
-    public function testCreateUserModel() {
+    public function testCreateUserModel()
+    {
         Monkey\Functions\when('get_class')->justReturn(\WP_User::class);
         $userMock = \Mockery::mock(\WP_User::class);
         $this->assertInstanceOf(UserObject::class, ModelFactory::create($userMock));
     }
 
-    public function testNotCreateModel() {
+    public function testNotCreateModel()
+    {
         $this->assertFalse(ModelFactory::create(null));
     }
 
-    public function testRegisterModels() {
+    public function testRegisterModels()
+    {
         $factory = new ModelFactory();
         $class = new \stdClass();
         $class->a = 'ok';
@@ -78,8 +87,9 @@ class ModelFactoryTest extends SimplyTestCase {
         $this->assertSame($expected, $factoryReflection->getStaticPropertyValue('postTypeModelClasses'));
         $this->assertSame($expected, $factoryReflection->getStaticPropertyValue('termTypeModelClasses'));
     }
-    
-    public function testRegisterMultipleModelsWithMultipleCall() {
+
+    public function testRegisterMultipleModelsWithMultipleCall()
+    {
         $factory = new ModelFactory();
         $classA = 'ClassA';
         $classB = 'ClassB';

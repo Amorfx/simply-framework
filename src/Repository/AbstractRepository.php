@@ -7,7 +7,8 @@ use Simply\Core\Contract\ModelInterface;
 use Simply\Core\Contract\RepositoryInterface;
 use Simply\Core\Model\ModelFactory;
 
-abstract class AbstractRepository  implements RepositoryInterface {
+abstract class AbstractRepository implements RepositoryInterface
+{
     /**
      * Return the object managed by the repository
      *
@@ -16,7 +17,8 @@ abstract class AbstractRepository  implements RepositoryInterface {
      * @return mixed|ModelInterface
      * @throws Exception
      */
-    protected function getReturnObject($objectQuery) {
+    protected function getReturnObject($objectQuery)
+    {
         $class = $this->getClassName();
         return new $class($objectQuery);
     }
