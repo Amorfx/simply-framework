@@ -2,6 +2,7 @@
 
 namespace Simply\Core\Command;
 
+use ReflectionException;
 use ReflectionFunction;
 use ReflectionMethod;
 use Simply\Core\Debug\FilterParams;
@@ -27,6 +28,9 @@ final class DebugHookCommand extends Command
         $this->addOption('function_name', null, InputOption::VALUE_OPTIONAL, 'Filter the hooks by function name.');
     }
 
+    /**
+     * @throws ReflectionException
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->input = $input;
@@ -78,6 +82,9 @@ final class DebugHookCommand extends Command
         return $searchEngine->search();
     }
 
+    /**
+     * @throws ReflectionException
+     */
     private function constructHookDebugData(array $hooks): array
     {
         /** @var HookDebug[] $hookDebug */
@@ -92,10 +99,12 @@ final class DebugHookCommand extends Command
                     $source = '';
                     $functionName = '';
                     $sourceLine = 0;
+                    // It's a method of a class
                     if (is_array($dataCallback['function'])) {
                         $reflector = new ReflectionMethod($dataCallback['function'][0], $dataCallback['function'][1]);
                         $source = $reflector->getFileName();
-                        $functionName = $dataCallback['function'][1];
+                        $fullClassName = $reflector->getDeclaringClass()->getName();
+                        $functionName = $fullClassName . ':' . $dataCallback['function'][1];
                         $sourceLine = $reflector->getStartLine();
                     } elseif (is_string($dataCallback['function'])) {
                         $reflector = new ReflectionFunction($dataCallback['function']);
