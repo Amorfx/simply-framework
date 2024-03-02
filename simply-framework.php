@@ -14,6 +14,8 @@ use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
+use Symfony\Component\DependencyInjection\LazyProxy\Instantiator\LazyServiceInstantiator;
+use Symfony\Component\DependencyInjection\LazyProxy\PhpDumper\LazyServiceDumper;
 
 // if vendor exist the user use the plugin not with the boilerplate or install manually
 $vendorPath = __DIR__ . '/vendor/autoload.php';
@@ -72,7 +74,6 @@ final class Simply
             self::registerSimplyPlugin(new CorePlugin($extensions, $configDirectories, self::$wpPluginsPath, self::$wpThemePath));
 
             $containerBuilder = new ContainerBuilder();
-            $containerBuilder->setProxyInstantiator(new RuntimeInstantiator());
             // In symfony component kernel.debug parameter must be added
             $containerBuilder->setParameter('kernel.debug', WP_DEBUG);
 
@@ -93,7 +94,6 @@ final class Simply
             $containerBuilder->compile();
 
             $dumper = new PhpDumper($containerBuilder);
-            $dumper->setProxyDumper(new ProxyDumper('_simply_'));
             $containerConfigCache->write(
                 $dumper->dump(['class' => 'CachedContainer']),
                 $containerBuilder->getResources()
