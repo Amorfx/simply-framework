@@ -24,17 +24,17 @@ if (file_exists($vendorPath)) {
 
 define('SIMPLY_CACHE_DIRECTORY', __DIR__ . '/cache');
 
-class Simply
+final class Simply
 {
-    private static $container;
+    private static Container $container;
     /**
      * @var PluginInterface[]|RegisterModelInterface[]
      */
-    private static $simplyPlugins = [];
+    private static array $simplyPlugins = [];
     private static array $wpPluginsPath = [];
     private static array $wpThemePath = [];
 
-    private static function initContainer()
+    private static function initContainer(): void
     {
         $file = CacheDirectoryManager::getCachePath('container.php');
         $containerConfigCache = new ConfigCache($file, WP_DEBUG);
@@ -75,9 +75,6 @@ class Simply
             $containerBuilder->setProxyInstantiator(new RuntimeInstantiator());
             // In symfony component kernel.debug parameter must be added
             $containerBuilder->setParameter('kernel.debug', WP_DEBUG);
-
-            // TODO deprecated after beta ? Use Class implement PluginInterface ?
-            do_action('simply/core/build', $containerBuilder);
 
             // Build plugins
             $modelFactory = new ModelFactory();

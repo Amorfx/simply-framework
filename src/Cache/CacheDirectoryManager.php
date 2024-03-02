@@ -4,7 +4,7 @@ namespace Simply\Core\Cache;
 
 use Symfony\Component\Filesystem\Filesystem;
 
-class CacheDirectoryManager
+final class CacheDirectoryManager
 {
     /**
      * @codeCoverageIgnore
