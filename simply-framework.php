@@ -24,7 +24,8 @@ if (file_exists($vendorPath)) {
 
 define('SIMPLY_CACHE_DIRECTORY', __DIR__ . '/cache');
 
-class Simply {
+class Simply
+{
     private static $container;
     /**
      * @var PluginInterface[]|RegisterModelInterface[]
@@ -33,7 +34,8 @@ class Simply {
     private static array $wpPluginsPath = [];
     private static array $wpThemePath = [];
 
-    private static function initContainer() {
+    private static function initContainer()
+    {
         $file = CacheDirectoryManager::getCachePath('container.php');
         $containerConfigCache = new ConfigCache($file, WP_DEBUG);
 
@@ -62,9 +64,9 @@ class Simply {
 
         if (!$containerConfigCache->isFresh()) {
             $extensions = apply_filters('simply/config/container_extensions', [
-                new PostTypeExtension,
-                new TaxonomyExtension,
-                new NavMenuExtension,
+                new PostTypeExtension(),
+                new TaxonomyExtension(),
+                new NavMenuExtension(),
             ]);
 
             self::registerSimplyPlugin(new CorePlugin($extensions, $configDirectories, self::$wpPluginsPath, self::$wpThemePath));
@@ -105,29 +107,34 @@ class Simply {
         self::$container = new CachedContainer();
     }
 
-    public static function registerPlugin(string $path, string $namespace = ''): void {
+    public static function registerPlugin(string $path, string $namespace = ''): void
+    {
         self::$wpPluginsPath[] = ['path' => $path, 'namespace' => $namespace];
     }
 
-    public static function registerSimplyPlugin(PluginInterface $plugin): void {
+    public static function registerSimplyPlugin(PluginInterface $plugin): void
+    {
         self::$simplyPlugins[] = $plugin;
     }
 
-    public static function registerTheme(string $path, string $namespace = ''): void {
+    public static function registerTheme(string $path, string $namespace = ''): void
+    {
         self::$wpThemePath = ['path' => $path, 'namespace' => $namespace];
     }
 
     /**
      * @return Container
      */
-    public static function getContainer(): Container {
+    public static function getContainer(): Container
+    {
         if (is_null(self::$container)) {
             self::initContainer();
         }
         return self::$container;
     }
 
-    static function bootstrap() {
+    public static function bootstrap()
+    {
         self::initContainer();
         self::get('framework.manager')->initialize();
         do_action('simply/core/after_bootstrap');
@@ -140,21 +147,21 @@ class Simply {
      * @return object|Container|null
      * @throws Exception
      */
-    static function get($id) {
+    public static function get($id)
+    {
         return self::getContainer()->get($id);
     }
 }
 
 // Use after_setup_theme and not init because the command manager use cli_init to register command
-add_action('after_setup_theme', function() {
+add_action('after_setup_theme', function () {
     Simply::bootstrap();
 });
 
-add_action('deactivate_plugin', function() {
+add_action('deactivate_plugin', function () {
     CacheDirectoryManager::deleteCache();
 });
 
-add_action('activate_plugin', function() {
+add_action('activate_plugin', function () {
     CacheDirectoryManager::deleteCache();
 });
-
