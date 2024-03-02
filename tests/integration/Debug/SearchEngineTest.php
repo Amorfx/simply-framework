@@ -34,7 +34,7 @@ class SearchEngineTest extends \WP_UnitTestCase {
     public function test_it_filter_function_name(): void
     {
         new ExampleClassHook();
-        $searchEngine = new SearchEngine($GLOBALS['wp_filter'], new FilterParams(directory: 'functionInit'));
+        $searchEngine = new SearchEngine($GLOBALS['wp_filter'], new FilterParams(functionName: 'functionInit'));
         $hooks = $searchEngine->search();
         self::assertCount(1, $hooks);
         self::assertArrayHasKey('my_hook', $hooks);
