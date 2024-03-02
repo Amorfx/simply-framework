@@ -51,6 +51,10 @@ class ModelFactory {
         self::$postTypeModelClasses = $postModels;
     }
 
+    public function addPostModel(array $postModels): void {
+        self::$postTypeModelClasses = array_merge(self::$postTypeModelClasses, $postModels);
+    }
+
     /**
      * Use in Simply Plugin to register your term type models
      *
@@ -58,6 +62,10 @@ class ModelFactory {
      */
     public function registerTermModel(array $termModels): void {
         self::$termTypeModelClasses = $termModels;
+    }
+
+    public function addTermModel(array $termModels): void {
+        self::$termTypeModelClasses = array_merge(self::$termTypeModelClasses, $termModels);
     }
 
     /**
