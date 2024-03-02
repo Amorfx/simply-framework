@@ -41,7 +41,7 @@ jobs:
 
     - name: Start MySQL
       run: sudo service mysql start
-      
+
     - name: Install wordpress test suites
       run: |
         cd web/content/mu-plugins/simply-framework/tests/integration
