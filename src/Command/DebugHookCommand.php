@@ -70,15 +70,6 @@ final class DebugHookCommand extends Command
     {
         global $wp_filter;
         $searchEngine = new SearchEngine($wp_filter, $filter);
-        if (array_key_exists($filter->hookName, $wp_filter)) {
-            return [$filter->hookName => $wp_filter[$filter->hookName]];
-        }
-
-        if ($filter->hookName) {
-            $this->output->writeln("<error>Hook $filter->hookName not found.</error>");
-            return [];
-        }
-
         return $searchEngine->search();
     }
 
