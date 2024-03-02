@@ -43,10 +43,10 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y mysql-server
         sudo service mysql start
-        
+
     - name: Install wordpress test suites
       run: |
-        cd web/content/mu-plugins/simply-framework/tests/integration
+        cd tests/integration
         chmod +x setup.sh
         ./setup.sh
 
