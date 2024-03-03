@@ -2,6 +2,7 @@
 
 namespace Simply\Core\Cache;
 
+use InvalidArgumentException;
 use Simply\Core\Contract\CacheInterface;
 
 class CacheFactory
@@ -25,5 +26,7 @@ class CacheFactory
             case 'memcached':
                 return new MemcachedCache($this->configuration['host'], $this->configuration['port']);
         }
+
+        throw new InvalidArgumentException('Invalid cache type');
     }
 }

@@ -36,6 +36,6 @@ class NavMenuExtensionTest extends SimplyTestCase
     public function testGetXsdValidationBasePath()
     {
         $extension = new NavMenuExtension();
-        $this->assertNull($extension->getXsdValidationBasePath());
+        $this->assertFalse($extension->getXsdValidationBasePath());
     }
 }

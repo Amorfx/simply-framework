@@ -39,6 +39,6 @@ class PostTypeExtensionTest extends SimplyTestCase
     public function testGetXsdValidationBasePath()
     {
         $extension = new PostTypeExtension();
-        $this->assertNull($extension->getXsdValidationBasePath());
+        $this->assertFalse($extension->getXsdValidationBasePath());
     }
 }

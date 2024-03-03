@@ -47,6 +47,6 @@ class TaxonomyExtensionTest extends SimplyTestCase
     public function testGetXsdValidationBasePath()
     {
         $extension = new TaxonomyExtension();
-        $this->assertNull($extension->getXsdValidationBasePath());
+        $this->assertFalse($extension->getXsdValidationBasePath());
     }
 }

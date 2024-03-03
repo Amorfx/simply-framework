@@ -101,7 +101,7 @@ final class Simply
         }
 
         require_once $file;
-        self::$container = new CachedContainer();
+        self::$container = new CachedContainer(); // @phpstan-ignore-line
     }
 
     public static function registerPlugin(string $path, string $namespace = ''): void

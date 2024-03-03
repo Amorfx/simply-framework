@@ -40,8 +40,9 @@ class TaxonomyExtension implements ExtensionInterface
         return false;
     }
 
-    public function getXsdValidationBasePath()
+    public function getXsdValidationBasePath(): bool
     {
+        return false;
     }
 
     public function getAlias()
