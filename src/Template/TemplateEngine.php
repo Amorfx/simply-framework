@@ -57,7 +57,8 @@ class TemplateEngine
     public function render($view, array $context, bool $display = true)
     {
         if ($display) {
-            return $this->engine->display($view, $context);
+            $this->engine->display($view, $context);
+            return;
         }
         return $this->engine->render($view, $context);
     }

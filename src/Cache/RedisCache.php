@@ -3,6 +3,7 @@
 namespace Simply\Core\Cache;
 
 use Redis;
+use RedisException;
 use Simply\Core\Contract\CacheInterface;
 
 class RedisCache implements CacheInterface
@@ -43,9 +44,9 @@ class RedisCache implements CacheInterface
 
     /**
      * @param $key
-     * @param mixed ...$otherKeys
      *
      * @return mixed|void
+     * @throws RedisException
      */
     public function delete($key)
     {

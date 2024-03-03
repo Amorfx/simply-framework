@@ -10,7 +10,7 @@ use WP_Hook;
 final class SearchEngine
 {
     /**
-     * @param array<string, array<WP_Hook> $hooks
+     * @param array<string, array<WP_Hook>> $hooks
      * @param FilterParams $filters
      */
     public function __construct(
