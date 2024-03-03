@@ -17,8 +17,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class DebugHookCommand extends Command
 {
     protected static $defaultName = 'simply:debug:hook';
-    private InputInterface $input;
-    private OutputInterface $output;
 
     protected function configure()
     {
@@ -33,9 +31,6 @@ final class DebugHookCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->input = $input;
-        $this->output = $output;
-
         $this->loadAllWordpressFiles();
 
         $filter = new FilterParams(

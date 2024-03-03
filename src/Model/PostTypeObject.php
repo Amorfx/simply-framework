@@ -8,10 +8,7 @@ use WP_Post;
 
 class PostTypeObject implements ModelInterface
 {
-    /**
-     * @var WP_Post
-     */
-    public $post;
+    public WP_Post $post;
 
     public function __construct(WP_Post $post)
     {
@@ -54,7 +51,7 @@ class PostTypeObject implements ModelInterface
     public function getCategories(): array
     {
         $allCategories = get_the_category($this->getID());
-        if (sizeof($allCategories) > 0 && (!$allCategories instanceof \WP_Error) && $allCategories !== false) {
+        if (is_array($allCategories) && sizeof($allCategories) > 0) {
             foreach ($allCategories as $k => $c) {
                 $allCategories[$k] = ModelFactory::create($c);
             }

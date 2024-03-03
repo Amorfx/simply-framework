@@ -33,11 +33,11 @@ class RedisCache implements CacheInterface
     /**
      * @param $key
      * @param $value
-     * @param null $expire
+     * @param array|int $expire
      *
      * @return mixed|void
      */
-    public function set($key, $value, $expire = null)
+    public function set($key, $value, $expire = 0)
     {
         $this->client->set($key, $value, $expire);
     }

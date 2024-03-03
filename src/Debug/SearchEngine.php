@@ -42,7 +42,7 @@ final class SearchEngine
     }
 
     /**
-     * @param array<WP_Hook> $hooks
+     * @param array<string, WP_Hook[]> $hooks
      * @return array
      */
     private function filterByHookName(array $hooks): array

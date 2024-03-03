@@ -43,7 +43,7 @@ class TagRepository extends AbstractRepository
         if ($tag) {
             return $tag[0];
         }
-        return false;
+        return null;
     }
 
     public function getClassName()

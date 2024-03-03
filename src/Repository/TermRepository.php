@@ -56,7 +56,7 @@ abstract class TermRepository extends AbstractRepository
         if ($term) {
             return $term[0];
         }
-        return false;
+        return null;
     }
 
     public function getClassName()

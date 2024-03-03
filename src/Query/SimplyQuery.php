@@ -4,16 +4,15 @@ namespace Simply\Core\Query;
 
 use Simply\Core\Contract\ModelInterface;
 use Simply\Core\Model\ModelFactory;
+use WP_Query;
 
 class SimplyQuery
 {
-    /**
-     * @var ModelInterface
-     */
-    private static $currentObject = null;
-    public $query;
 
-    public function __construct(\WP_Query $query)
+    private static ModelInterface|bool|null $currentObject = null;
+    public WP_Query $query;
+
+    public function __construct(WP_Query $query)
     {
         $this->query = $query;
     }

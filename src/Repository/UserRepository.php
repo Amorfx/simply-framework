@@ -12,7 +12,7 @@ class UserRepository extends AbstractRepository
         if ($user) {
             return $this->getReturnObject($user);
         }
-        return false;
+        return null;
     }
 
     public function findAll()
@@ -46,7 +46,7 @@ class UserRepository extends AbstractRepository
         if ($user) {
             return $user[0];
         }
-        return false;
+        return null;
     }
 
     public function getClassName()

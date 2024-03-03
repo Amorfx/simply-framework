@@ -46,7 +46,7 @@ class CategoryRepository extends AbstractRepository
         if ($cat) {
             return $cat[0];
         }
-        return false;
+        return null;
     }
 
     public function getClassName()

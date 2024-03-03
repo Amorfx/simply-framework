@@ -84,7 +84,7 @@ class PostRepository extends AbstractRepository
         if (count($models) > 0) {
             return $models[0];
         }
-        return false;
+        return null;
     }
 
     public function getClassName()

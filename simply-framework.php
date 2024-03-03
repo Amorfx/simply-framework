@@ -28,7 +28,7 @@ define('SIMPLY_CACHE_DIRECTORY', __DIR__ . '/cache');
 
 final class Simply
 {
-    private static Container $container;
+    private static ?Container $container = null;
     /**
      * @var PluginInterface[]|RegisterModelInterface[]
      */
