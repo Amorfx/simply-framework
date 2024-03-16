@@ -4,5 +4,5 @@ namespace Simply\Core\Contract;
 
 interface ModelInterface
 {
-    public static function getType();
+    public static function getType(): string;
 }

@@ -8,6 +8,7 @@ use Simply\Core\DependencyInjection\Compiler\HookPass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Finder\Finder;
@@ -18,11 +19,21 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
  */
 class CorePlugin implements PluginInterface
 {
+    /** @var array<ExtensionInterface> */
     private array $extensions;
+    /** @var array<string> */
     private array $configDirectories;
+    /** @var array<array<string, string>>  */
     private array $wpPluginPaths;
+    /** @var array<string, string> */
     private array $wpThemePath;
 
+    /**
+     * @param array<ExtensionInterface> $extensions
+     * @param array<string> $configDirectories
+     * @param array<array<string, string>> $wpPluginPaths
+     * @param array<string, string> $wpThemePath
+     */
     public function __construct(array $extensions, array $configDirectories, array $wpPluginPaths, array $wpThemePath)
     {
         $this->extensions = $extensions;
@@ -109,7 +120,7 @@ class CorePlugin implements PluginInterface
         ]);
     }
 
-    private function registerClasses(ContainerBuilder $container, $namespace, $srcDir)
+    private function registerClasses(ContainerBuilder $container, string $namespace, string $srcDir): void
     {
         if (file_exists($srcDir) && !empty($namespace)) {
             $loader = new PhpFileLoader($container, new FileLocator($srcDir));

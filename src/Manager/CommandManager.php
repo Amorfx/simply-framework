@@ -10,19 +10,22 @@ class CommandManager implements ManagerInterface
     /**
      * @var AbstractWordPressCommand[]
      */
-    private $commands;
+    private iterable $commands;
 
-    public function __construct($commands)
+    /**
+     * @param AbstractWordPressCommand[] $commands
+     */
+    public function __construct(iterable $commands)
     {
         $this->commands = $commands;
     }
 
-    public function initialize()
+    public function initialize(): void
     {
         add_action('cli_init', array($this, 'registerCommands'));
     }
 
-    public function registerCommands()
+    public function registerCommands(): void
     {
         foreach ($this->commands as $aCommand) {
             $aCommand->register();

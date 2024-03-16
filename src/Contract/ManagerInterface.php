@@ -4,5 +4,5 @@ namespace Simply\Core\Contract;
 
 interface ManagerInterface
 {
-    public function initialize();
+    public function initialize(): void;
 }

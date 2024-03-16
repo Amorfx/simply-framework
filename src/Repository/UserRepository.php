@@ -6,7 +6,7 @@ use Simply\Core\Model\UserObject;
 
 class UserRepository extends AbstractRepository
 {
-    public function find($id)
+    public function find(mixed $id)
     {
         $user = get_user_by('id', $id);
         if ($user) {
@@ -15,7 +15,7 @@ class UserRepository extends AbstractRepository
         return null;
     }
 
-    public function findAll()
+    public function findAll(): array
     {
         $users = get_users();
         $returnModels = [];
@@ -25,7 +25,7 @@ class UserRepository extends AbstractRepository
         return $returnModels;
     }
 
-    public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null)
+    public function findBy(array $criteria, array|string $orderBy = null, int $limit = null, int $offset = null): array
     {
         $args = array_merge($criteria, [
             'orderby' => $orderBy,
@@ -40,7 +40,7 @@ class UserRepository extends AbstractRepository
         return $returnModels;
     }
 
-    public function findOneBy(array $criteria)
+    public function findOneBy(array $criteria): ?object
     {
         $user = $this->findBy($criteria, null, 1);
         if ($user) {
@@ -49,7 +49,7 @@ class UserRepository extends AbstractRepository
         return null;
     }
 
-    public function getClassName()
+    public function getClassName(): string
     {
         return UserObject::class;
     }

@@ -8,14 +8,10 @@ use Simply\Core\DependencyInjection\Extension\NavMenu\NavMenuExtension;
 use Simply\Core\DependencyInjection\Extension\PostType\PostTypeExtension;
 use Simply\Core\DependencyInjection\Extension\Taxonomy\TaxonomyExtension;
 use Simply\Core\Model\ModelFactory;
-use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
-use Symfony\Bridge\ProxyManager\LazyProxy\PhpDumper\ProxyDumper;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
-use Symfony\Component\DependencyInjection\LazyProxy\Instantiator\LazyServiceInstantiator;
-use Symfony\Component\DependencyInjection\LazyProxy\PhpDumper\LazyServiceDumper;
 
 // if vendor exist the user use the plugin not with the boilerplate or install manually
 $vendorPath = __DIR__ . '/vendor/autoload.php';
@@ -33,7 +29,14 @@ final class Simply
      * @var PluginInterface[]|RegisterModelInterface[]
      */
     private static array $simplyPlugins = [];
+    /**
+     * @var array{}|array{path: string, namespace: string}[]
+     */
     private static array $wpPluginsPath = [];
+
+    /**
+     * @var array{}|array{path: string, namespace: string}
+     */
     private static array $wpThemePath = [];
 
     private static function initContainer(): void
@@ -130,7 +133,7 @@ final class Simply
         return self::$container;
     }
 
-    public static function bootstrap()
+    public static function bootstrap(): void
     {
         self::initContainer();
         self::get('framework.manager')->initialize();
@@ -139,12 +142,12 @@ final class Simply
 
     /**
      * Shortcut function for fn get of the container
-     * @param $id
+     * @param string $id
      *
      * @return object|Container|null
      * @throws Exception
      */
-    public static function get($id)
+    public static function get(string $id): mixed
     {
         return self::getContainer()->get($id);
     }

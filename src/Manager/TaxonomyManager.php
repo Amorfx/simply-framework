@@ -6,19 +6,22 @@ use Simply\Core\Contract\ManagerInterface;
 
 class TaxonomyManager implements ManagerInterface
 {
-    private $taxonomies;
+    /** @var array<string, array<mixed>>  */
+    private array $taxonomies;
+
+    /** @param array<string, array<mixed>> $taxonomies  */
 
     public function __construct(array $taxonomies)
     {
         $this->taxonomies = $taxonomies;
     }
 
-    public function initialize()
+    public function initialize(): void
     {
         add_action('init', array($this, 'registerTaxonomies'));
     }
 
-    public function registerTaxonomies()
+    public function registerTaxonomies(): void
     {
         foreach ($this->taxonomies as $key => $args) {
             $taxArgs = [];

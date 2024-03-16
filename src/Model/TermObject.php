@@ -17,25 +17,26 @@ abstract class TermObject implements ModelInterface
         $this->term = $term;
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->term->name;
     }
 
-    public function getSlug()
+    public function getSlug(): string
     {
         return $this->term->slug;
     }
 
-    public function getLink()
+    /** @phpstan-ignore-next-line  */
+    public function getLink(): \WP_Term|\WP_Error|bool|int|array|string|null
     {
         return get_term_link($this->term);
     }
 
-    public function getMeta($meta, $single)
+    public function getMeta(string $meta, bool $single): mixed
     {
         return get_term_meta($this->term->term_id, $meta, $single);
     }
 
-    abstract public static function getType();
+    abstract public static function getType(): string;
 }

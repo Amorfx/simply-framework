@@ -6,13 +6,17 @@ use Simply\Core\Model\CategoryObject;
 
 class CategoryRepository extends AbstractRepository
 {
-    public function find($id)
+    public function find(mixed $id)
     {
         $cat = get_category($id);
         return $this->getReturnObject($cat);
     }
 
-    public function findAll()
+    /**
+     * @return array{}|object[]
+     * @throws \Exception
+     */
+    public function findAll(): array
     {
         $tags = get_categories(['hide_empty' => false]);
         $returnModels = [];
@@ -22,7 +26,16 @@ class CategoryRepository extends AbstractRepository
         return $returnModels;
     }
 
-    public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null)
+    /**
+     * @param array $criteria
+     * @param array|string|null $orderBy
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return array{}|object[]
+     * @throws \Exception
+     * @phpstan-ignore-next-line
+     */
+    public function findBy(array $criteria, array|string $orderBy = null, int $limit = null, int $offset = null): array
     {
         $args = array_merge($criteria, [
             'orderby' => $orderBy,
@@ -40,7 +53,7 @@ class CategoryRepository extends AbstractRepository
         return $returnModels;
     }
 
-    public function findOneBy(array $criteria)
+    public function findOneBy(array $criteria): ?object
     {
         $cat = $this->findBy($criteria, null, 1);
         if ($cat) {
@@ -49,7 +62,7 @@ class CategoryRepository extends AbstractRepository
         return null;
     }
 
-    public function getClassName()
+    public function getClassName(): string
     {
         return CategoryObject::class;
     }

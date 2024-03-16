@@ -10,32 +10,21 @@ class MemcachedCache implements CacheInterface
     /**
      * @var Memcached
      */
-    private $client;
+    private Memcached $client;
 
-    public function __construct($host, $port = 11211)
+    public function __construct(string $host, int $port = 11211)
     {
         $this->client = new Memcached();
         $this->client->addServer($host, $port);
     }
 
-    /**
-     * @param $key
-     *
-     * @return mixed
-     */
-    public function get($key)
+
+    public function get(string $key): mixed
     {
         return $this->client->get($key);
     }
 
-    /**
-     * @param $key
-     * @param $value
-     * @param null $expire
-     *
-     * @return mixed|void
-     */
-    public function set($key, $value, $expire = null)
+    public function set(string $key, mixed $value, ?int $expire = null): void
     {
         if (is_null($expire)) {
             $expire = 0;
@@ -44,17 +33,12 @@ class MemcachedCache implements CacheInterface
         $this->client->set($key, $value, $expire);
     }
 
-    /**
-     * @param $key
-     *
-     * @return mixed|void
-     */
-    public function delete($key)
+    public function delete(string $key): void
     {
         $this->client->delete($key);
     }
 
-    public function getClient()
+    public function getClient(): Memcached
     {
         return $this->client;
     }

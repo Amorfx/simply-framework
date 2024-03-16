@@ -6,19 +6,20 @@ use Simply\Core\Contract\ModelInterface;
 
 class ModelFactory
 {
-    private static $postTypeModelClasses = [PostTypeObject::class];
-    private static $termTypeModelClasses = [TagObject::class, CategoryObject::class];
-
-    private static $postTypeMapping = null;
-    private static $taxTypeMapping = null;
+    /** @var array|string[]  */
+    private static array $postTypeModelClasses = [PostTypeObject::class];
+    /** @var array|string[]  */
+    private static array $termTypeModelClasses = [TagObject::class, CategoryObject::class];
+    /** @var null|array<string, string> */
+    private static ?array $postTypeMapping = null;
+    /** @var null|array<string, string> */
+    private static ?array $taxTypeMapping = null;
 
     /**
-     * @param $currentObject
-     *
      * @return ModelInterface|mixed
      * @throws \Exception
      */
-    public static function create($currentObject)
+    public static function create(?object $currentObject): mixed
     {
         if (is_null($currentObject)) {
             return false;
@@ -47,13 +48,16 @@ class ModelFactory
     /**
      * Use in Simply Plugin to register your post type models
      *
-     * @param array $postModels
+     * @param array<string> $postModels
      */
     public function registerPostModel(array $postModels): void
     {
         self::$postTypeModelClasses = $postModels;
     }
 
+    /**
+     * @param array<string> $postModels
+     */
     public function addPostModel(array $postModels): void
     {
         self::$postTypeModelClasses = array_merge(self::$postTypeModelClasses, $postModels);
@@ -62,13 +66,16 @@ class ModelFactory
     /**
      * Use in Simply Plugin to register your term type models
      *
-     * @param array $termModels
+     * @param array<string> $termModels
      */
     public function registerTermModel(array $termModels): void
     {
         self::$termTypeModelClasses = $termModels;
     }
 
+    /**
+     * @param array<string> $termModels
+     */
     public function addTermModel(array $termModels): void
     {
         self::$termTypeModelClasses = array_merge(self::$termTypeModelClasses, $termModels);
@@ -79,7 +86,7 @@ class ModelFactory
      *
      * @param string[] $models
      *
-     * @return array
+     * @return array<string, string>
      */
     private static function setMappingArray(array $models): array
     {
@@ -94,11 +101,9 @@ class ModelFactory
      * Get Model register by post type
      * A developer can map post type with a specific Model created by him
      *
-     * @param $postType
-     *
      * @return mixed|string
      */
-    private static function getPostModelByType($postType)
+    private static function getPostModelByType(string $postType): mixed
     {
         if (is_null(self::$postTypeMapping)) {
             self::$postTypeMapping = self::setMappingArray(apply_filters('simply/model/post_type_mapping', self::$postTypeModelClasses));
@@ -111,7 +116,7 @@ class ModelFactory
         }
     }
 
-    private static function getTermModelByType($taxonomy)
+    private static function getTermModelByType(string $taxonomy): mixed
     {
         if (is_null(self::$taxTypeMapping)) {
             self::$taxTypeMapping = self::setMappingArray(apply_filters('simply/model/term_mapping', self::$termTypeModelClasses));

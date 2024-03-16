@@ -37,7 +37,6 @@ class HookPassTest extends SimplyTestCase
             ->onlyMethods(array('compile', 'getFromCache', 'add'))
             ->getMock();
 
-        $hookCompiler->method('compile')->willReturn(true);
         $hookCompiler->method('getFromCache')->willReturn(array('hook' => 'ok'));
         $hookPass->method('getHookCompiler')->willReturn($hookCompiler);
 

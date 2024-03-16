@@ -12,12 +12,11 @@ abstract class AbstractRepository implements RepositoryInterface
     /**
      * Return the object managed by the repository
      *
-     * @param $objectQuery
      *
      * @return mixed|ModelInterface
      * @throws Exception
      */
-    protected function getReturnObject($objectQuery)
+    protected function getReturnObject(object $objectQuery): mixed
     {
         $class = $this->getClassName();
         return new $class($objectQuery);

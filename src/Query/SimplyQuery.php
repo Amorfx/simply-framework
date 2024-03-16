@@ -22,7 +22,7 @@ class SimplyQuery
      * @return ModelInterface|false
      * @throws \Exception
      */
-    public static function getCurrentObject()
+    public static function getCurrentObject(): ModelInterface|bool|null
     {
         if (!is_null(self::$currentObject)) {
             return self::$currentObject;
@@ -42,17 +42,17 @@ class SimplyQuery
     /**
      * @return SimplyQuery
      */
-    public static function getCurrentQuery()
+    public static function getCurrentQuery(): SimplyQuery
     {
         global $wp_query;
         return new self($wp_query);
     }
 
     /**
-     * @return array|false
+     * @return array{}|array<object>|false
      * @throws \Exception
      */
-    public function getQueriedPosts()
+    public function getQueriedPosts(): bool|array
     {
         $allPosts = $this->query->posts;
         if (sizeof($allPosts) > 0) {

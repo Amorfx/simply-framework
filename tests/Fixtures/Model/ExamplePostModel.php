@@ -6,7 +6,7 @@ use Simply\Core\Model\PostTypeObject;
 
 class ExamplePostModel extends PostTypeObject
 {
-    public static function getType()
+    public static function getType(): string
     {
         return 'example_type';
     }

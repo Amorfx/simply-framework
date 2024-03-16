@@ -11,12 +11,12 @@ use Simply\Core\Model\TermObject;
  */
 abstract class TermRepository extends AbstractRepository
 {
-    public function find($id)
+    public function find(mixed $id)
     {
         return $this->getReturnObject(get_term($id, $this->getTaxonomy()));
     }
 
-    public function findAll()
+    public function findAll(): array
     {
         $terms = get_terms(['taxonomy' => $this->getTaxonomy(), 'hide_empty' => false]);
         $returnModels = [];
@@ -26,7 +26,7 @@ abstract class TermRepository extends AbstractRepository
         return $returnModels;
     }
 
-    public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null)
+    public function findBy(array $criteria, array|string $orderBy = null, int $limit = null, int $offset = null): array
     {
         $mergeCriteria = ['taxonomy' => $this->getTaxonomy()];
         if (!is_null($orderBy)) {
@@ -50,7 +50,7 @@ abstract class TermRepository extends AbstractRepository
         return $returnModels;
     }
 
-    public function findOneBy(array $criteria)
+    public function findOneBy(array $criteria): ?object
     {
         $term = $this->findBy($criteria, null, 1);
         if ($term) {
@@ -59,7 +59,7 @@ abstract class TermRepository extends AbstractRepository
         return null;
     }
 
-    public function getClassName()
+    public function getClassName(): string
     {
         return TermObject::class;
     }
@@ -68,7 +68,7 @@ abstract class TermRepository extends AbstractRepository
      * Return the taxonomy name that term is part of
      * @return mixed
      */
-    protected function getTaxonomy()
+    protected function getTaxonomy(): mixed
     {
         return call_user_func(array($this::getClassName(), 'getType'));
     }

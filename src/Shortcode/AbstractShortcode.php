@@ -11,47 +11,43 @@ abstract class AbstractShortcode
 {
     /**
      * Tag of the shortcode (use in add_shortcode function)
-     * @var string
      */
-    public static $itsTag;
+    public static string $itsTag;
 
     /**
      * Condition for amp official plugin
-     * @var boolean
      */
-    protected $isAmp;
+    protected bool $isAmp;
 
     /**
      * Condition for Instant Article official plugin
-     * @var boolean
      */
-    protected $isInstantArticle;
+    protected bool $isInstantArticle;
 
     /**
      * Add the shortcode to wordpress
      * CustomShortcode constructor.
      */
-    public function register()
+    public function register(): void
     {
         add_shortcode($this->getTag(), array($this, 'actionShortcode'));
     }
 
     /**
      * Get shortcode Tag
-     * @return mixed
      */
-    public function getTag()
+    public function getTag(): string
     {
         return $this::$itsTag;
     }
 
     /**
      * Mix atts of shortcode and default parameters and finally render the shortcode
-     * @param $atts
+     * @param array<mixed> $atts
      * @param null $content
      * @return mixed
      */
-    public function actionShortcode($atts, $content = null)
+    public function actionShortcode(array $atts, $content = null): mixed
     {
         $atts = shortcode_atts($this->getDefaultParams(), $atts);
 
@@ -63,29 +59,26 @@ abstract class AbstractShortcode
 
     /**
      * Return array of default params
-     * @return array
+     * @return array<mixed>
      */
-    abstract public function getDefaultParams();
+    abstract public function getDefaultParams(): array;
 
-    abstract protected function render($atts, $content);
+    /** @phpstan-ignore-next-line a */
+    abstract protected function render(array $atts, $content): mixed;
 
     /**
      * Generate the shortcode string
-     * @return string
      */
-    public function createDefaultShortcodeString()
+    public function createDefaultShortcodeString(): string
     {
         return $this::__createShortcodeString($this::$itsTag, $this->getDefaultParams(), '');
     }
 
     /**
      * Generate shortcode string
-     * @param string $tag
-     * @param array $params
-     * @param string $content
-     * @return string
+     * @phpstan-ignore-next-line
      */
-    protected static function __createShortcodeString($tag, $params, $content, $haveContent = true)
+    protected static function __createShortcodeString(string $tag, array $params, string $content, bool $haveContent = true): string
     {
         $start = '[' . $tag;
 
@@ -103,7 +96,13 @@ abstract class AbstractShortcode
         return $start;
     }
 
-    public function createShortcodeString($params, $content, $haveContent)
+    /**
+     * @param array<mixed> $params
+     * @param string $content
+     * @param bool $haveContent
+     * @return string
+     */
+    public function createShortcodeString(array $params, string $content, bool $haveContent): string
     {
         return $this::__createShortcodeString($this::$itsTag, $params, $content, $haveContent);
     }

@@ -10,22 +10,30 @@ class HookManager implements ManagerInterface
     /**
      * @var array<HookableInterface>
      */
-    private $hooks;
+    private iterable $hooks;
 
+    /**
+     * @var array<string, array<array<string, string|int>>>
+     */
     private array $compileHooks;
     /**
      * @var array<object>
      */
-    private $attributeHooksService;
+    private iterable $attributeHooksService;
 
-    public function __construct($hooks, array $compileHooks, $attributeHooksService)
+    /**
+     * @param array<HookableInterface> $hooks
+     * @param array<string, array<array<string, string|int>>> $compileHooks
+     * @param array<object> $attributeHooksService
+     */
+    public function __construct(iterable $hooks, array $compileHooks, iterable $attributeHooksService)
     {
         $this->hooks = $hooks;
         $this->compileHooks = $compileHooks;
         $this->attributeHooksService = $attributeHooksService;
     }
 
-    public function initialize()
+    public function initialize(): void
     {
         foreach ($this->hooks as $aHook) {
             $aHook->register();
@@ -60,7 +68,7 @@ class HookManager implements ManagerInterface
      *
      * @return false|object
      */
-    private function getServiceFromClass(string $class)
+    private function getServiceFromClass(string $class): object|bool
     {
         foreach ($this->attributeHooksService as $service) {
             if ($service instanceof $class) {

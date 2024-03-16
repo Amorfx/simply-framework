@@ -11,6 +11,9 @@ class Filter implements HookableInterface
     private string $filter;
     private int $priority;
     private int $numberArguments;
+    /**
+     * @var array<object|string, string>
+     */
     private array $callable;
 
     public function __construct(string $filter, int $priority = 10, int $numberArguments = 1)
@@ -20,12 +23,16 @@ class Filter implements HookableInterface
         $this->numberArguments = $numberArguments;
     }
 
-    public function getHook()
+    public function getHook(): string
     {
         return $this->filter;
     }
 
-    public function setCallable(array $callable)
+    /**
+     * @param array<object|string, string> $callable
+     * @return void
+     */
+    public function setCallable(array $callable): void
     {
         $this->callable = $callable;
     }
@@ -46,7 +53,7 @@ class Filter implements HookableInterface
         return $this->numberArguments;
     }
 
-    public function register()
+    public function register(): void
     {
         add_filter($this->filter, $this->callable, $this->priority, $this->numberArguments);
     }

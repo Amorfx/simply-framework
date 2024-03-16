@@ -7,7 +7,7 @@ use Simply\Core\Model\PostTypeObject;
 
 class PostRepository extends AbstractRepository
 {
-    private function getPostType()
+    private function getPostType(): string
     {
         return call_user_func(array($this::getClassName(), 'getType'));
     }
@@ -17,7 +17,7 @@ class PostRepository extends AbstractRepository
      * @return mixed|ModelInterface|null
      * @throws \Exception
      */
-    public function find($id)
+    public function find(mixed $id): mixed
     {
         $post = get_post($id);
         return $this->getReturnObject($post);
@@ -27,7 +27,7 @@ class PostRepository extends AbstractRepository
      * @return ModelInterface[]
      * @throws \Exception
      */
-    public function findAll()
+    public function findAll(): array
     {
         $query = new \WP_Query([
             'post_type' => $this->getPostType(),
@@ -42,7 +42,16 @@ class PostRepository extends AbstractRepository
         return $returnModels;
     }
 
-    public function findBy(array $criteria, $orderBy = null, $limit = null, $offset  = null)
+    /**
+     * @param array $criteria
+     * @param array|string|null $orderBy
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return array{}|object[]
+     * @throws \Exception
+     * @phpstan-ignore-next-line
+     */
+    public function findBy(array $criteria, array|string $orderBy = null, int $limit = null, int $offset  = null): array
     {
         $arrayMergeCriterias = ['post_type' => $this->getPostType()];
 
@@ -78,7 +87,7 @@ class PostRepository extends AbstractRepository
         return $returnModels;
     }
 
-    public function findOneBy(array $criteria)
+    public function findOneBy(array $criteria): ?object
     {
         $models = $this->findBy($criteria, null, 1);
         if (count($models) > 0) {
@@ -87,7 +96,7 @@ class PostRepository extends AbstractRepository
         return null;
     }
 
-    public function getClassName()
+    public function getClassName(): string
     {
         return PostTypeObject::class;
     }

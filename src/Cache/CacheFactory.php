@@ -8,10 +8,13 @@ use Simply\Core\Contract\CacheInterface;
 class CacheFactory
 {
     /**
-     * @var array
+     * @var array{type: string, host: string, port: int}
      */
-    private $configuration;
+    private array $configuration;
 
+    /**
+     * @param array{type: string, host: string, port: int} $configuration
+     */
     public function __construct(array $configuration)
     {
         $this->configuration = $configuration;
