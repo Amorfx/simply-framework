@@ -2,31 +2,12 @@
 
 namespace Simply\Core\Contract;
 
-interface CacheInterface {
-    /**
-     * Get cache value from key
-     * @param $key
-     *
-     * @return mixed
-     */
-    public function get($key);
+interface CacheInterface
+{
 
-    /**
-     * Set value to cache
-     *
-     * @param $key
-     * @param $value
-     * @param $expire
-     *
-     * @return mixed
-     */
-    public function set($key, $value, $expire = null);
+    public function get(string $key): mixed;
 
-    /**
-     * Delete a key in cache
-     * @param $key
-     *
-     * @return mixed
-     */
-    public function delete($key);
+    public function set(string $key, mixed $value, int $expire = null): void;
+
+    public function delete(string $key): void;
 }

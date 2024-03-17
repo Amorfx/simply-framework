@@ -2,13 +2,14 @@
 
 namespace Simply\Core\DependencyInjection\Extension\NavMenu;
 
-
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
-class NavMenuExtension implements ExtensionInterface {
-    public function load(array $configs, ContainerBuilder $container) {
+class NavMenuExtension implements ExtensionInterface
+{
+    public function load(array $configs, ContainerBuilder $container): void
+    {
         $configuration = new Configuration();
         $processor = new Processor();
 
@@ -28,13 +29,18 @@ class NavMenuExtension implements ExtensionInterface {
         $container->setParameter('nav_menu', $config);
     }
 
-    public function getNamespace() {
+    public function getNamespace(): bool
+    {
         return false;
     }
 
-    public function getXsdValidationBasePath() {}
+    public function getXsdValidationBasePath(): bool
+    {
+        return false;
+    }
 
-    public function getAlias() {
+    public function getAlias(): string
+    {
         return 'nav_menu';
     }
 }

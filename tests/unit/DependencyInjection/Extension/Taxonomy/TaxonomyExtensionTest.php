@@ -8,8 +8,10 @@ use Simply\Tests\SimplyTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Brain\Monkey;
 
-class TaxonomyExtensionTest extends SimplyTestCase {
-    public function testAddNavMenuParam() {
+class TaxonomyExtensionTest extends SimplyTestCase
+{
+    public function testAddNavMenuParam()
+    {
         $container = new ContainerBuilder();
         $extension = new TaxonomyExtension();
         $configs = array(
@@ -30,18 +32,21 @@ class TaxonomyExtensionTest extends SimplyTestCase {
         ), $container->getParameter('taxonomy'));
     }
 
-    public function testGetAlias() {
+    public function testGetAlias()
+    {
         $extension = new TaxonomyExtension();
         $this->assertEquals('taxonomy', $extension->getAlias());
     }
 
-    public function testGetNamespace() {
+    public function testGetNamespace()
+    {
         $extension = new TaxonomyExtension();
         $this->assertFalse($extension->getNamespace());
     }
 
-    public function testGetXsdValidationBasePath() {
+    public function testGetXsdValidationBasePath()
+    {
         $extension = new TaxonomyExtension();
-        $this->assertNull($extension->getXsdValidationBasePath());
+        $this->assertFalse($extension->getXsdValidationBasePath());
     }
 }

@@ -2,16 +2,21 @@
 
 namespace Simply\Core\DependencyInjection\Extension\PostType;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
-class Configuration implements ConfigurationInterface {
+class Configuration implements ConfigurationInterface
+{
     /**
      * {@inheritDoc}
      */
-    public function getConfigTreeBuilder() {
+    public function getConfigTreeBuilder()
+    {
         $treeBuilder = new TreeBuilder('post_type');
-        $treeBuilder->getRootNode()->useAttributeAsKey('key')->arrayPrototype()
+        /** @var ArrayNodeDefinition $rootNode */
+        $rootNode = $treeBuilder->getRootNode();
+        $rootNode->useAttributeAsKey('key')->arrayPrototype()
             ->children()
                 ->variableNode('label')->end()
                 ->variableNode('labels')->end()

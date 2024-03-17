@@ -6,7 +6,8 @@ use Simply\Core\Debug\FilterParams;
 use Simply\Core\Debug\SearchEngine;
 use Simply\Tests\Fixtures\ExampleClassHook;
 
-class SearchEngineTest extends \WP_UnitTestCase {
+class SearchEngineTest extends \WP_UnitTestCase
+{
     public function test_it_filter_hook_name(): void
     {
         new ExampleClassHook();

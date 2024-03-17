@@ -4,17 +4,23 @@ namespace Simply\Core\Manager;
 
 use Simply\Core\Contract\ManagerInterface;
 
-class FrameworkChainedManager implements ManagerInterface {
+class FrameworkChainedManager implements ManagerInterface
+{
     /**
      * @var ManagerInterface[]
      */
-    private $allManagers;
-    
-    public function __construct($allManagers) {
+    private iterable $allManagers;
+
+    /**
+     * @param ManagerInterface[] $allManagers
+     */
+    public function __construct(iterable $allManagers)
+    {
         $this->allManagers = $allManagers;
     }
 
-    public function initialize() {
+    public function initialize(): void
+    {
         foreach ($this->allManagers as $aManager) {
             $aManager->initialize();
         }

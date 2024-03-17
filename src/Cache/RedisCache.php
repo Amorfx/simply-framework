@@ -3,51 +3,43 @@
 namespace Simply\Core\Cache;
 
 use Redis;
+use RedisException;
 use Simply\Core\Contract\CacheInterface;
 
-class RedisCache implements CacheInterface {
+class RedisCache implements CacheInterface
+{
     /**
      * @var Redis
      */
-    private $client;
+    private Redis $client;
 
-    public function __construct($host, $port) {
+    /**
+     * @throws RedisException
+     */
+    public function __construct(string $host, int $port)
+    {
         $this->client = new Redis();
         $this->client->connect($host, $port);
         $this->client->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
     }
 
-    /**
-     * @param $key
-     *
-     * @return bool|mixed|string
-     */
-    public function get($key) {
+    public function get(string $key): mixed
+    {
         return $this->client->get($key);
     }
 
-    /**
-     * @param $key
-     * @param $value
-     * @param null $expire
-     *
-     * @return mixed|void
-     */
-    public function set($key, $value, $expire = null) {
+    public function set(string $key, mixed $value, ?int $expire = 0): void
+    {
         $this->client->set($key, $value, $expire);
     }
 
-    /**
-     * @param $key
-     * @param mixed ...$otherKeys
-     *
-     * @return mixed|void
-     */
-    public function delete($key) {
+    public function delete(string $key): void
+    {
         $this->client->del($key);
     }
 
-    public function geoAdd($key, $longitude, $latitude, $member) {
+    public function geoAdd(string $key, float $longitude, float $latitude, string $member): bool|int|Redis
+    {
         $this->client->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_NONE);
         return $this->client->geoadd($key, $longitude, $latitude, $member);
     }

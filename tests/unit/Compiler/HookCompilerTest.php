@@ -6,8 +6,10 @@ use Simply\Core\Compiler\HookCompiler;
 use Simply\Tests\SimplyTestCase;
 use Brain\Monkey;
 
-class HookCompilerTest extends SimplyTestCase {
-    public function testAddHookAndGet() {
+class HookCompilerTest extends SimplyTestCase
+{
+    public function testAddHookAndGet()
+    {
         $hookCompiler = new HookCompiler();
         $hookCompiler->add('myClass', 'Action', 'myHook', 'myFunction');
 
@@ -31,7 +33,8 @@ class HookCompilerTest extends SimplyTestCase {
         $this->assertSame($expected, $stub->getFromClass('myClass'));
     }
 
-    public function testCompile() {
+    public function testCompile()
+    {
         $hookCompiler = new HookCompiler();
         $hookCompiler->add('myClass', 'Action', 'myHook', 'myFunction');
 

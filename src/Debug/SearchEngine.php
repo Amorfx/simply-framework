@@ -10,16 +10,17 @@ use WP_Hook;
 final class SearchEngine
 {
     /**
-     * @param array<string, array<WP_Hook> $hooks
+     * @param array<string, WP_Hook> $hooks
      * @param FilterParams $filters
      */
     public function __construct(
         private readonly array $hooks,
-        private readonly FilterParams $filters)
-    {
+        private readonly FilterParams $filters
+    ) {
     }
 
     /**
+     * @return array<string, WP_Hook>
      * @throws ReflectionException
      */
     public function search(): array
@@ -42,8 +43,8 @@ final class SearchEngine
     }
 
     /**
-     * @param array<WP_Hook> $hooks
-     * @return array
+     * @param array<string, WP_Hook> $hooks
+     * @return array<string, WP_Hook>
      */
     private function filterByHookName(array $hooks): array
     {
@@ -55,8 +56,8 @@ final class SearchEngine
     }
 
     /**
-     * @param array<WP_Hook> $hooks
-     * @return array
+     * @param array<string, WP_Hook> $hooks
+     * @return array<string, WP_Hook>
      * @throws ReflectionException
      */
     private function filterByDirectory(array $hooks): array
@@ -71,6 +72,10 @@ final class SearchEngine
         return $filteredArray;
     }
 
+    /**
+     * @param array<string, WP_Hook> $hooks
+     * @return array<string, WP_Hook>
+     */
     private function filterByFunctionName(array $hooks): array
     {
         $filteredArray = [];
@@ -95,6 +100,7 @@ final class SearchEngine
         return $filteredArray;
     }
 
+    /** @phpstan-ignore-next-line  */
     private function isInFunctionName(array $callback): bool
     {
         if (is_array($callback['function'])) {
@@ -122,6 +128,7 @@ final class SearchEngine
 
     /**
      * @throws ReflectionException
+     * @phpstan-ignore-next-line
      */
     private function isInSource(array $callback): bool
     {
@@ -131,6 +138,7 @@ final class SearchEngine
 
     /**
      * @throws ReflectionException
+     * @phpstan-ignore-next-line
      */
     private function getSource(array $callback): string
     {

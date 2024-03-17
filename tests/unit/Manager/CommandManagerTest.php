@@ -6,8 +6,10 @@ use Simply\Core\Command\AbstractWordPressCommand;
 use Simply\Core\Manager\CommandManager;
 use Simply\Tests\SimplyTestCase;
 
-class CommandManagerTest extends SimplyTestCase {
-    public function testInitialize() {
+class CommandManagerTest extends SimplyTestCase
+{
+    public function testInitialize()
+    {
         $command = $this->getMockBuilder(AbstractWordPressCommand::class)->onlyMethods(array('register'))->getMockForAbstractClass();
         $command2 = $this->getMockBuilder(AbstractWordPressCommand::class)->onlyMethods(array('register'))->getMockForAbstractClass();
         $command->expects($this->once())->method('register');

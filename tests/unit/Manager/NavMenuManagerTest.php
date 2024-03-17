@@ -6,8 +6,10 @@ use Simply\Core\Manager\NavMenuManager;
 use Simply\Tests\SimplyTestCase;
 use Brain\Monkey;
 
-class NavMenuManagerTest extends SimplyTestCase {
-    public function testInitialize() {
+class NavMenuManagerTest extends SimplyTestCase
+{
+    public function testInitialize()
+    {
         $manager = new NavMenuManager(array('menu'));
         $manager->initialize();
         // Expect added cli init

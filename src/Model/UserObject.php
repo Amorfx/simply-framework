@@ -3,16 +3,19 @@
 namespace Simply\Core\Model;
 
 use Simply\Core\Contract\ModelInterface;
-use Simply\Core\Repository\UserRepository;
+use WP_User;
 
-class UserObject implements ModelInterface {
-    public $user;
+class UserObject implements ModelInterface
+{
+    public WP_User $user;
 
-    public function __construct($user) {
+    public function __construct(WP_User $user)
+    {
         $this->user = $user;
     }
 
-    public static function getType() {
+    public static function getType(): string
+    {
         return 'user';
     }
 }

@@ -10,6 +10,6 @@ final class HookDebug
         public readonly int $sourceLine,
         public readonly string $functionName,
         public readonly int $priority,
-    )
-    {}
+    ) {
+    }
 }

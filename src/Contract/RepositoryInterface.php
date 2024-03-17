@@ -11,7 +11,7 @@ interface RepositoryInterface
      *
      * @return object|null The object.
      */
-    public function find($id);
+    public function find(mixed $id);
 
     /**
      * Finds all objects in the repository.
@@ -28,14 +28,14 @@ interface RepositoryInterface
      * not supported.
      *
      * @param mixed[]       $criteria
-     * @param string[]|string $orderBy
-     * @param int|null      $limit
-     * @param int|null      $offset
+     * @param string|string[]|null $orderBy
+     * @param int|null $limit
+     * @param int|null $offset
      *
      * @return object[] The objects.
      *
      */
-    public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null);
+    public function findBy(array $criteria, array|string $orderBy = null, int $limit = null, int $offset = null);
 
     /**
      * Finds a single object by a set of criteria.
@@ -44,12 +44,12 @@ interface RepositoryInterface
      *
      * @return object|null The object.
      */
-    public function findOneBy(array $criteria);
+    public function findOneBy(array $criteria): ?object;
 
     /**
      * Returns the class name of the object managed by the repository.
      *
      * @return string
      */
-    public function getClassName();
+    public function getClassName(): string;
 }

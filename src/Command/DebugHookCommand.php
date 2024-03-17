@@ -13,12 +13,11 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use WP_Hook;
 
 final class DebugHookCommand extends Command
 {
     protected static $defaultName = 'simply:debug:hook';
-    private InputInterface $input;
-    private OutputInterface $output;
 
     protected function configure()
     {
@@ -31,11 +30,8 @@ final class DebugHookCommand extends Command
     /**
      * @throws ReflectionException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->input = $input;
-        $this->output = $output;
-
         $this->loadAllWordpressFiles();
 
         $filter = new FilterParams(
@@ -66,6 +62,11 @@ final class DebugHookCommand extends Command
         return Command::SUCCESS;
     }
 
+    /**
+     * @param FilterParams $filter
+     * @return array<string, WP_Hook>
+     * @throws ReflectionException
+     */
     private function getAllHooksRegistered(FilterParams $filter): array
     {
         global $wp_filter;
@@ -75,6 +76,8 @@ final class DebugHookCommand extends Command
 
     /**
      * @throws ReflectionException
+     * @param array<string, WP_Hook> $hooks
+     * @return HookDebug[]
      */
     private function constructHookDebugData(array $hooks): array
     {
