@@ -5,6 +5,7 @@ namespace Simply\Core\DependencyInjection;
 use Simply\Core\Contract\HookableInterface;
 use Simply\Core\Contract\PluginInterface;
 use Simply\Core\DependencyInjection\Compiler\HookPass;
+use Simply\Core\DependencyInjection\Compiler\ModelPass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -108,6 +109,7 @@ class CorePlugin implements PluginInterface
             ->addTag('container.service_subscriber');
         $container->registerForAutoconfiguration(HookableInterface::class)->addTag('wp.hook');
         $container->addCompilerPass(new HookPass());
+        $container->addCompilerPass(new ModelPass());
         $container->setParameter('container.behavior_describing_tags', [
             'annotations.cached_reader',
             'container.do_not_inline',

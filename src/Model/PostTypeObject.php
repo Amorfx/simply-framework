@@ -3,9 +3,12 @@
 namespace Simply\Core\Model;
 
 use Exception;
+use Simply\Core\Attributes\PostTypeModel;
 use Simply\Core\Contract\ModelInterface;
+use Simply\Core\Repository\PostRepository;
 use WP_Post;
 
+#[PostTypeModel(type: 'post', repositoryClass: PostRepository::class)]
 class PostTypeObject implements ModelInterface
 {
     public WP_Post $post;
