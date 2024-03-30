@@ -2,3 +2,12 @@ services:
   Simply\Core\Model\:
     resource: '../../src/Model/*'
     tags: ['framework.model']
+
+  Simply\Core\Model\ModelFactory:
+    class: Simply\Core\Model\ModelFactory
+    arguments:
+      - '%simply.model.list.post_model%'
+      - '%simply.model.list.term_model%'
+      - '%simply.model.mapping.model_repository%'
+      - '%simply.model.mapping.type_model%'
+    public: true

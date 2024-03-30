@@ -2,24 +2,39 @@
 
 namespace Simply\Core\Model;
 
-use Simply\Core\Contract\ModelInterface;
+use Exception;
+use Simply;
+use WP_Post;
+use WP_Term;
+use WP_User;
 
 class ModelFactory
 {
-    /** @var array|string[]  */
-    private static array $postTypeModelClasses = [PostTypeObject::class];
-    /** @var array|string[]  */
-    private static array $termTypeModelClasses = [TagObject::class, CategoryObject::class];
-    /** @var null|array<string, string> */
-    private static ?array $postTypeMapping = null;
-    /** @var null|array<string, string> */
-    private static ?array $taxTypeMapping = null;
+    /**
+     * @param array<string> $postModelList
+     * @param array<string> $termModelList
+     * @param array<string, string> $modelRepositoryMapping
+     * @param array<string, string> $modelTypeMapping
+     */
+    public function __construct(
+        private array $postModelList = [],
+        private array $termModelList = [],
+        private array $modelRepositoryMapping = [],
+        private array $modelTypeMapping = []
+    )
+    {
+    }
+
+    public static function fromObject(object $object): object
+    {
+        return Simply::get(self::class)->create($object);
+    }
+
 
     /**
-     * @return ModelInterface|mixed
-     * @throws \Exception
+     * @throws Exception
      */
-    public static function create(?object $currentObject): mixed
+    public function create(?object $currentObject): mixed
     {
         if (is_null($currentObject)) {
             return false;
@@ -27,105 +42,55 @@ class ModelFactory
 
         $className = get_class($currentObject);
         switch ($className) {
-            case \WP_Post::class:
-                $modelClass = self::getPostModelByType($currentObject->post_type);
+            case WP_Post::class:
+                $modelClass = $this->getModelByType($currentObject->post_type);
                 break;
 
-            case \WP_Term::class:
-                $modelClass = self::getTermModelByType($currentObject->taxonomy);
+            case WP_Term::class:
+                $modelClass = $this->getModelByType($currentObject->taxonomy);
                 break;
 
-            case \WP_User::class:
+            case WP_User::class:
                 $modelClass = UserObject::class;
                 break;
 
             default:
-                throw new \Exception('The class ' . $className . ' is not supported');
+                throw new Exception('The class ' . $className . ' is not supported');
         }
         return new $modelClass($currentObject);
     }
 
     /**
-     * Use in Simply Plugin to register your post type models
-     *
-     * @param array<string> $postModels
+     * @throws Exception
      */
-    public function registerPostModel(array $postModels): void
+    private function getRepositoryClassByModel(string $modelClass): string
     {
-        self::$postTypeModelClasses = $postModels;
+        if (!array_key_exists($modelClass, $this->modelRepositoryMapping)) {
+            throw new Exception('The model ' . $modelClass . ' has not repository class defined');
+        }
+
+        return $this->modelRepositoryMapping[$modelClass];
     }
 
     /**
-     * @param array<string> $postModels
+     * @throws Exception
      */
-    public function addPostModel(array $postModels): void
+    private function getTypeByModel(string $modelClass): string
     {
-        self::$postTypeModelClasses = array_merge(self::$postTypeModelClasses, $postModels);
-    }
-
-    /**
-     * Use in Simply Plugin to register your term type models
-     *
-     * @param array<string> $termModels
-     */
-    public function registerTermModel(array $termModels): void
-    {
-        self::$termTypeModelClasses = $termModels;
-    }
-
-    /**
-     * @param array<string> $termModels
-     */
-    public function addTermModel(array $termModels): void
-    {
-        self::$termTypeModelClasses = array_merge(self::$termTypeModelClasses, $termModels);
-    }
-
-    /**
-     * Set key to have a clean mapping
-     *
-     * @param string[] $models
-     *
-     * @return array<string, string>
-     */
-    private static function setMappingArray(array $models): array
-    {
-        foreach ($models as $key => $model) {
-            $models[call_user_func([$model, 'getType'])] = $model;
-            unset($models[$key]);
-        }
-        return $models;
-    }
-
-    /**
-     * Get Model register by post type
-     * A developer can map post type with a specific Model created by him
-     *
-     * @return mixed|string
-     */
-    private static function getPostModelByType(string $postType): mixed
-    {
-        if (is_null(self::$postTypeMapping)) {
-            self::$postTypeMapping = self::setMappingArray(apply_filters('simply/model/post_type_mapping', self::$postTypeModelClasses));
+        if (!array_key_exists($modelClass, $this->modelTypeMapping)) {
+            throw new Exception('The model ' . $modelClass . ' has not type defined');
         }
 
-        if (empty(self::$postTypeMapping) || !array_key_exists($postType, self::$postTypeMapping)) {
-            return PostTypeObject::class;
-        } else {
-            return self::$postTypeMapping[$postType];
-        }
+        return $this->modelTypeMapping[$modelClass];
     }
 
-    private static function getTermModelByType(string $taxonomy): mixed
+    private function getModelByType(string $type): string
     {
-        if (is_null(self::$taxTypeMapping)) {
-            self::$taxTypeMapping = self::setMappingArray(apply_filters('simply/model/term_mapping', self::$termTypeModelClasses));
+        $search = array_search($type, $this->modelTypeMapping);
+        if ($search === false) {
+            throw new Exception('The type ' . $type . ' is not supported, the supported types are ' . implode(', ', $this->modelTypeMapping));
         }
 
-        if (empty(self::$taxTypeMapping) || !array_key_exists($taxonomy, self::$taxTypeMapping)) {
-            throw new \Exception('The taxonomy ' . $taxonomy . ' is not supported');
-        } else {
-            return self::$taxTypeMapping[$taxonomy];
-        }
+        return $search;
     }
 }
