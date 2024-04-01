@@ -59,17 +59,11 @@ abstract class TermRepository extends AbstractRepository
         return null;
     }
 
-    public function getClassName(): string
-    {
-        return TermObject::class;
-    }
-
     /**
      * Return the taxonomy name that term is part of
-     * @return mixed
      */
-    protected function getTaxonomy(): mixed
+    protected function getTaxonomy(): string
     {
-        return call_user_func(array($this::getClassName(), 'getType'));
+        return $this->type;
     }
 }

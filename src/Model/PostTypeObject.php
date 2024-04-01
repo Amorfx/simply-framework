@@ -3,10 +3,13 @@
 namespace Simply\Core\Model;
 
 use Exception;
+use Simply\Core\Attributes\PostTypeModel;
 use Simply\Core\Contract\ModelInterface;
+use Simply\Core\Repository\PostRepository;
 use WP_Post;
 
-class PostTypeObject implements ModelInterface
+#[PostTypeModel(type: 'post', repositoryClass: PostRepository::class)]
+class PostTypeObject
 {
     public WP_Post $post;
 
@@ -61,7 +64,7 @@ class PostTypeObject implements ModelInterface
         $allCategories = get_the_category($this->getID());
         if (is_array($allCategories) && sizeof($allCategories) > 0) {
             foreach ($allCategories as $k => $c) {
-                $allCategories[$k] = ModelFactory::create($c);
+                $allCategories[$k] = ModelFactory::fromObject($c);
             }
         } else {
             $allCategories = [];
@@ -78,7 +81,7 @@ class PostTypeObject implements ModelInterface
         $allTags = get_the_tags($this->getID());
         if (is_array($allTags) && sizeof($allTags) > 0) {
             foreach ($allTags as $k => $t) {
-                $allTags[$k] = ModelFactory::create($t);
+                $allTags[$k] = ModelFactory::fromObject($t);
             }
         } else {
             $allTags = [];
@@ -97,10 +100,5 @@ class PostTypeObject implements ModelInterface
     public function getMeta(string $key, bool $single = false): mixed
     {
         return get_post_meta($this->post->ID, $key, $single);
-    }
-
-    public static function getType(): string
-    {
-        return 'post';
     }
 }

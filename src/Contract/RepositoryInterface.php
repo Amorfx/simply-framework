@@ -45,11 +45,4 @@ interface RepositoryInterface
      * @return object|null The object.
      */
     public function findOneBy(array $criteria): ?object;
-
-    /**
-     * Returns the class name of the object managed by the repository.
-     *
-     * @return string
-     */
-    public function getClassName(): string;
 }

@@ -2,8 +2,6 @@
 
 namespace Simply\Core\Repository;
 
-use Simply\Core\Model\TagObject;
-
 class TagRepository extends AbstractRepository
 {
     public function find(mixed $id)
@@ -44,10 +42,5 @@ class TagRepository extends AbstractRepository
             return $tag[0];
         }
         return null;
-    }
-
-    public function getClassName(): string
-    {
-        return TagObject::class;
     }
 }

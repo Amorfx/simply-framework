@@ -2,3 +2,17 @@ services:
   Simply\Core\Model\:
     resource: '../../src/Model/*'
     tags: ['framework.model']
+
+  Simply\Core\Model\ModelManager:
+    class: Simply\Core\Model\ModelManager
+    arguments:
+      - '%simply.model.mapping.model_repository%'
+      - '%simply.model.mapping.type_model%'
+
+  Simply\Core\Model\ModelFactory:
+    class: Simply\Core\Model\ModelFactory
+    public: true
+    arguments:
+      - '@Simply\Core\Model\ModelManager'
+
+

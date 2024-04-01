@@ -2,8 +2,6 @@
 
 namespace Simply\Core\Repository;
 
-use Simply\Core\Model\UserObject;
-
 class UserRepository extends AbstractRepository
 {
     public function find(mixed $id)
@@ -47,10 +45,5 @@ class UserRepository extends AbstractRepository
             return $user[0];
         }
         return null;
-    }
-
-    public function getClassName(): string
-    {
-        return UserObject::class;
     }
 }

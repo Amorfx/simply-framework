@@ -8,7 +8,6 @@ use WP_Query;
 
 class SimplyQuery
 {
-
     private static ModelInterface|bool|null $currentObject = null;
     public WP_Query $query;
 
@@ -30,7 +29,7 @@ class SimplyQuery
 
         $currentObject = get_queried_object();
         try {
-            $model = ModelFactory::create($currentObject);
+            $model = ModelFactory::fromObject($currentObject);
         } catch (\Exception $e) {
             error_log($e->getMessage());
             return false;
@@ -58,7 +57,7 @@ class SimplyQuery
         if (sizeof($allPosts) > 0) {
             $returnPosts = [];
             foreach ($allPosts as $aPost) {
-                $returnPosts[] = ModelFactory::create($aPost);
+                $returnPosts[] = ModelFactory::fromObject($aPost);
             }
             return $returnPosts;
         }

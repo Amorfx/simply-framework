@@ -3,13 +3,12 @@
 namespace Simply\Core\Repository;
 
 use Simply\Core\Contract\ModelInterface;
-use Simply\Core\Model\PostTypeObject;
 
 class PostRepository extends AbstractRepository
 {
     private function getPostType(): string
     {
-        return call_user_func(array($this::getClassName(), 'getType'));
+        return $this->type;
     }
     /**
      * @param mixed $id
@@ -94,10 +93,5 @@ class PostRepository extends AbstractRepository
             return $models[0];
         }
         return null;
-    }
-
-    public function getClassName(): string
-    {
-        return PostTypeObject::class;
     }
 }
