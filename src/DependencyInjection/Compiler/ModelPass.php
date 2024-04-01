@@ -6,8 +6,6 @@ use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionException;
 use Simply\Core\Attributes\Model;
-use Simply\Core\Attributes\PostTypeModel;
-use Simply\Core\Attributes\TermModel;
 use Simply\Core\Model\CategoryObject;
 use Simply\Core\Model\PostTypeObject;
 use Simply\Core\Model\TagObject;
@@ -29,8 +27,6 @@ final class ModelPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $postModelList = [];
-        $termModelList = [];
         $modelRepository = [];
         $listTypeModelIndexedByClass = [];
 
@@ -42,7 +38,7 @@ final class ModelPass implements CompilerPassInterface
 
             try {
                 $ref = new ReflectionClass($class);
-            } catch (ReflectionException) {
+            } catch (ReflectionException) { // @phpstan-ignore-line
                 continue;
             }
 
@@ -53,12 +49,6 @@ final class ModelPass implements CompilerPassInterface
             }
 
             $modelAttribute = $attributes[0]->newInstance();
-            if ($modelAttribute instanceof PostTypeModel) {
-                $postModelList[] = $class;
-            } elseif ($modelAttribute instanceof TermModel) {
-                $termModelList[] = $class;
-            }
-
             $listTypeModelIndexedByClass[$class] = $modelAttribute->type;
             $modelRepository[$class] = $modelAttribute->repositoryClass;
         }
@@ -68,26 +58,21 @@ final class ModelPass implements CompilerPassInterface
         if (count($allPostModelTypePost) > 1) {
             unset($listTypeModelIndexedByClass[PostTypeObject::class]);
             unset($modelRepository[PostTypeObject::class]);
-            unset($postModelList[array_search(PostTypeObject::class, $postModelList)]);
         }
 
         $allCategoryModelTypeCategory = array_filter($listTypeModelIndexedByClass, fn($type) => $type === 'category');
         if (count($allCategoryModelTypeCategory) > 1) {
             unset($listTypeModelIndexedByClass[CategoryObject::class]);
             unset($modelRepository[CategoryObject::class]);
-            unset($termModelList[array_search(CategoryObject::class, $termModelList)]);
         }
 
         $allTagModelTypeTag = array_filter($listTypeModelIndexedByClass, fn($type) => $type === 'post_tag');
         if (count($allTagModelTypeTag) > 1) {
             unset($listTypeModelIndexedByClass[TagObject::class]);
             unset($modelRepository[TagObject::class]);
-            unset($termModelList[array_search(TagObject::class, $termModelList)]);
         }
 
 
-        $container->setParameter('simply.model.list.post_model', $postModelList);
-        $container->setParameter('simply.model.list.term_model', $termModelList);
         $container->setParameter('simply.model.mapping.model_repository', $modelRepository);
         $container->setParameter('simply.model.mapping.type_model', $listTypeModelIndexedByClass);
 
@@ -101,7 +86,7 @@ final class ModelPass implements CompilerPassInterface
         string $type,
         string $modelClass,
         string $repositoryClass
-    )
+    ): void
     {
         $definition = $container->getDefinition($repositoryClass);
         $definition->setArgument('$type', $type);

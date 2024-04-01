@@ -26,7 +26,7 @@ final class Simply
 {
     private static ?Container $container = null;
     /**
-     * @var PluginInterface[]|RegisterModelInterface[]
+     * @var PluginInterface[]
      */
     private static array $simplyPlugins = [];
     /**

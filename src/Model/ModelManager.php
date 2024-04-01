@@ -13,14 +13,10 @@ use WP_User;
 final class ModelManager
 {
     /**
-     * @param array<string> $postModelList
-     * @param array<string> $termModelList
      * @param array<string, string> $modelRepositoryMapping
      * @param array<string, string> $modelTypeMapping
      */
     public function __construct(
-        private array $postModelList = [],
-        private array $termModelList = [],
         private array $modelRepositoryMapping = [],
         private array $modelTypeMapping = []
     )
