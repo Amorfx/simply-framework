@@ -5,7 +5,7 @@ namespace Simply\Core\Model;
 use Simply\Core\Contract\ModelInterface;
 use Simply\Core\Repository\TagRepository;
 
-abstract class TermObject implements ModelInterface
+abstract class TermObject
 {
     /**
      * @var \WP_Term
@@ -37,6 +37,4 @@ abstract class TermObject implements ModelInterface
     {
         return get_term_meta($this->term->term_id, $meta, $single);
     }
-
-    abstract public static function getType(): string;
 }

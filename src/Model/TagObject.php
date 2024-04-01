@@ -8,8 +8,4 @@ use Simply\Core\Repository\TagRepository;
 #[TermModel(type: 'post_tag', repositoryClass: TagRepository::class)]
 class TagObject extends TermObject
 {
-    public static function getType(): string
-    {
-        return 'post_tag';
-    }
 }

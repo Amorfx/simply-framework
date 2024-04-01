@@ -10,17 +10,8 @@ use WP_User;
 
 class ModelFactory
 {
-    /**
-     * @param array<string> $postModelList
-     * @param array<string> $termModelList
-     * @param array<string, string> $modelRepositoryMapping
-     * @param array<string, string> $modelTypeMapping
-     */
     public function __construct(
-        private array $postModelList = [],
-        private array $termModelList = [],
-        private array $modelRepositoryMapping = [],
-        private array $modelTypeMapping = []
+        private ModelManager $modelManager
     )
     {
     }
@@ -43,11 +34,11 @@ class ModelFactory
         $className = get_class($currentObject);
         switch ($className) {
             case WP_Post::class:
-                $modelClass = $this->getModelByType($currentObject->post_type);
+                $modelClass = $this->modelManager->getModelByType($currentObject->post_type);
                 break;
 
             case WP_Term::class:
-                $modelClass = $this->getModelByType($currentObject->taxonomy);
+                $modelClass = $this->modelManager->getModelByType($currentObject->taxonomy);
                 break;
 
             case WP_User::class:
@@ -58,39 +49,5 @@ class ModelFactory
                 throw new Exception('The class ' . $className . ' is not supported');
         }
         return new $modelClass($currentObject);
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function getRepositoryClassByModel(string $modelClass): string
-    {
-        if (!array_key_exists($modelClass, $this->modelRepositoryMapping)) {
-            throw new Exception('The model ' . $modelClass . ' has not repository class defined');
-        }
-
-        return $this->modelRepositoryMapping[$modelClass];
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function getTypeByModel(string $modelClass): string
-    {
-        if (!array_key_exists($modelClass, $this->modelTypeMapping)) {
-            throw new Exception('The model ' . $modelClass . ' has not type defined');
-        }
-
-        return $this->modelTypeMapping[$modelClass];
-    }
-
-    private function getModelByType(string $type): string
-    {
-        $search = array_search($type, $this->modelTypeMapping);
-        if ($search === false) {
-            throw new Exception('The type ' . $type . ' is not supported, the supported types are ' . implode(', ', $this->modelTypeMapping));
-        }
-
-        return $search;
     }
 }

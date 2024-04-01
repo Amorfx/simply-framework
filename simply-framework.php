@@ -81,13 +81,9 @@ final class Simply
             $containerBuilder->setParameter('kernel.debug', WP_DEBUG);
 
             // Build plugins
-            $modelFactory = new ModelFactory();
             foreach (self::$simplyPlugins as $plugin) {
                 $plugin->build($containerBuilder);
                 $interfaces = class_implements($plugin);
-                if (is_array($interfaces) && in_array(RegisterModelInterface::class, $interfaces)) {
-                    $plugin->registerModel($modelFactory);
-                }
             }
 
             // force autoconfigure true

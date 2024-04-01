@@ -23,7 +23,7 @@ class ModelFactoryTest extends SimplyTestCase
         // Model factory use get class and want to have exactly a classname but a mock is not WP_Post but Mock_xx_WP_Post so mock get_class
         Monkey\Functions\when('get_class')->justReturn(\WP_Post::class);
         Monkey\Functions\when('apply_filters')->justReturn($mapping);
-        $this->assertInstanceOf(ExamplePostModel::class, ModelFactory::create($postMock));
+        $this->assertInstanceOf(ExamplePostModel::class, ModelFactory::fromObject($postMock));
     }
 
     public function testCreatePostTypeModelNotFoundDefault()
@@ -34,13 +34,13 @@ class ModelFactoryTest extends SimplyTestCase
         // Model factory use get class and want to have exactly a classname but a mock is not WP_Post but Mock_xx_WP_Post so mock get_class
         Monkey\Functions\when('get_class')->justReturn(\WP_Post::class);
         Monkey\Functions\when('apply_filters')->justReturn($mapping);
-        $this->assertInstanceOf(PostTypeObject::class, ModelFactory::create($postMock));
+        $this->assertInstanceOf(PostTypeObject::class, ModelFactory::fromObject($postMock));
     }
 
     public function testClassNotSupported()
     {
         $this->expectException(\Exception::class);
-        ModelFactory::create(new \stdClass());
+        ModelFactory::fromObject(new \stdClass());
     }
 
     public function testCreateTermModel()
@@ -51,7 +51,7 @@ class ModelFactoryTest extends SimplyTestCase
 
         $termMock = \Mockery::mock(\WP_Term::class);
         $termMock->taxonomy = 'example_type';
-        $this->assertInstanceOf(ExampleTermModel::class, ModelFactory::create($termMock));
+        $this->assertInstanceOf(ExampleTermModel::class, ModelFactory::fromObject($termMock));
     }
 
     public function testTaxonomyNotSupported()
@@ -60,19 +60,19 @@ class ModelFactoryTest extends SimplyTestCase
         $termMock = \Mockery::mock(\WP_Term::class);
         $termMock->taxonomy = 'does_not_exist';
         $this->expectExceptionMessage('The taxonomy does_not_exist is not supported');
-        ModelFactory::create($termMock);
+        ModelFactory::fromObject($termMock);
     }
 
     public function testCreateUserModel()
     {
         Monkey\Functions\when('get_class')->justReturn(\WP_User::class);
         $userMock = \Mockery::mock(\WP_User::class);
-        $this->assertInstanceOf(UserObject::class, ModelFactory::create($userMock));
+        $this->assertInstanceOf(UserObject::class, ModelFactory::fromObject($userMock));
     }
 
     public function testNotCreateModel()
     {
-        $this->assertFalse(ModelFactory::create(null));
+        $this->assertFalse(ModelFactory::fromObject(null));
     }
 
     public function testRegisterModels()

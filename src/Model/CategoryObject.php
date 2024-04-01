@@ -8,8 +8,4 @@ use Simply\Core\Repository\CategoryRepository;
 #[TermModel(type: 'category', repositoryClass: CategoryRepository::class)]
 class CategoryObject extends TermObject
 {
-    public static function getType(): string
-    {
-        return 'category';
-    }
 }

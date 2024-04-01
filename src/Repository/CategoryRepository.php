@@ -2,8 +2,6 @@
 
 namespace Simply\Core\Repository;
 
-use Simply\Core\Model\CategoryObject;
-
 class CategoryRepository extends AbstractRepository
 {
     public function find(mixed $id)
@@ -60,10 +58,5 @@ class CategoryRepository extends AbstractRepository
             return $cat[0];
         }
         return null;
-    }
-
-    public function getClassName(): string
-    {
-        return CategoryObject::class;
     }
 }

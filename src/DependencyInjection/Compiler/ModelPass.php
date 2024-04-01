@@ -90,6 +90,22 @@ final class ModelPass implements CompilerPassInterface
         $container->setParameter('simply.model.list.term_model', $termModelList);
         $container->setParameter('simply.model.mapping.model_repository', $modelRepository);
         $container->setParameter('simply.model.mapping.type_model', $listTypeModelIndexedByClass);
+
+        foreach ($listTypeModelIndexedByClass as $class => $type) {
+            $this->setupDefinitionForRepository($container, $type, $class, $modelRepository[$class]);
+        }
+    }
+
+    private function setupDefinitionForRepository(
+        ContainerBuilder $container,
+        string $type,
+        string $modelClass,
+        string $repositoryClass
+    )
+    {
+        $definition = $container->getDefinition($repositoryClass);
+        $definition->setArgument('$type', $type);
+        $definition->setArgument('$modelClass', $modelClass);
     }
 
 }
