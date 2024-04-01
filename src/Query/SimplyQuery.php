@@ -8,7 +8,7 @@ use WP_Query;
 
 class SimplyQuery
 {
-    private static ModelInterface|bool|null $currentObject = null;
+    private static object|bool|null $currentObject = null;
     public WP_Query $query;
 
     public function __construct(WP_Query $query)
@@ -18,10 +18,9 @@ class SimplyQuery
 
     /**
      * Get the model associated with the WordPress queried object
-     * @return ModelInterface|false
      * @throws \Exception
      */
-    public static function getCurrentObject(): ModelInterface|bool|null
+    public static function getCurrentObject(): object|bool|null
     {
         if (!is_null(self::$currentObject)) {
             return self::$currentObject;
