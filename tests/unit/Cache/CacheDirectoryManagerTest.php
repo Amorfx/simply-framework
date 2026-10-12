@@ -34,15 +34,29 @@ class CacheDirectoryManagerTest extends SimplyTestCase
         $this->assertSame(SIMPLY_CACHE_DIRECTORY . '/abc123/container.php', CacheDirectoryManager::getCachePath('container.php'));
     }
 
-    public function testDeleteCacheRemovesTheDirectoryWithoutLeftovers()
+    public function testDeleteCacheEmptiesTheDirectoryWithoutLeftovers()
     {
         file_put_contents(SIMPLY_CACHE_DIRECTORY . '/container.php', '<?php');
         mkdir(SIMPLY_CACHE_DIRECTORY . '/abc123/twig', 0777, true);
 
         CacheDirectoryManager::deleteCache();
 
-        $this->assertDirectoryDoesNotExist(SIMPLY_CACHE_DIRECTORY);
+        // The directory itself is kept: it may be a mount point (Docker volume), which cannot be renamed
+        $this->assertDirectoryExists(SIMPLY_CACHE_DIRECTORY);
+        $this->assertSame([], array_values(array_diff(scandir(SIMPLY_CACHE_DIRECTORY), ['.', '..'])));
         $this->assertSame([], glob(SIMPLY_CACHE_DIRECTORY . '.trash-*'));
+    }
+
+    public function testEntriesBeingRemovedByAnotherRequestAreLeftAlone()
+    {
+        mkdir(SIMPLY_CACHE_DIRECTORY . '/.trash-concurrent', 0777, true);
+        mkdir(SIMPLY_CACHE_DIRECTORY . '/previous', 0777, true);
+        CacheDirectoryManager::setFingerprint('current');
+
+        CacheDirectoryManager::pruneStaleFingerprints();
+        CacheDirectoryManager::deleteCache();
+
+        $this->assertSame(['.trash-concurrent'], array_values(array_diff(scandir(SIMPLY_CACHE_DIRECTORY), ['.', '..'])));
     }
 
     public function testDeleteCacheWithoutCacheDirectoryDoesNothing()

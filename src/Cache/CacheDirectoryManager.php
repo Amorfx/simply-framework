@@ -6,6 +6,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 final class CacheDirectoryManager
 {
+    private const TRASH_PREFIX = '.trash-';
+
     private static ?string $fingerprint = null;
 
     /**
@@ -17,11 +19,11 @@ final class CacheDirectoryManager
     }
 
     /**
-     * Remove the whole cache. Concurrent requests see either the complete cache or no cache, never a half-deleted one.
+     * Remove the whole cache. Concurrent requests see either a complete fingerprint directory or none, never a half-deleted one.
      */
     public static function deleteCache(): void
     {
-        self::trash(SIMPLY_CACHE_DIRECTORY);
+        self::trashEntries(static fn(string $name): bool => true);
     }
 
     /**
@@ -29,16 +31,12 @@ final class CacheDirectoryManager
      */
     public static function pruneStaleFingerprints(): void
     {
-        if (self::$fingerprint === null || !is_dir(SIMPLY_CACHE_DIRECTORY)) {
+        $fingerprint = self::$fingerprint;
+        if ($fingerprint === null) {
             return;
         }
 
-        foreach (new \DirectoryIterator(SIMPLY_CACHE_DIRECTORY) as $entry) {
-            if ($entry->isDot() || $entry->getFilename() === self::$fingerprint) {
-                continue;
-            }
-            self::trash($entry->getPathname());
-        }
+        self::trashEntries(static fn(string $name): bool => $name !== $fingerprint);
     }
 
     public static function getCachePath(string $path): string
@@ -52,15 +50,33 @@ final class CacheDirectoryManager
     }
 
     /**
-     * Rename then remove: rename is atomic, so readers never see a partially removed cache
+     * The cache directory itself is kept: it may be a mount point (Docker volume), which cannot be renamed
+     *
+     * @param callable(string): bool $shouldTrash
      */
-    private static function trash(string $path): void
+    private static function trashEntries(callable $shouldTrash): void
     {
-        if (!file_exists($path)) {
+        if (!is_dir(SIMPLY_CACHE_DIRECTORY)) {
             return;
         }
 
-        $trash = SIMPLY_CACHE_DIRECTORY . '.trash-' . bin2hex(random_bytes(6));
+        foreach (new \DirectoryIterator(SIMPLY_CACHE_DIRECTORY) as $entry) {
+            $name = $entry->getFilename();
+            // Trash entries are being removed by the request that renamed them
+            if ($entry->isDot() || str_starts_with($name, self::TRASH_PREFIX) || !$shouldTrash($name)) {
+                continue;
+            }
+            self::trash($entry->getPathname());
+        }
+    }
+
+    /**
+     * Rename then remove: rename is atomic, so readers never see a partially removed entry.
+     * The trash stays in the cache directory, so the rename never crosses a filesystem boundary.
+     */
+    private static function trash(string $path): void
+    {
+        $trash = SIMPLY_CACHE_DIRECTORY . '/' . self::TRASH_PREFIX . bin2hex(random_bytes(6));
         // A concurrent request may have trashed it first
         if (!@rename($path, $trash)) {
             return;
