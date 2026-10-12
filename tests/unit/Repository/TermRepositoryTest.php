@@ -50,4 +50,30 @@ class TermRepositoryTest extends SimplyTestCase
 
         $this->assertInstanceOf(CategoryObject::class, (new CategoryRepository('category', CategoryObject::class))->find(1));
     }
+
+    public function testTermFindByUsesWordPressOrderbyKey(): void
+    {
+        Monkey\Functions\expect('get_terms')
+            ->once()
+            ->with(['hide_empty' => false, 'orderby' => 'name', 'order' => 'ASC', 'number' => 5, 'taxonomy' => 'genre'])
+            ->andReturn([]);
+        $repository = new class('genre', CategoryObject::class) extends TermRepository {
+        };
+
+        $repository->findBy(['hide_empty' => false], ['orderby' => 'name', 'order' => 'ASC'], 5);
+    }
+
+    public function testCategoryFindByDoesNotSendNullArguments(): void
+    {
+        Monkey\Functions\expect('get_categories')->once()->with(['hide_empty' => false])->andReturn([]);
+
+        (new CategoryRepository('category', CategoryObject::class))->findBy(['hide_empty' => false]);
+    }
+
+    public function testTagFindByDoesNotSendNullArguments(): void
+    {
+        Monkey\Functions\expect('get_tags')->once()->with(['orderby' => 'count', 'offset' => 2])->andReturn([]);
+
+        (new TagRepository('post_tag', TagObject::class))->findBy([], 'count', null, 2);
+    }
 }

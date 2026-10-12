@@ -21,11 +21,7 @@ class TagRepository extends AbstractRepository
 
     public function findBy(array $criteria, array|string $orderBy = null, int $limit = null, int $offset = null): array
     {
-        $args = array_merge($criteria, [
-            'orderby' => $orderBy,
-            'number' => $limit,
-            'offset' => $offset
-        ]);
+        $args = array_merge($criteria, $this->getOrderArgs($orderBy), $this->getPaginationArgs($limit, $offset));
         $tags = get_tags($args);
         $returnModels = [];
         foreach ($tags as $aTag) {
