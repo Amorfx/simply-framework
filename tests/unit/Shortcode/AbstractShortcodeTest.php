@@ -34,13 +34,32 @@ class AbstractShortcodeTest extends SimplyTestCase
         };
     }
 
-    public function testShortcodeWithoutAttributesUsesDefaults(): void
-    {
-        $this->assertSame(['title' => 'default'], $this->createShortcode()->actionShortcode(''));
-    }
-
     public function testShortcodeWithAttributes(): void
     {
         $this->assertSame(['title' => 'x'], $this->createShortcode()->actionShortcode(['title' => 'x', 'unknown' => 'y']));
+    }
+
+    public function testRegisteredCallbackAcceptsEmptyStringAttributes(): void
+    {
+        $callback = null;
+        Monkey\Functions\expect('add_shortcode')
+            ->once()
+            ->andReturnUsing(static function (string $tag, callable $registered) use (&$callback): void {
+                $callback = $registered;
+            });
+
+        $this->createShortcode()->register();
+
+        $this->assertSame(['title' => 'default'], $callback(''));
+    }
+
+    /**
+     * Subclasses overriding actionShortcode(array $atts, ...) must stay compatible
+     */
+    public function testActionShortcodeSignatureStaysArray(): void
+    {
+        $parameter = (new \ReflectionMethod(AbstractShortcode::class, 'actionShortcode'))->getParameters()[0];
+
+        $this->assertSame('array', (string) $parameter->getType());
     }
 }
