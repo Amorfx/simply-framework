@@ -20,7 +20,7 @@ This is why the framework was developed as a WordPress must use plugin
 
 ## Cache
 
-The compiled container and Twig templates are cached in `SIMPLY_CACHE_DIRECTORY`, in a sub-directory named after a fingerprint of what they are built from: installed Composer packages, configuration directories, registered plugins and theme, and `WP_DEBUG`. Updating a package, switching theme or adding a configuration directory therefore rebuilds the cache automatically. Register plugins, theme and configuration directories the same way for WP-CLI and web requests, otherwise each one rebuilds the cache of the other.
+The compiled container and Twig templates are cached in `SIMPLY_CACHE_DIRECTORY`, in a sub-directory named after a fingerprint of what they are built from: installed Composer packages, configuration directories, registered plugins and theme, and `WP_DEBUG`. Updating a package, switching theme or adding a configuration directory therefore rebuilds the cache automatically. Caches of other fingerprints are removed on the next rebuild once they have not been modified for an hour, so several contexts (WP-CLI with `--skip-themes`, one theme per site on a multisite) can live side by side.
 
 With `WP_DEBUG` set to `false`, files are not checked for changes. When you deploy code changes that Composer does not see (your theme or plugin services, YAML configuration, Twig templates), clear the cache as part of the deployment:
 
