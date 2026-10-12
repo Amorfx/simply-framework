@@ -27,13 +27,19 @@ final class CallbackReflector
     }
 
     /**
-     * "Class:method" for a method, the function name otherwise
+     * "Class:method" for a method, the function name otherwise.
+     * A lazy listener of a service whose id is not its class also shows the id, to tell services of the same class apart.
      */
     public static function name(mixed $callback): string
     {
         $reflection = self::reflect($callback);
         if ($reflection instanceof \ReflectionMethod) {
-            return $reflection->getDeclaringClass()->getName() . ':' . $reflection->getName();
+            $name = $reflection->getDeclaringClass()->getName() . ':' . $reflection->getName();
+            if ($callback instanceof LazyHookListener && $callback->serviceId !== $callback->class) {
+                $name .= ' (' . $callback->serviceId . ')';
+            }
+
+            return $name;
         }
 
         return $reflection?->getName() ?? '';

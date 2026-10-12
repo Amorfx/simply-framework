@@ -13,7 +13,7 @@ class CallbackReflectorTest extends SimplyTestCase
     public function testLazyListenerResolvesToTheServiceMethod()
     {
         ExampleLazyHookService::$instances = 0;
-        $listener = new LazyHookListener(new ServiceLocator([]), 'app.title', ExampleLazyHookService::class, 'title');
+        $listener = new LazyHookListener(new ServiceLocator([]), ExampleLazyHookService::class, ExampleLazyHookService::class, 'title');
 
         $reflection = CallbackReflector::reflect($listener);
 
@@ -21,6 +21,15 @@ class CallbackReflectorTest extends SimplyTestCase
         $this->assertStringEndsWith('tests/Fixtures/ExampleLazyHookService.php', $reflection->getFileName());
         $this->assertSame(ExampleLazyHookService::class . ':title', CallbackReflector::name($listener));
         $this->assertSame(0, ExampleLazyHookService::$instances, 'Debugging must not instantiate the service');
+    }
+
+    public function testLazyListenerOfAServiceWhoseIdIsNotItsClassShowsTheId()
+    {
+        $listener = new LazyHookListener(new ServiceLocator([]), 'app.title', ExampleLazyHookService::class, 'title');
+        $autoRegistered = new LazyHookListener(new ServiceLocator([]), ExampleLazyHookService::class, ExampleLazyHookService::class, 'title');
+
+        $this->assertSame(ExampleLazyHookService::class . ':title (app.title)', CallbackReflector::name($listener));
+        $this->assertSame(ExampleLazyHookService::class . ':title', CallbackReflector::name($autoRegistered));
     }
 
     public function testArrayCallback()
