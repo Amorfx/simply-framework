@@ -29,10 +29,6 @@ final class CacheFingerprint
      */
     private static function getInstalledPackages(): array
     {
-        if (!method_exists(ClassLoader::class, 'getRegisteredLoaders')) {
-            return [];
-        }
-
         $packages = [];
         foreach (ClassLoader::getRegisteredLoaders() as $vendorDir => $loader) {
             $installedFile = $vendorDir . '/composer/installed.php';

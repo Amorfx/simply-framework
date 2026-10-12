@@ -28,7 +28,8 @@ class ShortcodeManager implements ManagerInterface
     public function registerShortcodes(): void
     {
         foreach ($this->shortcodes as $aShortcode) {
-            if (!$aShortcode instanceof AbstractShortcode) {
+            // Tagged services are not type-checked by the container
+            if (!$aShortcode instanceof AbstractShortcode) { // @phpstan-ignore instanceof.alwaysTrue
                 throw new \RuntimeException('Services with tags wp_shortcode has to be an extension class of AbstractShortcode');
             }
 

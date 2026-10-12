@@ -34,7 +34,7 @@ abstract class AbstractShortcode
         add_shortcode(
             $this->getTag(),
             // WordPress stubs describe the >= 6.5 behaviour, where the string case cannot happen
-            // @phpstan-ignore ternary.elseUnreachable
+            // @phpstan-ignore function.alreadyNarrowedType
             fn(array|string $atts, ?string $content = null): mixed => $this->actionShortcode(is_array($atts) ? $atts : [], $content)
         );
     }

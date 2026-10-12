@@ -11,3 +11,10 @@ parameters:
         - simply-framework.php
     excludePaths:
         - src/DependencyInjection/Extension/*
+    ignoreErrors:
+        # Traits offered to Simply users, not used inside the framework itself
+        -
+            identifier: trait.unused
+            paths:
+                - src/Cache/ServiceCacheTrait.php
+                - src/Model/HasCachedProperties.php
