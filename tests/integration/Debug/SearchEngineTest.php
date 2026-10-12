@@ -4,7 +4,10 @@ namespace Simply\Tests\Integration\Debug;
 
 use Simply\Core\Debug\FilterParams;
 use Simply\Core\Debug\SearchEngine;
+use Simply\Core\Hook\LazyHookListener;
 use Simply\Tests\Fixtures\ExampleClassHook;
+use Simply\Tests\Fixtures\ExampleLazyHookService;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 
 class SearchEngineTest extends \WP_UnitTestCase
 {
@@ -46,6 +49,18 @@ class SearchEngineTest extends \WP_UnitTestCase
         self::assertCount(0, $hooks);
     }
 
+    public function test_it_finds_lazy_listeners_by_function_name_and_directory(): void
+    {
+        $this->loadAllWordpressFiles();
+        add_filter('my_lazy_hook', new LazyHookListener(new ServiceLocator([]), 'app.title', ExampleLazyHookService::class, 'title'));
+
+        $byName = (new SearchEngine($GLOBALS['wp_filter'], new FilterParams(functionName: 'title')))->search();
+        self::assertArrayHasKey('my_lazy_hook', $byName);
+
+        $byDirectory = (new SearchEngine($GLOBALS['wp_filter'], new FilterParams(null, 'tests/Fixtures')))->search();
+        self::assertArrayHasKey('my_lazy_hook', $byDirectory);
+    }
+
     private function loadAllWordpressFiles(): void
     {
         require_once ABSPATH . 'wp-admin/includes/admin.php';
@@ -53,8 +68,8 @@ class SearchEngineTest extends \WP_UnitTestCase
         require_once ABSPATH . 'wp-admin/includes/dashboard.php';
         require_once ABSPATH . 'wp-admin/includes/nav-menu.php';
         require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-        require ABSPATH . 'wp-admin/includes/theme-install.php';
-        require ABSPATH . 'wp-admin/includes/update-core.php';
-        require ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+        require_once ABSPATH . 'wp-admin/includes/theme-install.php';
+        require_once ABSPATH . 'wp-admin/includes/update-core.php';
+        require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
     }
 }

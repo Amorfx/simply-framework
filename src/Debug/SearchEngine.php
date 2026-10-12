@@ -2,9 +2,6 @@
 
 namespace Simply\Core\Debug;
 
-use ReflectionException;
-use ReflectionFunction;
-use ReflectionMethod;
 use WP_Hook;
 
 final class SearchEngine
@@ -21,7 +18,6 @@ final class SearchEngine
 
     /**
      * @return array<string, WP_Hook>
-     * @throws ReflectionException
      */
     public function search(): array
     {
@@ -58,7 +54,6 @@ final class SearchEngine
     /**
      * @param array<string, WP_Hook> $hooks
      * @return array<string, WP_Hook>
-     * @throws ReflectionException
      */
     private function filterByDirectory(array $hooks): array
     {
@@ -103,15 +98,10 @@ final class SearchEngine
     /** @phpstan-ignore-next-line  */
     private function isInFunctionName(array $callback): bool
     {
-        if (is_array($callback['function'])) {
-            return $this->filters->functionName === $callback['function'][1];
-        }
-
-        return $this->filters->functionName === $callback['function'];
+        return $this->filters->functionName === CallbackReflector::reflect($callback['function'])?->getName();
     }
 
     /**
-     * @throws ReflectionException
      */
     private function isInDirectory(WP_Hook $hook): bool
     {
@@ -127,7 +117,6 @@ final class SearchEngine
     }
 
     /**
-     * @throws ReflectionException
      * @phpstan-ignore-next-line
      */
     private function isInSource(array $callback): bool
@@ -136,20 +125,9 @@ final class SearchEngine
         return str_contains($source, '/' . $this->filters->directory . '/');
     }
 
-    /**
-     * @throws ReflectionException
-     * @phpstan-ignore-next-line
-     */
+    /** @phpstan-ignore-next-line */
     private function getSource(array $callback): string
     {
-        if (is_array($callback['function'])) {
-            $reflector = new ReflectionMethod($callback['function'][0], $callback['function'][1]);
-            return $reflector->getFileName();
-        } elseif (is_string($callback['function'])) {
-            $reflector = new ReflectionFunction($callback['function']);
-            return $reflector->getFileName();
-        }
-
-        return '';
+        return CallbackReflector::reflect($callback['function'])?->getFileName() ?: '';
     }
 }

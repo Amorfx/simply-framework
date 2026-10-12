@@ -1,0 +1,3 @@
+services:
+  # Available in bin/console when simply-maker is loaded: it tags every console command
+  Simply\Core\Command\DebugHookCommand: ~

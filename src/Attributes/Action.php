@@ -3,18 +3,13 @@
 namespace Simply\Core\Attributes;
 
 use Attribute;
-use Simply\Core\Contract\HookableInterface;
 
 #[Attribute(Attribute::IS_REPEATABLE | Attribute::TARGET_METHOD)]
-class Action implements HookableInterface
+class Action
 {
     private string $action;
     private int $priority;
     private int $numberArguments;
-    /**
-     * @var array<object|string, string> $callable
-     */
-    private array $callable;
 
     public function __construct(string $action, int $priority = 10, int $numberArguments = 1)
     {
@@ -26,15 +21,6 @@ class Action implements HookableInterface
     public function getHook(): string
     {
         return $this->action;
-    }
-
-    /**
-     * @param array<object|string, string> $callable
-     * @return void
-     */
-    public function setCallable(array $callable): void
-    {
-        $this->callable = $callable;
     }
 
     /**
@@ -51,10 +37,5 @@ class Action implements HookableInterface
     public function getNumberArguments(): int
     {
         return $this->numberArguments;
-    }
-
-    public function register(): void
-    {
-        add_action($this->action, $this->callable, $this->priority, $this->numberArguments);
     }
 }
