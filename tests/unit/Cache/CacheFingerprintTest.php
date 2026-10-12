@@ -69,4 +69,21 @@ class CacheFingerprintTest extends SimplyTestCase
             $loader->unregister();
         }
     }
+
+    public function testPhpVersionIsPartOfTheFingerprint()
+    {
+        // The container dumped by Symfony on PHP 8.4 uses syntax that PHP 8.2 cannot parse
+        $this->assertNotSame(
+            CacheFingerprint::compute([], self::PACKAGES, '8.2'),
+            CacheFingerprint::compute([], self::PACKAGES, '8.4')
+        );
+    }
+
+    public function testCurrentPhpVersionIsUsedByDefault()
+    {
+        $this->assertSame(
+            CacheFingerprint::compute([], self::PACKAGES, PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION),
+            CacheFingerprint::compute([], self::PACKAGES)
+        );
+    }
 }
