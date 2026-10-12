@@ -30,6 +30,18 @@ abstract class AbstractRepository implements RepositoryInterface
     }
 
     /**
+     * Same as getReturnObject but returns null when WordPress found nothing (null, false or WP_Error)
+     */
+    protected function getReturnObjectOrNull(mixed $objectQuery): mixed
+    {
+        if (!is_object($objectQuery) || $objectQuery instanceof \WP_Error) {
+            return null;
+        }
+
+        return $this->getReturnObject($objectQuery);
+    }
+
+    /**
      * Translate the repository orderBy argument into WordPress query arguments.
      * Accepted: a field name ('title'), ['orderby' => field, 'order' => 'ASC|DESC']
      * or ['meta_key' => key, 'order' => 'ASC|DESC'].

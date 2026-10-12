@@ -6,8 +6,7 @@ class TagRepository extends AbstractRepository
 {
     public function find(mixed $id)
     {
-        $tag = get_tag($id);
-        return $this->getReturnObject($tag);
+        return $this->getReturnObjectOrNull(get_tag($id));
     }
 
     public function findAll(): array

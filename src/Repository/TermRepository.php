@@ -13,7 +13,7 @@ abstract class TermRepository extends AbstractRepository
 {
     public function find(mixed $id)
     {
-        return $this->getReturnObject(get_term($id, $this->getTaxonomy()));
+        return $this->getReturnObjectOrNull(get_term($id, $this->getTaxonomy()));
     }
 
     public function findAll(): array

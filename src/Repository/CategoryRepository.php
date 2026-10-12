@@ -6,8 +6,7 @@ class CategoryRepository extends AbstractRepository
 {
     public function find(mixed $id)
     {
-        $cat = get_category($id);
-        return $this->getReturnObject($cat);
+        return $this->getReturnObjectOrNull(get_category($id));
     }
 
     /**

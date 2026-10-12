@@ -19,6 +19,10 @@ class PostRepository extends AbstractRepository
     public function find(mixed $id): mixed
     {
         $post = get_post($id);
+        if (!$post instanceof \WP_Post || $post->post_type !== $this->getPostType()) {
+            return null;
+        }
+
         return $this->getReturnObject($post);
     }
 

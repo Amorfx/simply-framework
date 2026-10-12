@@ -59,4 +59,29 @@ class PostRepositoryTest extends SimplyTestCase
         $this->assertSame('post', \WP_Query::$lastArgs['post_type']);
         $this->assertSame(3, \WP_Query::$lastArgs['author']);
     }
+
+    public function testFindReturnsNullWhenPostDoesNotExist(): void
+    {
+        Monkey\Functions\when('get_post')->justReturn(null);
+
+        $this->assertNull($this->repository->find(999));
+    }
+
+    public function testFindReturnsNullWhenPostHasAnotherType(): void
+    {
+        $page = \Mockery::mock(\WP_Post::class);
+        $page->post_type = 'page';
+        Monkey\Functions\when('get_post')->justReturn($page);
+
+        $this->assertNull($this->repository->find(2));
+    }
+
+    public function testFindReturnsModel(): void
+    {
+        $post = \Mockery::mock(\WP_Post::class);
+        $post->post_type = 'post';
+        Monkey\Functions\when('get_post')->justReturn($post);
+
+        $this->assertInstanceOf(PostTypeObject::class, $this->repository->find(1));
+    }
 }
