@@ -3,7 +3,6 @@
 use Simply\Core\Cache\CacheDirectoryManager;
 use Simply\Core\Cache\CacheFingerprint;
 use Simply\Core\Contract\PluginInterface;
-use Simply\Core\Contract\RegisterModelInterface;
 use Simply\Core\DependencyInjection\CorePlugin;
 use Simply\Core\DependencyInjection\Extension\NavMenu\NavMenuExtension;
 use Simply\Core\DependencyInjection\Extension\PostType\PostTypeExtension;
