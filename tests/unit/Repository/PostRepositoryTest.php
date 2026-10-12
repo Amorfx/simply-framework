@@ -84,4 +84,40 @@ class PostRepositoryTest extends SimplyTestCase
 
         $this->assertInstanceOf(PostTypeObject::class, $this->repository->find(1));
     }
+
+    public function testFindByAcceptsSingleFieldDirectionMap(): void
+    {
+        $this->repository->findBy([], ['title' => 'DESC']);
+
+        $this->assertSame('title', \WP_Query::$lastArgs['orderby']);
+        $this->assertSame('DESC', \WP_Query::$lastArgs['order']);
+    }
+
+    public function testFindByRejectsMultiFieldMap(): void
+    {
+        $this->expectException(\UnexpectedValueException::class);
+
+        $this->repository->findBy([], ['title' => 'DESC', 'date' => 'ASC']);
+    }
+
+    public function testFindByOrdersByNumericMetaValue(): void
+    {
+        $this->repository->findBy([], ['meta_key' => 'price', 'orderby' => 'meta_value_num', 'order' => 'ASC']);
+
+        $this->assertSame('price', \WP_Query::$lastArgs['meta_key']);
+        $this->assertSame('meta_value_num', \WP_Query::$lastArgs['orderby']);
+    }
+
+    /**
+     * get_post() falls back to the global post for empty ids
+     */
+    public function testFindReturnsNullForEmptyId(): void
+    {
+        $post = \Mockery::mock(\WP_Post::class);
+        $post->post_type = 'post';
+        Monkey\Functions\when('get_post')->justReturn($post);
+
+        $this->assertNull($this->repository->find(0));
+        $this->assertNull($this->repository->find(null));
+    }
 }

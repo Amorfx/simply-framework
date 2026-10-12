@@ -18,6 +18,11 @@ class PostRepository extends AbstractRepository
      */
     public function find(mixed $id): mixed
     {
+        // get_post() falls back to the global post when the id is empty
+        if (empty($id)) {
+            return null;
+        }
+
         $post = get_post($id);
         if (!$post instanceof \WP_Post || $post->post_type !== $this->getPostType()) {
             return null;

@@ -43,11 +43,13 @@ abstract class AbstractRepository implements RepositoryInterface
 
     /**
      * Translate the repository orderBy argument into WordPress query arguments.
-     * Accepted: a field name ('title'), ['orderby' => field, 'order' => 'ASC|DESC']
-     * or ['meta_key' => key, 'order' => 'ASC|DESC'].
+     * Accepted: a field name ('title'), ['orderby' => field, 'order' => 'ASC|DESC'],
+     * ['meta_key' => key, 'orderby' => 'meta_value|meta_value_num', 'order' => 'ASC|DESC']
+     * or a single field => direction pair (['title' => 'DESC']).
      *
      * @param array<string, string>|string|null $orderBy
      * @return array<string, string>
+     * @throws \UnexpectedValueException When ordering by several fields
      */
     protected function getOrderArgs(array|string|null $orderBy): array
     {
@@ -59,10 +61,18 @@ abstract class AbstractRepository implements RepositoryInterface
             return ['orderby' => $orderBy];
         }
 
+        if (!isset($orderBy['meta_key']) && !isset($orderBy['orderby']) && !isset($orderBy['order'])) {
+            if (count($orderBy) !== 1) {
+                throw new \UnexpectedValueException('Only one field => direction pair is supported in orderBy, pass "orderby" in the criteria to order by several fields.');
+            }
+
+            return ['orderby' => (string) array_key_first($orderBy), 'order' => (string) reset($orderBy)];
+        }
+
         $args = [];
         if (isset($orderBy['meta_key'])) {
             $args['meta_key'] = $orderBy['meta_key'];
-            $args['orderby'] = 'meta_value';
+            $args['orderby'] = $orderBy['orderby'] ?? 'meta_value';
         } elseif (isset($orderBy['orderby'])) {
             $args['orderby'] = $orderBy['orderby'];
         }
