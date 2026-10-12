@@ -43,13 +43,13 @@ abstract class AbstractShortcode
 
     /**
      * Mix atts of shortcode and default parameters and finally render the shortcode
-     * @param array<mixed> $atts
+     * @param array<mixed>|string $atts WordPress passes an empty string when the shortcode has no attributes
      * @param null $content
      * @return mixed
      */
-    public function actionShortcode(array $atts, $content = null): mixed
+    public function actionShortcode(array|string $atts, $content = null): mixed
     {
-        $atts = shortcode_atts($this->getDefaultParams(), $atts);
+        $atts = shortcode_atts($this->getDefaultParams(), is_array($atts) ? $atts : []);
 
         $this->isAmp = function_exists('is_amp_endpoint') && is_amp_endpoint();
         $this->isInstantArticle = function_exists('is_transforming_instant_article') && is_transforming_instant_article();
