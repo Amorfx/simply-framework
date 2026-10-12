@@ -16,8 +16,12 @@ class RedisCache implements CacheInterface
     /**
      * @throws RedisException
      */
-    public function __construct(string $host, int $port)
+    public function __construct(string $host, int $port, ?Redis $client = null)
     {
+        if ($client !== null) {
+            $this->client = $client;
+            return;
+        }
         $this->client = new Redis();
         $this->client->connect($host, $port);
         $this->client->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
@@ -28,9 +32,10 @@ class RedisCache implements CacheInterface
         return $this->client->get($key);
     }
 
-    public function set(string $key, mixed $value, ?int $expire = 0): void
+    public function set(string $key, mixed $value, ?int $expire = null): void
     {
-        $this->client->set($key, $value, $expire);
+        // phpredis rejects an expiration below 1 and then stores nothing
+        $this->client->set($key, $value, $expire !== null && $expire > 0 ? ['EX' => $expire] : null);
     }
 
     public function delete(string $key): void
