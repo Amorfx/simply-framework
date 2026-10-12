@@ -44,8 +44,10 @@ jobs:
         sudo apt-get install -y mysql-server
         sudo service mysql start
 
+    # setup.sh exports the WordPress test suite with svn, no longer shipped on ubuntu-latest runners
     - name: Install wordpress test suites
       run: |
+        sudo apt-get install -y subversion
         cd tests/integration
         chmod +x setup.sh
         ./setup.sh wordpress_test root root
