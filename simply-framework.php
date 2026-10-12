@@ -68,7 +68,7 @@ final class Simply
         // Scope the cache to what it is built from: a package update, another theme or configuration directory
         // gets a fresh container even when WP_DEBUG is false and no file is checked for changes.
         // CorePlugin is left out because it is registered while building, it would change the fingerprint on the next call.
-        CacheDirectoryManager::setFingerprint(CacheFingerprint::compute([
+        $fingerprint = CacheFingerprint::compute([
             'debug' => WP_DEBUG,
             'config_directories' => $configDirectories,
             'plugins' => self::$wpPluginsPath,
@@ -77,12 +77,17 @@ final class Simply
                 array_map('get_class', self::$simplyPlugins),
                 static fn(string $class): bool => $class !== CorePlugin::class
             )),
-        ]));
+        ]);
+        CacheDirectoryManager::setFingerprint($fingerprint);
+        // One class per fingerprint: a container requested early (e.g. on plugins_loaded) and the one built at bootstrap
+        // may differ, and both are loaded in the same request
+        $containerClass = 'CachedContainer_' . $fingerprint;
         $file = CacheDirectoryManager::getCachePath('container.php');
         $containerConfigCache = new ConfigCache($file, WP_DEBUG);
 
-        // A concurrent cache clear may remove the file between the check and the include: rebuild it then
-        if (!$containerConfigCache->isFresh() || (@include_once $file) === false) {
+        // Rebuild when a concurrent cache clear removed the file between the check and the include,
+        // or when the file was dumped by another version of this code under the same fingerprint (source or path installs)
+        if (!$containerConfigCache->isFresh() || (@include_once $file) === false || !class_exists($containerClass, false)) {
             $extensions = apply_filters('simply/config/container_extensions', [
                 new PostTypeExtension(),
                 new TaxonomyExtension(),
@@ -109,14 +114,19 @@ final class Simply
 
             $dumper = new PhpDumper($containerBuilder);
             $containerConfigCache->write(
-                $dumper->dump(['class' => 'CachedContainer']),
+                $dumper->dump(['class' => $containerClass]),
                 $containerBuilder->getResources()
             );
             CacheDirectoryManager::pruneStaleFingerprints();
-            require_once $file;
+            // Not require_once: a stale file of the same path may already have been included above
+            if (!class_exists($containerClass, false)) {
+                require $file;
+            }
         }
 
-        self::$container = new CachedContainer(); // @phpstan-ignore-line
+        /** @var Container $container */
+        $container = new $containerClass();
+        self::$container = $container;
     }
 
     public static function registerPlugin(string $path, string $namespace = ''): void
