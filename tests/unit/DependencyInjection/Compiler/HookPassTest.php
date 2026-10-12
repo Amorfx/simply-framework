@@ -34,14 +34,22 @@ class HookPassTest extends SimplyTestCase
             ->onlyMethods(array('getHookCompiler'))
             ->getMock();
         $hookCompiler = $this->getMockBuilder(HookCompiler::class)
-            ->onlyMethods(array('compile', 'getFromCache', 'add'))
+            ->onlyMethods(array('getHooksMapping', 'add'))
             ->getMock();
 
-        $hookCompiler->method('getFromCache')->willReturn(array('hook' => 'ok'));
+        $hookCompiler->method('getHooksMapping')->willReturn(array('hook' => 'ok'));
         $hookPass->method('getHookCompiler')->willReturn($hookCompiler);
 
         $hookPass->process($container);
         $this->assertTrue($definition->hasTag('simply.attribute_hooks'));
         $this->assertSame(array('hook' => 'ok'), $container->getParameter('simply.compile_hooks'));
+    }
+
+    public function testCompileHooksParameterIsDefinedWithoutAnyHook()
+    {
+        $container = new ContainerBuilder();
+        (new HookPass())->process($container);
+
+        $this->assertSame([], $container->getParameter('simply.compile_hooks'));
     }
 }
