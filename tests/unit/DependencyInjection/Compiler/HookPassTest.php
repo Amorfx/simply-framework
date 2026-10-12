@@ -6,6 +6,7 @@ use Brain\Monkey;
 use Simply\Core\Hook\LazyHookListener;
 use Simply\Core\Manager\HookManager;
 use Simply\Core\DependencyInjection\Compiler\HookPass;
+use Simply\Tests\Fixtures\ExampleByReferenceHookService;
 use Simply\Tests\Fixtures\ExampleLazyHookService;
 use Simply\Tests\Fixtures\ExamplePrivateHookService;
 use Simply\Tests\Fixtures\ExampleServiceHookAttribute;
@@ -83,6 +84,18 @@ class HookPassTest extends SimplyTestCase
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('"Simply\Tests\Fixtures\ExamplePrivateHookService::hidden()" has a #[Action] attribute but is not public');
+
+        (new HookPass())->process($container);
+    }
+
+    public function testByReferenceParameterFailsTheBuild()
+    {
+        // The lazy listener receives arguments by value: a by-reference parameter would silently stop working
+        $container = $this->containerWithHookManager();
+        $container->register(ExampleByReferenceHookService::class, ExampleByReferenceHookService::class);
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('"Simply\Tests\Fixtures\ExampleByReferenceHookService::addItem()" takes $items by reference');
 
         (new HookPass())->process($container);
     }

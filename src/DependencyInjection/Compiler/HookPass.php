@@ -61,6 +61,17 @@ class HookPass implements CompilerPassInterface
                             (new ReflectionClass($attribute->getName()))->getShortName()
                         ));
                     }
+                    foreach ($method->getParameters() as $parameter) {
+                        if ($parameter->isPassedByReference()) {
+                            throw new LogicException(sprintf(
+                                'The method "%s::%s()" takes $%s by reference: hooks declared with #[%s] receive their arguments by value. Register this hook with a HookableInterface service instead.',
+                                $class,
+                                $method->getName(),
+                                $parameter->getName(),
+                                (new ReflectionClass($attribute->getName()))->getShortName()
+                            ));
+                        }
+                    }
                     /** @var Action|Filter $hook */
                     $hook = $attribute->newInstance();
                     $hooks[] = [
