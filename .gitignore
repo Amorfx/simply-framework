@@ -1,4 +1,5 @@
 vendor
 /cache
+/cache.trash-*
 .phpunit.result.cache
 .php-cs-fixer.cache
