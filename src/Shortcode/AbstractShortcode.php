@@ -30,7 +30,11 @@ abstract class AbstractShortcode
      */
     public function register(): void
     {
-        add_shortcode($this->getTag(), array($this, 'actionShortcode'));
+        // WordPress < 6.5 passes an empty string instead of an array when the shortcode has no attributes
+        add_shortcode(
+            $this->getTag(),
+            fn(array|string $atts, ?string $content = null): mixed => $this->actionShortcode(is_array($atts) ? $atts : [], $content)
+        );
     }
 
     /**

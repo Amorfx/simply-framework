@@ -34,7 +34,8 @@ class ModelFactory
         $className = get_class($currentObject);
         switch ($className) {
             case WP_Post::class:
-                $modelClass = $this->modelManager->getModelByType($currentObject->post_type);
+                // Post types without a dedicated model (page, custom post types...) use the generic post model
+                $modelClass = $this->modelManager->findModelByType($currentObject->post_type) ?? PostTypeObject::class;
                 break;
 
             case WP_Term::class:

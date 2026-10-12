@@ -47,13 +47,20 @@ final class ModelManager
         return $this->modelTypeMapping[$modelClass];
     }
 
+    public function findModelByType(string $type): ?string
+    {
+        $search = array_search($type, $this->modelTypeMapping, true);
+
+        return false === $search ? null : $search;
+    }
+
     public function getModelByType(string $type): string
     {
-        $search = array_search($type, $this->modelTypeMapping);
-        if ($search === false) {
+        $model = $this->findModelByType($type);
+        if (null === $model) {
             throw new Exception('The type ' . $type . ' is not supported, the supported types are ' . implode(', ', $this->modelTypeMapping));
         }
 
-        return $search;
+        return $model;
     }
 }

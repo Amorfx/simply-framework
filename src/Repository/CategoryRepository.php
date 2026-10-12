@@ -6,8 +6,7 @@ class CategoryRepository extends AbstractRepository
 {
     public function find(mixed $id)
     {
-        $cat = get_category($id);
-        return $this->getReturnObject($cat);
+        return $this->getReturnObjectOrNull(get_category($id));
     }
 
     /**
@@ -35,17 +34,11 @@ class CategoryRepository extends AbstractRepository
      */
     public function findBy(array $criteria, array|string $orderBy = null, int $limit = null, int $offset = null): array
     {
-        $args = array_merge($criteria, [
-            'orderby' => $orderBy,
-            'number' => $limit,
-            'offset' => $offset
-        ]);
+        $args = array_merge($criteria, $this->getOrderArgs($orderBy), $this->getPaginationArgs($limit, $offset));
         $cats = get_categories($args);
         $returnModels = [];
-        if (!empty($cats)) {
-            foreach ($cats as $aCat) {
-                $returnModels[] = $this->getReturnObject($aCat);
-            }
+        foreach ($cats as $aCat) {
+            $returnModels[] = $this->getReturnObject($aCat);
         }
 
         return $returnModels;
