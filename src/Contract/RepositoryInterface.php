@@ -35,7 +35,7 @@ interface RepositoryInterface
      * @return object[] The objects.
      *
      */
-    public function findBy(array $criteria, array|string $orderBy = null, int $limit = null, int $offset = null);
+    public function findBy(array $criteria, array|string|null $orderBy = null, ?int $limit = null, ?int $offset = null);
 
     /**
      * Finds a single object by a set of criteria.

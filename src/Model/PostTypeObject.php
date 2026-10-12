@@ -26,7 +26,7 @@ class PostTypeObject
         return get_the_title($this->post);
     }
 
-    public function getContent(string $more_link_text = null, bool $strip_teaser = false): string
+    public function getContent(?string $more_link_text = null, bool $strip_teaser = false): string
     {
         return get_the_content($more_link_text, $strip_teaser, $this->getID());
     }

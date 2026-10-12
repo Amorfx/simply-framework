@@ -26,7 +26,7 @@ abstract class TermRepository extends AbstractRepository
         return $returnModels;
     }
 
-    public function findBy(array $criteria, array|string $orderBy = null, int $limit = null, int $offset = null): array
+    public function findBy(array $criteria, array|string|null $orderBy = null, ?int $limit = null, ?int $offset = null): array
     {
         $args = array_merge(
             $criteria,
