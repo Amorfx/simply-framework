@@ -64,5 +64,10 @@
             "@php-cs-fix-test",
             "@phpstan"
         ]
+    },
+    "config": {
+        "platform": {
+            "php": "8.2"
+        }
     }
 }
