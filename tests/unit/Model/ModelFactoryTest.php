@@ -35,8 +35,17 @@ class ModelFactoryTest extends SimplyTestCase
         $postMock->post_type = 'does_not_exist';
         // Model factory use get class and want to have exactly a classname but a mock is not WP_Post but Mock_xx_WP_Post so mock get_class
         Monkey\Functions\when('get_class')->justReturn(\WP_Post::class);
-        $this->expectExceptionMessage('The type does_not_exist is not supported, the supported types are ');
-        $modelFactory->create($postMock);
+        $this->assertInstanceOf(PostTypeObject::class, $modelFactory->create($postMock));
+    }
+
+    public function testCreateTermModelNotFoundThrows()
+    {
+        $modelFactory = new ModelFactory(new ModelManager());
+        Monkey\Functions\when('get_class')->justReturn(\WP_Term::class);
+        $termMock = \Mockery::mock(\WP_Term::class);
+        $termMock->taxonomy = 'does_not_exist';
+        $this->expectExceptionMessage('The type does_not_exist is not supported');
+        $modelFactory->create($termMock);
     }
 
     public function testClassNotSupported()
