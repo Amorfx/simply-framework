@@ -33,6 +33,8 @@ abstract class AbstractShortcode
         // WordPress < 6.5 passes an empty string instead of an array when the shortcode has no attributes
         add_shortcode(
             $this->getTag(),
+            // WordPress stubs describe the >= 6.5 behaviour, where the string case cannot happen
+            // @phpstan-ignore ternary.elseUnreachable
             fn(array|string $atts, ?string $content = null): mixed => $this->actionShortcode(is_array($atts) ? $atts : [], $content)
         );
     }

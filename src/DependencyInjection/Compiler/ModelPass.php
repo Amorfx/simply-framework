@@ -38,7 +38,7 @@ final class ModelPass implements CompilerPassInterface
 
             try {
                 $ref = new ReflectionClass($class);
-            } catch (ReflectionException) { // @phpstan-ignore-line
+            } catch (ReflectionException) {
                 continue;
             }
 
