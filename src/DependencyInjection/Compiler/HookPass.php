@@ -10,10 +10,11 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Contracts\Service\ServiceMethodsSubscriberTrait;
 use Symfony\Contracts\Service\ServiceSubscriberTrait;
 
 /**
- * Add container.service_subscriber tag if class use ServiceSubscriberTrait
+ * Add container.service_subscriber tag if class use ServiceMethodsSubscriberTrait (or the deprecated ServiceSubscriberTrait)
  * Collect the #[Action] and #[Filter] hooks of all services for the HookManager
  *
  * @package SimplyFramework\Container\Compiler
@@ -31,7 +32,10 @@ class HookPass implements CompilerPassInterface
         if (!empty($allHookServices)) {
             foreach ($allHookServices as $id => $tags) {
                 $definition = $container->findDefinition($id);
-                if (!$definition->hasTag('container.service_subscriber') && in_array(ServiceSubscriberTrait::class, class_uses($definition->getClass()))) {
+                $traits = class_uses($definition->getClass()) ?: [];
+                $usesSubscriberTrait = in_array(ServiceMethodsSubscriberTrait::class, $traits, true)
+                    || in_array(ServiceSubscriberTrait::class, $traits, true);
+                if (!$definition->hasTag('container.service_subscriber') && $usesSubscriberTrait) {
                     $definition->addTag('container.service_subscriber');
                     $definition->setAutowired(true);
                 }
