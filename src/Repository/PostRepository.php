@@ -59,7 +59,7 @@ class PostRepository extends AbstractRepository
      * @throws \Exception
      * @phpstan-ignore-next-line
      */
-    public function findBy(array $criteria, array|string $orderBy = null, int $limit = null, int $offset  = null): array
+    public function findBy(array $criteria, array|string|null $orderBy = null, ?int $limit = null, ?int $offset = null): array
     {
         $queryArgs = array_merge(
             $criteria,

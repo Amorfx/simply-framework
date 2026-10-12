@@ -32,7 +32,7 @@ class CategoryRepository extends AbstractRepository
      * @throws \Exception
      * @phpstan-ignore-next-line
      */
-    public function findBy(array $criteria, array|string $orderBy = null, int $limit = null, int $offset = null): array
+    public function findBy(array $criteria, array|string|null $orderBy = null, ?int $limit = null, ?int $offset = null): array
     {
         $args = array_merge($criteria, $this->getOrderArgs($orderBy), $this->getPaginationArgs($limit, $offset));
         $cats = get_categories($args);
