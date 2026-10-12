@@ -13,12 +13,14 @@ final class CacheFingerprint
     /**
      * @param array<mixed> $context what the container is built from besides the installed packages
      * @param array<string, array{0: ?string, 1: ?string}>|null $installedPackages name => [version, reference], read from Composer when null
+     * @param string|null $phpVersion major.minor, the running one when null: the dumped container depends on it
      */
-    public static function compute(array $context, ?array $installedPackages = null): string
+    public static function compute(array $context, ?array $installedPackages = null, ?string $phpVersion = null): string
     {
         $installedPackages ??= self::getInstalledPackages();
+        $phpVersion ??= PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;
 
-        return substr(hash('xxh128', serialize([$context, $installedPackages])), 0, 16);
+        return substr(hash('xxh128', serialize([$context, $installedPackages, $phpVersion])), 0, 16);
     }
 
     /**
