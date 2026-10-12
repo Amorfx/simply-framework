@@ -2,11 +2,19 @@
 
 namespace Simply\Core\Cache;
 
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
 final class CacheDirectoryManager
 {
     private const TRASH_PREFIX = '.trash-';
+
+    /**
+     * Seconds after which the cache of another fingerprint is considered unused. Several fingerprints can be live at once
+     * (WP-CLI run with --skip-themes, a multisite with one theme per site, a rolling deployment): pruning them right away
+     * would make each one rebuild the cache of the other.
+     */
+    private const STALE_AFTER = 3600;
 
     private static ?string $fingerprint = null;
 
@@ -23,11 +31,11 @@ final class CacheDirectoryManager
      */
     public static function deleteCache(): void
     {
-        self::trashEntries(static fn(string $name): bool => true);
+        self::trashEntries(static fn(\SplFileInfo $entry): bool => true);
     }
 
     /**
-     * Remove what was cached for other fingerprints, including the layout of simply-framework <= 0.2.8
+     * Remove what was cached for other fingerprints and not modified for a while, including the layout of simply-framework <= 0.2.8
      */
     public static function pruneStaleFingerprints(): void
     {
@@ -36,7 +44,9 @@ final class CacheDirectoryManager
             return;
         }
 
-        self::trashEntries(static fn(string $name): bool => $name !== $fingerprint);
+        $staleBefore = time() - self::STALE_AFTER;
+        self::trashEntries(static fn(\SplFileInfo $entry): bool =>
+            $entry->getFilename() !== $fingerprint && $entry->getMTime() < $staleBefore);
     }
 
     public static function getCachePath(string $path): string
@@ -52,7 +62,7 @@ final class CacheDirectoryManager
     /**
      * The cache directory itself is kept: it may be a mount point (Docker volume), which cannot be renamed
      *
-     * @param callable(string): bool $shouldTrash
+     * @param callable(\SplFileInfo): bool $shouldTrash
      */
     private static function trashEntries(callable $shouldTrash): void
     {
@@ -61,9 +71,8 @@ final class CacheDirectoryManager
         }
 
         foreach (new \DirectoryIterator(SIMPLY_CACHE_DIRECTORY) as $entry) {
-            $name = $entry->getFilename();
-            // Trash entries are being removed by the request that renamed them
-            if ($entry->isDot() || str_starts_with($name, self::TRASH_PREFIX) || !$shouldTrash($name)) {
+            // Dot entries are being removed by another request: our trash, or the ".!<random>" name Symfony Filesystem::remove() renames to
+            if (str_starts_with($entry->getFilename(), '.') || !$shouldTrash($entry)) {
                 continue;
             }
             self::trash($entry->getPathname());
@@ -82,6 +91,10 @@ final class CacheDirectoryManager
             return;
         }
 
-        (new Filesystem())->remove($trash);
+        try {
+            (new Filesystem())->remove($trash);
+        } catch (IOException|\UnexpectedValueException) {
+            // Best effort: the cache is already out of the way, a leftover (e.g. files owned by another user) must not break the request
+        }
     }
 }
