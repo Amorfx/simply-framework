@@ -6,6 +6,7 @@ use Simply\Core\Debug\CallbackReflector;
 use Simply\Core\Debug\FilterParams;
 use Simply\Core\Debug\HookDebug;
 use Simply\Core\Debug\SearchEngine;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,13 +14,11 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use WP_Hook;
 
+#[AsCommand(name: 'simply:debug:hook', description: 'List all hooks registered in the application.')]
 final class DebugHookCommand extends Command
 {
-    protected static $defaultName = 'simply:debug:hook';
-
     protected function configure()
     {
-        $this->setDescription('List all hooks registered in the application.');
         $this->addOption('hook_name', null, InputOption::VALUE_OPTIONAL, 'Filter the hooks by name.');
         $this->addOption('directory', null, InputOption::VALUE_OPTIONAL, 'Filter the hooks by directory path.');
         $this->addOption('function_name', null, InputOption::VALUE_OPTIONAL, 'Filter the hooks by function name.');
