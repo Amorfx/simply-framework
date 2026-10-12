@@ -2,9 +2,7 @@
 
 namespace Simply\Core\Command;
 
-use ReflectionException;
-use ReflectionFunction;
-use ReflectionMethod;
+use Simply\Core\Debug\CallbackReflector;
 use Simply\Core\Debug\FilterParams;
 use Simply\Core\Debug\HookDebug;
 use Simply\Core\Debug\SearchEngine;
@@ -27,9 +25,6 @@ final class DebugHookCommand extends Command
         $this->addOption('function_name', null, InputOption::VALUE_OPTIONAL, 'Filter the hooks by function name.');
     }
 
-    /**
-     * @throws ReflectionException
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->loadAllWordpressFiles();
@@ -65,7 +60,6 @@ final class DebugHookCommand extends Command
     /**
      * @param FilterParams $filter
      * @return array<string, WP_Hook>
-     * @throws ReflectionException
      */
     private function getAllHooksRegistered(FilterParams $filter): array
     {
@@ -75,7 +69,6 @@ final class DebugHookCommand extends Command
     }
 
     /**
-     * @throws ReflectionException
      * @param array<string, WP_Hook> $hooks
      * @return HookDebug[]
      */
@@ -90,27 +83,12 @@ final class DebugHookCommand extends Command
 
             foreach ($hookData->callbacks as $priority => $callbacks) {
                 foreach ($callbacks as $dataCallback) {
-                    $source = '';
-                    $functionName = '';
-                    $sourceLine = 0;
-                    // It's a method of a class
-                    if (is_array($dataCallback['function'])) {
-                        $reflector = new ReflectionMethod($dataCallback['function'][0], $dataCallback['function'][1]);
-                        $source = $reflector->getFileName();
-                        $fullClassName = $reflector->getDeclaringClass()->getName();
-                        $functionName = $fullClassName . ':' . $dataCallback['function'][1];
-                        $sourceLine = $reflector->getStartLine();
-                    } elseif (is_string($dataCallback['function'])) {
-                        $reflector = new ReflectionFunction($dataCallback['function']);
-                        $source = $reflector->getFileName();
-                        $functionName = $dataCallback['function'];
-                        $sourceLine = $reflector->getStartLine();
-                    }
+                    $reflection = CallbackReflector::reflect($dataCallback['function']);
                     $hookDebug[] = new HookDebug(
                         $name,
-                        $source,
-                        $sourceLine,
-                        $functionName,
+                        $reflection?->getFileName() ?: '',
+                        $reflection?->getStartLine() ?: 0,
+                        CallbackReflector::name($dataCallback['function']),
                         $priority,
                     );
                 }
