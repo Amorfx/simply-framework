@@ -10,6 +10,7 @@ use Simply\Tests\Fixtures\ExampleByReferenceHookService;
 use Simply\Tests\Fixtures\ExampleLazyHookService;
 use Simply\Tests\Fixtures\ExamplePrivateHookService;
 use Simply\Tests\Fixtures\ExampleServiceHookAttribute;
+use Simply\Tests\Fixtures\ExampleServiceMethodsSubscriberClass;
 use Simply\Tests\Fixtures\ExampleServiceSubscriberClass;
 use Simply\Tests\SimplyTestCase;
 use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
@@ -28,6 +29,18 @@ class HookPassTest extends SimplyTestCase
         $hookPass->process($container);
 
         $this->assertTrue(array_key_exists('container.service_subscriber', $definition->getTags()));
+        $this->assertTrue($definition->isAutowired());
+    }
+
+    public function testServiceMethodsSubscriberTraitIsTaggedAndAutowired()
+    {
+        $container = new ContainerBuilder();
+        $definition = $container->register('example', ExampleServiceMethodsSubscriberClass::class);
+        $definition->addTag('wp.hook');
+
+        (new HookPass())->process($container);
+
+        $this->assertTrue($definition->hasTag('container.service_subscriber'));
         $this->assertTrue($definition->isAutowired());
     }
 
