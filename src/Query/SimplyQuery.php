@@ -4,7 +4,10 @@ namespace Simply\Core\Query;
 
 use Simply\Core\Contract\ModelInterface;
 use Simply\Core\Model\ModelFactory;
+use WP_Post;
 use WP_Query;
+use WP_Term;
+use WP_User;
 
 class SimplyQuery
 {
@@ -26,9 +29,15 @@ class SimplyQuery
             return self::$currentObject;
         }
 
-        $currentObject = get_queried_object();
+        $queriedObject = get_queried_object();
+        // Blog home, 404, search and date archives have no queried object, post type archives return a WP_Post_Type:
+        // none of them can have a model
+        if (!$queriedObject instanceof WP_Post && !$queriedObject instanceof WP_Term && !$queriedObject instanceof WP_User) {
+            return false;
+        }
+
         try {
-            $model = ModelFactory::fromObject($currentObject);
+            $model = ModelFactory::fromObject($queriedObject);
         } catch (\Exception $e) {
             error_log($e->getMessage());
             return false;
