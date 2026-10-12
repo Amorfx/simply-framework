@@ -93,7 +93,7 @@ final class CacheDirectoryManager
 
         try {
             (new Filesystem())->remove($trash);
-        } catch (IOException|\UnexpectedValueException) {
+        } catch (IOException|\UnexpectedValueException) { // @phpstan-ignore catch.neverThrown (the FilesystemIterator used by Filesystem::remove() can throw it when a directory disappears)
             // Best effort: the cache is already out of the way, a leftover (e.g. files owned by another user) must not break the request
         }
     }

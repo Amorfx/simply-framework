@@ -49,7 +49,7 @@ abstract class AbstractWordPressCommand
     protected function verifyRequiredArgs(array $assoc_args): void
     {
         $missedArgs = array();
-        if (is_array($this::$requiredArgs) && ! empty($this::$requiredArgs)) {
+        if (! empty($this::$requiredArgs)) {
             foreach ($this::$requiredArgs as $anArg) {
                 if (!array_key_exists($anArg, $assoc_args)) {
                     $missedArgs[] = $anArg;

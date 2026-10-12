@@ -165,7 +165,7 @@ final class Simply
      * Shortcut function for fn get of the container
      * @param string $id
      *
-     * @return object|Container|null
+     * @return object
      * @throws Exception
      */
     public static function get(string $id): mixed

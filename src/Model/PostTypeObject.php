@@ -62,7 +62,7 @@ class PostTypeObject
     public function getCategories(): array
     {
         $allCategories = get_the_category($this->getID());
-        if (is_array($allCategories) && sizeof($allCategories) > 0) {
+        if (!empty($allCategories)) {
             foreach ($allCategories as $k => $c) {
                 $allCategories[$k] = ModelFactory::fromObject($c);
             }

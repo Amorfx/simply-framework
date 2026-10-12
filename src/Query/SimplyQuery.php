@@ -11,7 +11,7 @@ use WP_User;
 
 class SimplyQuery
 {
-    private static object|bool|null $currentObject = null;
+    private static ?object $currentObject = null;
     public WP_Query $query;
 
     public function __construct(WP_Query $query)

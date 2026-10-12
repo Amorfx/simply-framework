@@ -31,6 +31,8 @@ final class CacheFingerprint
      */
     private static function getInstalledPackages(): array
     {
+        // The first declared ClassLoader wins: it may come from an older Composer (a WP-CLI phar, a plugin's own vendor)
+        // @phpstan-ignore function.alreadyNarrowedType
         if (!method_exists(ClassLoader::class, 'getRegisteredLoaders')) {
             return [];
         }
