@@ -2,22 +2,26 @@
 
 namespace Simply\Core\DependencyInjection\Compiler;
 
+use LogicException;
 use ReflectionClass;
 use Simply\Core\Attributes\Action;
 use Simply\Core\Attributes\Filter;
-use Simply\Core\Compiler\HookCompiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Contracts\Service\ServiceSubscriberTrait;
 
 /**
  * Add container.service_subscriber tag if class use ServiceSubscriberTrait
- * Compile all hooks with parsing attributes
+ * Collect the #[Action] and #[Filter] hooks of all services for the HookManager
  *
  * @package SimplyFramework\Container\Compiler
  */
 class HookPass implements CompilerPassInterface
 {
+    public const HOOK_MANAGER = 'framework.manager.hook';
+
     /**
      * @throws \ReflectionException
      */
@@ -34,41 +38,47 @@ class HookPass implements CompilerPassInterface
             }
         }
 
-        // In php 8 we have Action and Filters Attribute that can be used to register action and filters
-        // A class without HookableInterface can add action and filters with this attributes
-        $classesToParse = array();
+        if (!$container->hasDefinition(self::HOOK_MANAGER)) {
+            return;
+        }
 
-        foreach ($container->getDefinitions() as $d) {
-            if (!empty($d->getClass()) && class_exists($d->getClass())) {
-                $classesToParse[] = $d->getClass();
+        // #[Action] and #[Filter] methods of any service, by service id: the HookManager gets the services through a
+        // locator, so that a service is only instantiated when WordPress runs one of its hooks
+        $hooks = [];
+        $services = [];
+        foreach ($container->getDefinitions() as $id => $definition) {
+            $class = $definition->getClass();
+            if ($definition->isAbstract() || empty($class) || !class_exists($class)) {
+                continue;
+            }
+            foreach ((new ReflectionClass($class))->getMethods() as $method) {
+                foreach ([...$method->getAttributes(Action::class), ...$method->getAttributes(Filter::class)] as $attribute) {
+                    if (!$method->isPublic()) {
+                        throw new LogicException(sprintf(
+                            'The method "%s::%s()" has a #[%s] attribute but is not public: WordPress cannot call it.',
+                            $class,
+                            $method->getName(),
+                            (new ReflectionClass($attribute->getName()))->getShortName()
+                        ));
+                    }
+                    /** @var Action|Filter $hook */
+                    $hook = $attribute->newInstance();
+                    $hooks[] = [
+                        'type' => $hook instanceof Action ? 'action' : 'filter',
+                        'hook' => $hook->getHook(),
+                        'priority' => $hook->getPriority(),
+                        'accepted_args' => $hook->getNumberArguments(),
+                        'service' => $id,
+                        'class' => $class,
+                        'method' => $method->getName(),
+                    ];
+                    $services[$id] = new Reference($id);
+                }
             }
         }
-        // Parse to find hooks
-        $hookCompiler = $this->getHookCompiler();
-        foreach ($classesToParse as $c) {
-            $ref = new ReflectionClass($c);
-            foreach ($ref->getMethods() as $method) {
-                $actionsAttribute = $method->getAttributes(Action::class);
-                $filtersAttribute = $method->getAttributes(Filter::class);
-                $attributes = array_merge($actionsAttribute, $filtersAttribute);
-                if (empty($attributes)) {
-                    continue;
-                }
-                $container->getDefinition($c)->addTag('simply.attribute_hooks');
-                foreach ($attributes as $attr) {
-                    /** @var Action|Filter $hooks */
-                    $hooks = $attr->newInstance();
-                    /** @phpstan-ignore-next-line  */
-                    $hooks->setCallable(array($c, $method->getName()));
-                    $hookCompiler->add($c, get_class($hooks), $hooks->getHook(), $method->getName(), $hooks->getPriority(), $hooks->getNumberArguments());
-                }
-            }
-        }
-        $container->setParameter('simply.compile_hooks', $hookCompiler->getHooksMapping());
-    }
 
-    protected function getHookCompiler(): HookCompiler
-    {
-        return new HookCompiler();
+        $container->getDefinition(self::HOOK_MANAGER)
+            ->replaceArgument(1, $hooks)
+            ->replaceArgument(2, ServiceLocatorTagPass::register($container, $services));
     }
 }

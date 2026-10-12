@@ -2,35 +2,23 @@
 
 namespace Simply\Core\Manager;
 
+use Psr\Container\ContainerInterface;
 use Simply\Core\Contract\HookableInterface;
 use Simply\Core\Contract\ManagerInterface;
+use Simply\Core\Hook\LazyHookListener;
 
 class HookManager implements ManagerInterface
 {
     /**
-     * @var array<HookableInterface>
+     * @param iterable<HookableInterface> $hooks
+     * @param list<array{type: string, hook: string, priority: int, accepted_args: int, service: string, class: class-string, method: string}> $attributeHooks collected by HookPass
+     * @param ContainerInterface $attributeHookServices services holding the attribute hooks, by service id
      */
-    private iterable $hooks;
-
-    /**
-     * @var array<string, array<array<string, string|int>>>
-     */
-    private array $compileHooks;
-    /**
-     * @var array<object>
-     */
-    private iterable $attributeHooksService;
-
-    /**
-     * @param array<HookableInterface> $hooks
-     * @param array<string, array<array<string, string|int>>> $compileHooks
-     * @param array<object> $attributeHooksService
-     */
-    public function __construct(iterable $hooks, array $compileHooks, iterable $attributeHooksService)
-    {
-        $this->hooks = $hooks;
-        $this->compileHooks = $compileHooks;
-        $this->attributeHooksService = $attributeHooksService;
+    public function __construct(
+        private iterable $hooks,
+        private array $attributeHooks,
+        private ContainerInterface $attributeHookServices,
+    ) {
     }
 
     public function initialize(): void
@@ -39,42 +27,14 @@ class HookManager implements ManagerInterface
             $aHook->register();
         }
 
-        if (!empty($this->compileHooks)) {
-            foreach ($this->compileHooks as $class => $hooks) {
-                foreach ($hooks as $arrayHook) {
-                    $attributeHook = new $arrayHook['type'](
-                        $arrayHook['hook'],
-                        $arrayHook['priority'],
-                        $arrayHook['numberArguments']
-                    );
-
-                    $service = $this->getServiceFromClass($class);
-                    if (false === $service) {
-                        throw new \Exception('The service ' . $class . ' is not register in container.');
-                    }
-                    $attributeHook->setCallable(array($service, $arrayHook['fn']));
-                    if (is_callable(array($service, $arrayHook['fn']))) {
-                        $attributeHook->register();
-                    }
-                }
+        foreach ($this->attributeHooks as $hook) {
+            $listener = new LazyHookListener($this->attributeHookServices, $hook['service'], $hook['class'], $hook['method']);
+            if ($hook['type'] === 'action') {
+                // The listener returns the method result, which WordPress ignores for actions
+                add_action($hook['hook'], $listener, $hook['priority'], $hook['accepted_args']); // @phpstan-ignore return.void
+            } else {
+                add_filter($hook['hook'], $listener, $hook['priority'], $hook['accepted_args']);
             }
         }
-    }
-
-    /**
-     * In compile hook we have the classname not the service
-     * so we have to search the service instance with the classname
-     * @param string $class
-     *
-     * @return false|object
-     */
-    private function getServiceFromClass(string $class): object|bool
-    {
-        foreach ($this->attributeHooksService as $service) {
-            if ($service instanceof $class) {
-                return $service;
-            }
-        }
-        return false;
     }
 }

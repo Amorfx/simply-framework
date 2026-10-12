@@ -32,8 +32,8 @@ services:
     class: Simply\Core\Manager\HookManager
     arguments:
       - !tagged_iterator wp.hook
-      - '%simply.compile_hooks%'
-      - !tagged_iterator simply.attribute_hooks
+      - [] # #[Action] and #[Filter] hooks, collected by HookPass
+      - !service_locator [] # services holding these hooks, collected by HookPass
     tags: [ 'framework.manager' ]
 
   framework.manager.navmenu:
