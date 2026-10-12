@@ -2,7 +2,7 @@
 
 namespace Simply\Core\Cache;
 
-use Composer\InstalledVersions;
+use Composer\Autoload\ClassLoader;
 
 /**
  * Identify what the cache is built from, so that a new deployment or configuration gets a fresh cache
@@ -22,16 +22,24 @@ final class CacheFingerprint
     }
 
     /**
+     * Packages of the Composer installations that load Simply. Other autoloaders are ignored: WP-CLI runs from a phar
+     * with its own packages, which would give WP-CLI and web requests different fingerprints.
+     *
      * @return array<string, array{0: ?string, 1: ?string}>
      */
     private static function getInstalledPackages(): array
     {
-        if (!class_exists(InstalledVersions::class)) {
+        if (!method_exists(ClassLoader::class, 'getRegisteredLoaders')) {
             return [];
         }
 
         $packages = [];
-        foreach (InstalledVersions::getAllRawData() as $installed) {
+        foreach (ClassLoader::getRegisteredLoaders() as $vendorDir => $loader) {
+            $installedFile = $vendorDir . '/composer/installed.php';
+            if ($loader->findFile(self::class) === false || !is_file($installedFile)) {
+                continue;
+            }
+            $installed = require $installedFile;
             foreach ($installed['versions'] as $name => $package) {
                 $packages[$name] = [$package['pretty_version'] ?? null, $package['reference'] ?? null];
             }

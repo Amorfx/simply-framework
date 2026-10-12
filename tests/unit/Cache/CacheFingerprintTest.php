@@ -2,6 +2,7 @@
 
 namespace Simply\Tests\Cache;
 
+use Composer\Autoload\ClassLoader;
 use Simply\Core\Cache\CacheFingerprint;
 use Simply\Tests\SimplyTestCase;
 
@@ -47,5 +48,25 @@ class CacheFingerprintTest extends SimplyTestCase
             CacheFingerprint::compute([], []),
             CacheFingerprint::compute([])
         );
+    }
+
+    public function testPackagesOfAnotherAutoloaderAreIgnored()
+    {
+        // WP-CLI runs from a phar that registers its own Composer autoloader and installed packages
+        $vendorDir = sys_get_temp_dir() . '/simply-framework-tests/other-vendor';
+        @mkdir($vendorDir . '/composer', 0777, true);
+        file_put_contents($vendorDir . '/composer/installed.php', '<?php return ' . var_export([
+            'root' => ['name' => 'wp-cli/wp-cli-bundle', 'pretty_version' => '2.12.0', 'version' => '2.12.0.0', 'reference' => 'abc', 'type' => 'library', 'install_path' => $vendorDir, 'aliases' => [], 'dev' => false],
+            'versions' => ['wp-cli/wp-cli' => ['pretty_version' => '2.12.0', 'version' => '2.12.0.0', 'reference' => 'abc', 'type' => 'library', 'install_path' => $vendorDir, 'aliases' => [], 'dev_requirement' => false]],
+        ], true) . ';');
+        $before = CacheFingerprint::compute([]);
+
+        $loader = new ClassLoader($vendorDir);
+        $loader->register();
+        try {
+            $this->assertSame($before, CacheFingerprint::compute([]));
+        } finally {
+            $loader->unregister();
+        }
     }
 }
