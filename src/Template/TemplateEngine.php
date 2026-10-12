@@ -2,6 +2,7 @@
 
 namespace Simply\Core\Template;
 
+use Simply\Core\Cache\CacheDirectoryManager;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
@@ -21,7 +22,7 @@ class TemplateEngine
 
         // environnement configuration
         $envConfig = [
-            'cache' => SIMPLY_CACHE_DIRECTORY . '/twig'
+            'cache' => CacheDirectoryManager::getCachePath('twig')
         ];
 
         if (WP_DEBUG === true) {

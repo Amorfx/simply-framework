@@ -2,34 +2,12 @@
 
 namespace Simply\Core\Compiler;
 
-use Simply\Core\Cache\CacheDirectoryManager;
-
 class HookCompiler
 {
     /**
      * @var array<string, array<array<string, string|int>>>
      */
     private array $hooksMapping = array();
-    private const FILE_NAME = 'hooks.php';
-
-    protected function getFilePath(): string
-    {
-        return CacheDirectoryManager::getCachePath(self::FILE_NAME);
-    }
-
-    /**
-     * @return bool|array<string, array<array<string, string|int>>>
-     */
-    public function getFromCache(): bool|array
-    {
-        $fp = $this->getFilePath();
-        if (!file_exists($fp)) {
-            return false;
-        }
-        // @codeCoverageIgnoreStart
-        return require $fp;
-        // @codeCoverageIgnoreEnd
-    }
 
     public function add(string $className, string $hookClass, string $hook, string $function, int $priority = 10, int $numberArguments = 1): void
     {
@@ -47,17 +25,10 @@ class HookCompiler
     }
 
     /**
-     * @param string $className
-     * @return \int[][]|mixed|\string[][]
+     * @return array<string, array<array<string, string|int>>>
      */
-    public function getFromClass(string $className)
+    public function getHooksMapping(): array
     {
-        $content = $this->getFromCache();
-        return $content[$className];
-    }
-
-    public function compile(): void
-    {
-        file_put_contents($this->getFilePath(), '<?php return ' . var_export($this->hooksMapping, true) . ';');
+        return $this->hooksMapping;
     }
 }

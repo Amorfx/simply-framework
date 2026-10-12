@@ -4,51 +4,23 @@ namespace Simply\Tests\Compiler;
 
 use Simply\Core\Compiler\HookCompiler;
 use Simply\Tests\SimplyTestCase;
-use Brain\Monkey;
 
 class HookCompilerTest extends SimplyTestCase
 {
-    public function testAddHookAndGet()
+    public function testGetHooksMappingReturnsAddedHooksByClass()
     {
         $hookCompiler = new HookCompiler();
         $hookCompiler->add('myClass', 'Action', 'myHook', 'myFunction');
+        $hookCompiler->add('myClass', 'Filter', 'otherHook', 'otherFunction', 20, 2);
 
-        // Test in property
-        $reflection = new \ReflectionClass($hookCompiler);
-        $property = $reflection->getProperty('hooksMapping');
-        $property->setAccessible(true);
-        $expected = array( 0 => array(
-            'hook' => 'myHook',
-            'type' => 'Action',
-            'fn' => 'myFunction',
-            'priority' => 10,
-            'numberArguments' => 1,
-        ));
-        $propertyValue = $property->getValue($hookCompiler);
-        $stub = $this->getMockBuilder(HookCompiler::class)
-            ->onlyMethods(array('getFromCache'))
-            ->getMock();
-        $stub->method('getFromCache')
-            ->willReturn($propertyValue);
-        $this->assertSame($expected, $stub->getFromClass('myClass'));
+        $this->assertSame(['myClass' => [
+            ['hook' => 'myHook', 'type' => 'Action', 'fn' => 'myFunction', 'priority' => 10, 'numberArguments' => 1],
+            ['hook' => 'otherHook', 'type' => 'Filter', 'fn' => 'otherFunction', 'priority' => 20, 'numberArguments' => 2],
+        ]], $hookCompiler->getHooksMapping());
     }
 
-    public function testCompile()
+    public function testGetHooksMappingIsEmptyWithoutHooks()
     {
-        $hookCompiler = new HookCompiler();
-        $hookCompiler->add('myClass', 'Action', 'myHook', 'myFunction');
-
-        $reflection = new \ReflectionClass($hookCompiler);
-        $property = $reflection->getProperty('hooksMapping');
-        $property->setAccessible(true);
-        $map = $property->getValue($hookCompiler);
-        Monkey\Functions\expect('file_put_contents')
-            ->once()
-            ->with('/tmp/hooks.php', '<?php return ' . var_export($map, true) . ';');
-        $hookCompiler->compile();
-
-        // Test get from cache
-        Monkey\Functions\when('file_exists')->justReturn(false);
-        $this->assertFalse($hookCompiler->getFromCache());
+        $this->assertSame([], (new HookCompiler())->getHooksMapping());
     }
 }

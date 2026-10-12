@@ -63,9 +63,8 @@ class HookPass implements CompilerPassInterface
                     $hookCompiler->add($c, get_class($hooks), $hooks->getHook(), $method->getName(), $hooks->getPriority(), $hooks->getNumberArguments());
                 }
             }
-            $hookCompiler->compile();
-            $container->setParameter('simply.compile_hooks', $hookCompiler->getFromCache());
         }
+        $container->setParameter('simply.compile_hooks', $hookCompiler->getHooksMapping());
     }
 
     protected function getHookCompiler(): HookCompiler
